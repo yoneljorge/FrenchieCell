@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="360.0" prefWidth="350.0" styleClass="hbox" stylesheets="@../../css/styleItem.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Promotor:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label text="Yonel Jorge Sánchez Cantillo" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Cliente:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label text="Cheila" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Teléfono:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label text="56391475" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="IMEI:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label text="35468596124523" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Marca:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label text="Samsung" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Modelo:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label text="A12" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Precio:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label text="150" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Precio mensajería:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label text="1800" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Fecha de venta:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label text="16/7/24" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Comisión:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label text="10" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Validar:" visible="false">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <CheckBox disable="true" mnemonicParsing="false" text="Marcar para liquidar" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

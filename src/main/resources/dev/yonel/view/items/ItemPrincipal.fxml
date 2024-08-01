@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="itemC" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="53.0" prefWidth="735.0" spacing="40.0" styleClass="hbox" stylesheets="@../../css/styleItem.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label fx:id="labelMarca" text="Samsung">
+         <HBox.margin>
+            <Insets left="25.0" />
+         </HBox.margin></Label>
+        <Label fx:id="labelModelo" text="A05">
+            <HBox.margin>
+                <Insets />
+            </HBox.margin>
+        </Label>
+        <Label fx:id="labelDualSim" text="SI">
+            <HBox.margin>
+                <Insets />
+            </HBox.margin>
+        </Label>
+        <Label fx:id="Precio" text="\$200">
+            <HBox.margin>
+                <Insets />
+            </HBox.margin>
+        </Label>
+      <Label fx:id="Precio1" text="Yonel" />
+      <Label fx:id="Precio2" text="1/6/24" />
+      <Label fx:id="Precio21" text="12345678912345" />
+        <Button fx:id="btnDevolver" mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" stylesheets="@../../css/styleItem.css" text="Devolver" textFill="WHITE">
+            <HBox.margin>
+                <Insets />
+            </HBox.margin>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+        </Button>
+    </children>
+    <effect>
+        <DropShadow blurType="GAUSSIAN" height="5.0" radius="2.0" width="5.0" />
+    </effect>
+</HBox>
