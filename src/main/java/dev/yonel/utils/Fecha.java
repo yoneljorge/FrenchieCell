@@ -7,7 +7,7 @@ import java.time.format.DateTimeParseException;
 public class Fecha {
 
     // Creamos los formatos de fecha
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     /**
      * Método para comprobar que una fecha de una cadena de texto es válida.
@@ -38,8 +38,10 @@ public class Fecha {
      */
     public static LocalDate getLocalDate(String dateString) {
 
-        return LocalDate.parse(dateString, formatter);
-
+        if (esFechaValida(dateString)) {
+            return LocalDate.parse(dateString, formatter);
+        }
+        return null;
     }
 
     /**

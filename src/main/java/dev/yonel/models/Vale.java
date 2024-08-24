@@ -1,7 +1,7 @@
 package dev.yonel.models;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import dev.yonel.utils.data_access.BaseEntity;
 import jakarta.persistence.Column;
@@ -50,10 +50,10 @@ public class Vale extends BaseEntity<Vale, Long> implements Serializable{
     private Long costoMensajeria;
 
     @Column(name = "fecha_venta")
-    private Date fechaVenta;
+    private LocalDate fechaVenta;
 
     @Column(name = "fecha_garantia")
-    private Date fechaGarantia;
+    private LocalDate fechaGarantia;
 
     @Column(name = "comision")
     private Long comision;
@@ -61,7 +61,7 @@ public class Vale extends BaseEntity<Vale, Long> implements Serializable{
     public Vale(){}
 
     public Vale(Long idVales, Promotor promotor, Marca marca, Modelo modelo, Double precio, String moneda,
-            Boolean mensajeria, String direccion, Long costoMensajeria, Date fechaVenta, Date fechaGarantia,
+            Boolean mensajeria, String direccion, Long costoMensajeria, LocalDate fechaVenta, LocalDate fechaGarantia,
             Long comision) {
         this.idVales = idVales;
         this.promotor = promotor;
@@ -148,19 +148,19 @@ public Modelo getModelo() {
         this.costoMensajeria = costoMensajeria;
     }
 
-    public Date getFechaVenta() {
+    public LocalDate getFechaVenta() {
         return fechaVenta;
     }
 
-    public void setFechaVenta(Date fechaVenta) {
+    public void setFechaVenta(LocalDate fechaVenta) {
         this.fechaVenta = fechaVenta;
     }
 
-    public Date getFechaGarantia() {
+    public LocalDate getFechaGarantia() {
         return fechaGarantia;
     }
 
-    public void setFechaGarantia(Date fechaGarantia) {
+    public void setFechaGarantia(LocalDate fechaGarantia) {
         this.fechaGarantia = fechaGarantia;
     }
 

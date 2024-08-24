@@ -2,6 +2,7 @@ package dev.yonel.utils.data_access;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseEntity<T, Id extends Serializable> {
     
@@ -23,5 +24,9 @@ public abstract class BaseEntity<T, Id extends Serializable> {
 
     public final static <T> List<T> getAll(Class<T> clazz){
         return GenericDAO.getAllObject(clazz);
+    }
+
+    public final static boolean existe(Map<String, Object> propiedades){
+        return GenericDAO.existe(propiedades);
     }
 }

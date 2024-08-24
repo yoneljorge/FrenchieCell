@@ -1,183 +1,183 @@
 package dev.yonel.controllers;
 
-import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.List;
 
-import dev.yonel.App;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
-import dev.yonel.services.celulares.AgregarCelular;
-import dev.yonel.utils.ComboBoxUtil;
+import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
+import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
 import dev.yonel.utils.others.SetVisible;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 public class CelularesController implements Initializable {
     // ****************************************************************** */
     // ***************************COMPONENTES DEL FXML******************* */
     @FXML
-    private Button btnVista;
-
+    private MFXButton btnVista;
     @FXML
-    private Button btnAgregar;
-
-    @FXML
-    private Button btnGuardar;
-
-    @FXML
-    private Button btnLimpiar;
-
-    @FXML
-    private ComboBox cmbFechaIngresoVista;
-
-    @FXML
-    private ComboBox combMarcaVista;
-
-    @FXML
-    private ComboBox cmbModeloVista;
-
-    @FXML
-    private ComboBox cmbVendidosVista;
-
-    @FXML
-    private ComboBox<Marca> cmbMarcaAgregar;
-    
-    @FXML
-    private ComboBox<Modelo> cmbModeloAgregar;
-
-
-
+    private MFXButton btnAgregar;
     @FXML
     private Pane pnlAgregar;
-
     @FXML
     private Pane pnlVista;
 
+    // Controles Vista Agregar
     @FXML
-    private TextField txtBuscarVista;
-
+    private MFXButton btnGuardar;
     @FXML
-    private TextField txtImeiUno;
-
+    private MFXButton btnLimpiar;
     @FXML
-    private TextField txtImeiDos;
-
+    private MFXButton btnAgregarMarca;
+    @FXML
+    private MFXButton btnAgregarModelo;
+    @FXML
+    private MFXFilterComboBox<Marca> cmbMarcaAgregar;
+    @FXML
+    private MFXFilterComboBox<Modelo> cmbModeloAgregar;
+    @FXML
+    private MFXTextField txtImeiUno;
+    @FXML
+    private MFXTextField txtImeiDos;
     @FXML
     private TextArea txtObservaciones;
-
     @FXML
-    private TextField txtPrecio;
-
-    @FXML
-    private VBox vboxItemVista;
-
+    private MFXTextField txtPrecio;
     @FXML
     private DatePicker dateFechaInventario;
-
-    @FXML 
+    @FXML
     private Label lblEstado;
+    @FXML
+    private Label validationLabel_ImeiUno;
+    @FXML
+    private Label validationLabel_ImeiDos;
+    @FXML
+    private Label validationLabel_Precio;
+    @FXML
+    private Label validationLabel_Fecha;
+
+    // Controles Vista Tienda
+    @FXML
+    private VBox vboxItemVista;
+    @FXML
+    private MFXButton btnRecargar;
+    @FXML
+    private MFXFilterComboBox<Marca> cmbMarcaVista;
+    @FXML
+    private MFXFilterComboBox<Modelo> cmbModeloVista;
+    @FXML
+    private MFXFilterComboBox<LocalDate> cmbFechaVista;
+    @FXML
+    private MFXTextField txtFiltrarImei;
+    @FXML
+    private Label validationLabel_FilterImei;
+    @FXML
+    private CheckBox checkDual;
+    @FXML
+    private CheckBox checkVendido;
 
     // **************************************************** */
     // **************************************************** */
-
 
     // ArrayList en el que vamos a almacenar los Pane para una mejor gestión.
     private ArrayList<Pane> listPane = new ArrayList<>();
 
-    AgregarCelular agregarCelular = new AgregarCelular();
+    // MapS en que vamos a agregar los controles de los panels para una mejor
+    // gestión.
+    private Map<String, Object> listaControlesVistaAgregar = new HashMap<>();
+    private Map<String, Object> listaControlesVista = new HashMap<>();
+    // Servicios de las vistas
+    private ServiceCelularControllerAgregar serviceAgregar;
+    private ServiceCelularControllerVista serviceVista;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        //Agregamos los pane a la lista y ponemos la vista como el visible.
+        // Agregamos los pane a la lista y ponemos la vista como el visible.
         listPane.add(pnlAgregar);
         listPane.add(pnlVista);
         SetVisible.This(listPane, pnlVista);
 
-        Node[] nodes = new Node[10];
-        for (int i = 0; i < nodes.length; i++) {
-            try {
-                nodes[i] = App.loadFXML("items/itemCelulares");
+        /****************************************
+         * *********** PANEL AGREGAR ***********
+         ****************************************/
 
-                // give the items some effect
+        listaControlesVistaAgregar.put("marca", cmbMarcaAgregar);
+        listaControlesVistaAgregar.put("agregarMarca", btnAgregarMarca);
+        listaControlesVistaAgregar.put("modelo", cmbModeloAgregar);
+        listaControlesVistaAgregar.put("agregarModelo", btnAgregarModelo);
+        listaControlesVistaAgregar.put("imeiUno", txtImeiUno);
+        listaControlesVistaAgregar.put("imeiDos", txtImeiDos);
+        listaControlesVistaAgregar.put("precio", txtPrecio);
+        listaControlesVistaAgregar.put("fecha", dateFechaInventario);
+        listaControlesVistaAgregar.put("estado", lblEstado);
+        listaControlesVistaAgregar.put("observaciones", txtObservaciones);
+        listaControlesVistaAgregar.put("validation_ImeiUno", validationLabel_ImeiUno);
+        listaControlesVistaAgregar.put("validation_ImeiDos", validationLabel_ImeiDos);
+        listaControlesVistaAgregar.put("validation_Precio", validationLabel_Precio);
+        listaControlesVistaAgregar.put("btnAgregarMarca", btnAgregarMarca);
+        listaControlesVistaAgregar.put("btnAgregarModelo", btnAgregarModelo);
+        listaControlesVistaAgregar.put("btnGuardar", btnGuardar);
+        listaControlesVistaAgregar.put("btnLimpiar", btnLimpiar);
+        listaControlesVistaAgregar.put("validation_Fecha", validationLabel_Fecha);
+        this.serviceAgregar = new ServiceCelularControllerAgregar(listaControlesVistaAgregar);
 
-                vboxItemVista.getChildren().add(nodes[i]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        serviceAgregar.configure();
 
-        cmbMarcaAgregar.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue){//Chequea si el ComboBox gana el foco
-                filtrarComboBoxMarca();
-            }
-        });
+        /****************************************
+         * *********** PANEL VISTA ***********
+         ****************************************/
+        listaControlesVista.put("vbox", vboxItemVista);
+        listaControlesVista.put("recargar", btnRecargar);
+        listaControlesVista.put("comboMarca", cmbMarcaVista);
+        listaControlesVista.put("comboModelo", cmbModeloVista);
+        listaControlesVista.put("comboFecha", cmbFechaVista);
+        listaControlesVista.put("filtrarImei", txtFiltrarImei);
+        listaControlesVista.put("validation", validationLabel_FilterImei);
+        listaControlesVista.put("checkDual", checkDual);
+        listaControlesVista.put("checkVendido", checkVendido);
+        this.serviceVista = new ServiceCelularControllerVista(listaControlesVista);
+
+        serviceVista.configure();
+
     }
 
     // ******************EVENTO DE LOS BOTONES********** */
     // ************************************************* */
 
     public void handleClicks(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == btnVista) { SetVisible.This(listPane, pnlVista);}
+        if (actionEvent.getSource() == btnVista) {
+            SetVisible.This(listPane, pnlVista);
+            btnAgregar.setDisable(false);
+            btnVista.setDisable(true);
 
-        if (actionEvent.getSource() == btnAgregar) { SetVisible.This(listPane, pnlAgregar);}
+            // Si se agrega una marca, modelo o celular entonces se actualiza la vista
+            // completa.
+            if (ServiceCelularControllerVista.getNewItem()) {
+                serviceVista.recargar();
+                ServiceCelularControllerVista.setNewItem(false);
+            }
+        }
 
-        if (actionEvent.getSource() == btnGuardar) { btnGuardarLogica();}
-
-        if(actionEvent.getSource() == btnLimpiar){}
-    }
-
-    // ****************GUARDADO DE LOS DATOS DEL CELULAR********** */
-    // *********************************************************** */
-
-    private void setDatosAgregarCelular() {
-        agregarCelular.setMarca(String.valueOf(cmbMarcaAgregar.getValue()));
-        agregarCelular.setModelo(String.valueOf(cmbModeloAgregar.getValue()));
-        agregarCelular.setImei_Uno(Long.parseLong(txtImeiUno.getText().trim()));
-        agregarCelular.setImei_Dos(Long.parseLong(txtImeiDos.getText().trim()));
-        agregarCelular.setPrecio(Double.parseDouble(txtPrecio.getText().trim()));
-        agregarCelular.setFechaInventario(dateFechaInventario.getValue());
-        agregarCelular.setObservaciones(txtObservaciones.getText());
-    }
-    // **********************MÉTODOS***************************** */
-    // ********************************************************** */
-
-
-    private void filtrarComboBoxMarca(){
-        List<Marca> listMarca = Marca.getAll(Marca.class);//Cargamos los datos desde la base de datos
-
-        //Quitar este constructor en un futuro porque crea una sobrecarga de trabajo
-        ComboBoxUtil<Marca> comboBox = new ComboBoxUtil<>(cmbMarcaAgregar, Marca::getMarca);
-        comboBox.filtrar(listMarca);//Llamamos el método y le pasamos los datos
-        listMarca.clear();//Limpiamos la lista
-    }
-
-    private void btnGuardarLogica(){
-        setDatosAgregarCelular();
-        if (agregarCelular.saveCelular()) {
-            lblEstado.setText("Succes");
-            lblEstado.setTextFill(Color.GREEN);
-            txtImeiUno.setText("");
-            txtImeiDos.setText("");
-            txtPrecio.setText("");
-            txtObservaciones.setText("");
-        }else{
-            lblEstado.setText("Error");
-            lblEstado.setTextFill(Color.RED);
+        if (actionEvent.getSource() == btnAgregar) {
+            SetVisible.This(listPane, pnlAgregar);
+            btnAgregar.setDisable(true);
+            btnVista.setDisable(false);
         }
     }
 }

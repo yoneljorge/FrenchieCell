@@ -1,0 +1,13 @@
+@import '../fonts/Fonts.css';
+@import 'Common.css';
+@import 'MFXColors.css';
+
+
+
+.label{
+    -fx-text-fill: -mfx-purple;
+}
+
+.label-error{
+    -fx-text-fill: -mfx-red;
+}

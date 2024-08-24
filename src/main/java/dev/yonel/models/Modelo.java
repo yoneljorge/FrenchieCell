@@ -30,6 +30,11 @@ public class Modelo extends BaseEntity<Modelo, Long> implements Serializable{
 
     public Modelo(){}
 
+    public Modelo(String modelo, Marca marca){
+        this.modelo = modelo;
+        this.marca = marca;
+    }
+
     public Modelo(Long idModelo, Marca marca, String modelo) {
         this.idModelo = idModelo;
         this.marca = marca;
@@ -57,7 +62,7 @@ public class Modelo extends BaseEntity<Modelo, Long> implements Serializable{
     }
 
     public void setModelo(String modelo) {
-        this.modelo = modelo;
+        this.modelo = modelo.toUpperCase();
     }
 
     @Override

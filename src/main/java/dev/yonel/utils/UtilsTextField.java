@@ -17,12 +17,12 @@ import javafx.util.converter.DefaultStringConverter;
 public class UtilsTextField {
 
     /**
-     * Se rdefine una interfaz que recibe un objeto de tipo TextFormatter.Change, la
+     * Se define una interfaz que recibe un objeto de tipo TextFormatter.Change, la
      * cual verifica si la modificación del text incluye un espacio en blanco y
      * elimina ese espacio.
      *
      */
-    private static UnaryOperator<TextFormatter.Change> filter = change -> {
+    private static UnaryOperator<TextFormatter.Change> filterEspaceInBlanc = change -> {
         if (change.getText().matches("[\\s]")) {
             change.setText("");
         }
@@ -35,12 +35,29 @@ public class UtilsTextField {
      * aplicará dinámicamente al TextField correspondiente cuando se escriba en él,
      * a trvés de la función eventKey.
      */
-    public static void setFilter(TextField textField) {
+    public static void setFilterEspaceInBlanc(TextField textField) {
         if (textField.getText().equalsIgnoreCase(" ")) {
             textField.setText(textField.getText().trim());
         }
         textField.setTextFormatter(
-                new TextFormatter<>(new DefaultStringConverter(), "", filter));
+                new TextFormatter<>(new DefaultStringConverter(), "", filterEspaceInBlanc));
+    }
+
+
+
+    private static UnaryOperator<TextFormatter.Change> filterNumbers = change -> {
+        //Si el texto ya existe, obtenemos el texto nuevo
+        String newText = change.getControlNewText();
+        //Comprobamos si el nuevo texto es vacío o si es un número.
+        if(newText.matches("\\d*")){
+            return change;//Permitir el cambio
+        }
+        return null; //Rechazar el cambio.
+    };
+
+    public static void setFilterNumber(TextField textField){
+        TextFormatter<String> textFormatter = new TextFormatter<>(filterNumbers);
+        textField.setTextFormatter(textFormatter);
     }
 
     /**
@@ -86,4 +103,6 @@ public class UtilsTextField {
             }
         }
     }
+
+    
 }

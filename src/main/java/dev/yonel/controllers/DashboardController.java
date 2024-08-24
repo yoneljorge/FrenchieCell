@@ -1,23 +1,20 @@
 package dev.yonel.controllers;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
+import dev.yonel.App;
+import dev.yonel.utils.AlertUtil;
+import dev.yonel.utils.others.SetVisible;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.*;
-
-import dev.yonel.App;
-import dev.yonel.utils.others.SetVisible;
 
 public class DashboardController implements Initializable {
 
@@ -57,6 +54,7 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        
         try {
             principal = (VBox) App.loadFXML("viewPrincipal");
             stackPane.getChildren().add(principal);
@@ -80,7 +78,6 @@ public class DashboardController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     // ********************BOTONES DEL MENU*********** */
@@ -105,31 +102,11 @@ public class DashboardController implements Initializable {
         }
 
         if (actionEvent.getSource() == btnSignout) {
-            alertExit();
+            AlertUtil.advertencia("Desea salir?", null, () -> Platform.exit());
         }
     }
 
     // ***********************MÉTODOS***************** */
     // ********************************************** */
-
-    private void alertExit() {
-        Alert alert = new Alert(AlertType.WARNING);
-        alert.setTitle("¿Deseas salir?");
-        alert.setContentText("Guarde toda la información antes de salir.");
-
-        // Agregar botones al alert
-        // alert.setAlertType(AlertType.CONFIRMATION);
-        ButtonType botonAceptar = new ButtonType("Aceptar");
-        ButtonType botonCancelar = new ButtonType("Cancelar");
-        alert.getButtonTypes().setAll(botonAceptar, botonCancelar);
-
-        // Mostrar el Alert
-        ButtonType result = (ButtonType) alert.showAndWait().get();
-
-        // Se especifica que se hace en cada caso
-        if (result == botonAceptar) {
-            Platform.exit();
-        }
-    }
 
 }

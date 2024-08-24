@@ -128,6 +128,9 @@ public class Celular extends BaseEntity<Celular, Long> implements Serializable{
     }
 
     public Boolean getVendido() {
+        if(vendido == null){
+            return false;
+        }
         return vendido;
     }
 

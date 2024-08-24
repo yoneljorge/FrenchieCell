@@ -10,60 +10,56 @@
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
     <dependencies>
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-controls</artifactId>
-                <version>22</version>
-            </dependency>
-    
-    
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-graphics</artifactId>
-                <version>22</version>
-            </dependency>
-    
-    
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-base</artifactId>
-                <version>22</version>
-            </dependency>
-    
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-fxml</artifactId>
-                <version>22</version>
-            </dependency>
-    
-    
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-swing</artifactId>
-                <version>22</version>
-            </dependency>
-    
-    
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-web</artifactId>
-                <version>22</version>
-            </dependency>
-    
-    
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-media</artifactId>
-                <version>22</version>
-            </dependency>
-    
-    
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx</artifactId>
-                <version>22</version>
-                <type>pom</type>
-            </dependency>
+            
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>21</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>21</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>21</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>21</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>21</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>21</version>
+        </dependency>
+
+
+
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx</artifactId>
+            <version>21</version>
+            <type>pom</type>
+        </dependency>
 
             <!-- Connector SQLite-->
         <dependency>
@@ -91,6 +87,14 @@
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.2</version>
             <scope>test</scope>
+        </dependency>
+
+    
+
+        <dependency>
+            <groupId>io.github.palexdev</groupId>
+            <artifactId>materialfx</artifactId>
+            <version>11.17.0</version>
         </dependency>
 
     </dependencies>
@@ -129,6 +133,27 @@
         <dependencies>
 
             <dependency>
+                <groupId>io.github.palexdev</groupId>
+                <artifactId>mfxresources</artifactId>
+                <version>11.7.0</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>io.github.palexdev</groupId>
+                <artifactId>mfxeffects</artifactId>
+                <version>11.2.1</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>io.github.palexdev</groupId>
+                <artifactId>mfxcore</artifactId>
+                <version>11.6.2</version>
+            </dependency>
+
+
+            <dependency>
                 <groupId>jakarta.activation</groupId>
                 <artifactId>jakarta.activation-api</artifactId>
                 <version>2.1.1</version>
@@ -142,6 +167,5 @@
             </dependency>
 
         </dependencies>
-
     </dependencyManagement>
 </project>

@@ -9,6 +9,7 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
+
 /**
  * JavaFX App
  */
@@ -19,6 +20,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+
 		Parent root = loadFXML("viewDashboard");
 		primaryStage.setScene(new Scene(root));
 		//set stage borderless
@@ -46,6 +48,10 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("view/" + fxml + ".fxml"));
         return fxmlLoader.load();
     }
+
+	public static FXMLLoader fxmlLoader(String fxml) throws IOException{
+		return new FXMLLoader(App.class.getResource("view/" + fxml + ".fxml"));
+	}
 
     public static void main(String[] args) {
         launch();

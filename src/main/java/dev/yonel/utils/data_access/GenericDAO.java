@@ -2,10 +2,13 @@ package dev.yonel.utils.data_access;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -13,7 +16,7 @@ import jakarta.persistence.criteria.Root;
 
 public class GenericDAO<T, Id extends Serializable> {
 
-    private static SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
+    private final static SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
 
     private static Session getSession() {
         return sessionFactory.getCurrentSession();
@@ -163,6 +166,55 @@ public class GenericDAO<T, Id extends Serializable> {
             return true;
         } catch (Exception e) {
             tx.rollback();
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> boolean existe(Map<String, Object> propiedades) {
+        if (propiedades == null) {
+            throw new IllegalArgumentException("El mapa de propiedades no puede estar vacío.");
+        }
+
+        Transaction tx = getSession().beginTransaction();
+        try {
+            StringBuilder hql = new StringBuilder("SELECT COUNT(*) FROM ");
+
+            // Asumimos que el nombre de la clase está presente en el mapa bajo la clave
+            // "class"
+            Class<T> clase = (Class<T>) propiedades.get("class");
+            if (clase == null) {
+                throw new IllegalArgumentException("Debe proporcionar una clase en el mapa de propiedades");
+            }
+
+            hql.append(clase.getName()).append(" WHERE ");
+
+            Set<Map.Entry<String, Object>> entrySet = propiedades.entrySet();
+            boolean first = true;
+
+            for (Map.Entry<String, Object> entry : entrySet) {
+                if ("class".equals(entry.getKey())) {
+                    continue;
+                }
+                if (!first) {
+                    hql.append(" AND ");
+                }
+                hql.append(entry.getKey()).append(" = :").append(entry.getKey());
+                first = false;
+            }
+
+            Query<Long> query = getSession().createQuery(hql.toString(), Long.class);
+            for (Map.Entry<String, Object> entry : entrySet) {
+                if (!"class".equals(entry.getKey())) {
+                    query.setParameter(entry.getKey(), entry.getValue());
+                }
+            }
+
+            long count = query.uniqueResult();
+            tx.commit();
+            return count > 0;
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             return false;
         }

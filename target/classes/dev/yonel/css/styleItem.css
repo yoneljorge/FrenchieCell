@@ -1,3 +1,8 @@
+
+@import '../fonts/Fonts.css';
+@import 'Common.css';
+@import 'MFXColors.css';
+
 .button
 {
 -fx-background-color :  #2a8a85;
@@ -21,6 +26,8 @@
 }
 .hbox:hover{
     -fx-background-color: #e0e0e0;
+    -fx-border-color: #7a0ed9;
+    -fx-border-radius: 10px;
 }
 
 .menu-button
@@ -52,6 +59,9 @@
 .label
 {
     -fx-font-size: 15;
+}
+#custom{
+    -fx-font-size: 12;
 }
 
 

@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "marca")
-public class Marca extends BaseEntity<Marca, Long> implements Serializable{
+public class Marca extends BaseEntity<Marca, Long> implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,10 @@ public class Marca extends BaseEntity<Marca, Long> implements Serializable{
     private String marca;
 
     public Marca(){}
+
+    public Marca(String marca){
+        this.marca = marca;
+    }
 
     public Marca(Long idMarca, String marca) {
         this.idMarca = idMarca;
@@ -42,7 +46,8 @@ public class Marca extends BaseEntity<Marca, Long> implements Serializable{
     }
 
     public void setMarca(String marca) {
-        this.marca = marca;
+
+        this.marca = marca.toUpperCase();
     }
 
     @Override

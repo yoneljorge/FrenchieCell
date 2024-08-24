@@ -1,92 +1,102 @@
 package dev.yonel.utils;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ListCell;
 
 import java.util.List;
 
 import java.util.function.Function;
 
 public class ComboBoxUtil<T> {
-    private ComboBox<T> comboBox;
-    private List<T> items;
-    private Function<T, String> displayFunction;
-    private ObservableList<T> observableList = FXCollections.observableArrayList();
+    private final ComboBox<T> comboBox;
+    private final Function<T, String> displayFunction;
+    private final List<T> items;
+    private final ObservableList<T> observableList = FXCollections.observableArrayList();
     private boolean loadingData = false;
 
-    public ComboBoxUtil(ComboBox<T> comboBox, Function<T, String> displayFunction) {
+    public ComboBoxUtil(ComboBox<T> comboBox, List<T> items, Function<T, String> displayFunction) {
+        System.out.println("Se crea el constructor de ComboBoxUtil");
+
+        if (displayFunction == null) {
+            throw new IllegalArgumentException("El displayFunction no puede ser null");
+        }
+
         this.comboBox = comboBox;
         this.displayFunction = displayFunction;
+        this.items = items;
+
+        configureComboBox();
+        loadData();
     }
 
-    public void filtrar(List<T> items) {
+    private void configureComboBox() {
+
+        comboBox.setCellFactory(lv -> new ListCell<T>() {
+            @Override
+            protected void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : displayFunction.apply(item));
+            }
+        });
+
+        comboBox.setButtonCell(new ListCell<T>() {
+            @Override
+            protected void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : displayFunction.apply(item));
+            }
+        });
+
+        setupFiltering();
+    }
+
+    private void loadData() {
+
         if (loadingData)
             return;
 
         loadingData = true;// Indicar que estamos cargando datos
-        observableList.clear();// Limpiar la lista existente
 
-        this.items = items;
-        this.observableList = FXCollections.observableArrayList(this.items);
-        // Crear el ComboBox con la observableList
-        this.comboBox.setItems(observableList);
+        Platform.runLater(() -> {
+            observableList.clear();
+            if (this.items != null) {
+                observableList.addAll(items);
+            }
+            comboBox.setItems(observableList);
+            loadingData = false;
+        });
+    }
 
-        // Filtrar elementos mientras se escribe
-        TextField editor = (TextField) this.comboBox.getEditor();
+    private void setupFiltering() {
+        System.out.println("Configurando el filtrado");
+
         FilteredList<T> filteredList = new FilteredList<>(observableList, p -> true);
+        TextField editor = (TextField) comboBox.getEditor();
 
-        // Agregar un listener al editor de texto del ComboBox
         editor.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList.setPredicate(item -> {
-                // Si el campo está vacio, mostrar todos los elementos
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
+            String upperCaseFilter = newValue == null ? "" : newValue.toUpperCase();
 
-                String upperCaseFilter = newValue.toUpperCase();
+            filteredList.setPredicate(item -> {
+                if (upperCaseFilter.isEmpty()) {
+                    return true; // Mostrar todo si el campo está vacío
+                }
                 return displayFunction.apply(item).toUpperCase().contains(upperCaseFilter);
             });
 
-            try {
-                // Actualizar las opciones del ComboBox con la lista filtrada
+            Platform.runLater(() -> {
                 comboBox.setItems(filteredList);
-                comboBox.show(); // Mostrar la lista filtrada automáticamente
-            } catch (Exception e) {
-                e.printStackTrace(); //Manejo básico de excepciones
-            } finally{
-                loadingData = false; //Restablecer la bandera
-            }
 
-        });
-
-        comboBox.setCellFactory(lv -> new javafx.scene.control.ListCell<T>() {
-            @Override
-            protected void updateItem(T item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(displayFunction.apply(item));
+                // Si el campo de texto esta vacío, deselecciona cualquier elemento seleccionado
+                if (upperCaseFilter.isEmpty()) {
+                    comboBox.getSelectionModel().clearSelection();
                 }
-            }
+                comboBox.show(); // Muestra la lista filtrada
+            });
         });
-
-        comboBox.setButtonCell(new javafx.scene.control.ListCell<T>() {
-            @Override
-            protected void updateItem(T item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(displayFunction.apply(item));
-                }
-            }
-        });
-
-        //Limpiamos la lista 
-        this.items.clear();
     }
 }
