@@ -11,6 +11,7 @@ module dev.yonel {
     requires org.hibernate.orm.core;
     requires org.hibernate.orm.community.dialects;
     requires jakarta.persistence;
+    requires lombok;
 
     
 

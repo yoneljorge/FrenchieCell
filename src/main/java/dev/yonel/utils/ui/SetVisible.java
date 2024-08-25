@@ -1,4 +1,4 @@
-package dev.yonel.utils.others;
+package dev.yonel.utils.ui;
 
 import java.util.ArrayList;
 

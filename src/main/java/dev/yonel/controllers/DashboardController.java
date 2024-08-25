@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 
 import dev.yonel.App;
 import dev.yonel.utils.AlertUtil;
-import dev.yonel.utils.others.SetVisible;
+import dev.yonel.utils.ui.SetVisible;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

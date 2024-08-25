@@ -90,7 +90,7 @@ public class ServiceModelo {
             if (!exist(modelo)) {
                 if (modelo.save()) {
                     //Notificamos al ServiceList que hay cambios
-                    ServiceLista.cambioModelo = true;
+                    ServiceLista.setCambioModelo(true);
                     ServiceCelularControllerVista.setNewItem(true);
                     AlertUtil.information("Éxito", "Modelo: " + modelo.getModelo() + " guardado.");
                     configureComboBox(comboBoxModelo, comboBoxMarca, btnAsociado);

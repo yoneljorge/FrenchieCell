@@ -109,6 +109,7 @@
                                     <Insets left="17.0" />
                                  </HBox.margin>
                               </Label>
+                              <Label fx:id="labelCantidad" stylesheets="@../css/Label.css" text="Cantidad: " />
                            </children>
                            <padding>
                               <Insets left="22.0" />

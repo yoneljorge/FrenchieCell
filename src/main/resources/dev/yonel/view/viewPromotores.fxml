@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -15,9 +15,15 @@
 
 <VBox fx:id="vboxPromotores" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.yonel.controllers.PromotoresController">
    <children>
-      <StackPane fx:id="stackPane" prefHeight="556.0" prefWidth="793.0">
+      <HBox alignment="CENTER" prefHeight="44.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css">
          <children>
-            <VBox fx:id="vboxPromotor_Promotor" prefHeight="537.0" prefWidth="793.0" visible="false">
+            <MFXButton id="custom" fx:id="btnPromotores" disable="true" text="Promotores" />
+            <MFXButton id="custom" fx:id="btnAgregarPromotor" text="Agregar Promotor" />
+         </children>
+      </HBox>
+      <StackPane fx:id="stackPane" prefHeight="525.0" prefWidth="793.0">
+         <children>
+            <VBox fx:id="vboxPromotor" prefHeight="537.0" prefWidth="793.0" visible="false">
                <children>
                   <HBox alignment="CENTER" prefHeight="38.0" prefWidth="793.0" spacing="5.0">
                      <children>
@@ -48,7 +54,7 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblPromotor_Ventas" text="10" textFill="#ff4800">
+                              <Label fx:id="lblValesTotal" text="10" textFill="#ff4800">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -62,7 +68,7 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblPromotor_EnGarantia" text="10" textFill="#ff4800">
+                              <Label fx:id="lblValesGarantia" text="10" textFill="#ff4800">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -76,7 +82,7 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblPromotor_PorPagar" text="10" textFill="#ff4800">
+                              <Label fx:id="lblValesPorPagar" text="10" textFill="#ff4800">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -90,17 +96,17 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblPromotor_Total" text="10" textFill="#ff4800">
+                              <Label fx:id="lblDineroPorPagar" text="10" textFill="#ff4800">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
                               </Label>
                            </children>
                         </VBox>
-                        <MenuButton alignment="CENTER_RIGHT" mnemonicParsing="false" stylesheets="@../css/styleItem.css" text="Opciones" textFill="WHITE">
+                        <MenuButton alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Opciones" textFill="WHITE">
                           <items>
-                            <MenuItem fx:id="menuItemPromotores_EditarPerfil" mnemonicParsing="false" onAction="#handleClicks" text="Editar Perfil" />
-                            <MenuItem fx:id="menuItemPromotores_EliminarPerfil" mnemonicParsing="false" onAction="#handleClicks" text="Eliminar Perfil" />
+                            <MenuItem fx:id="menuItemEditarPerfil" mnemonicParsing="false" text="Editar Perfil" />
+                            <MenuItem fx:id="menuItemEliminarPerfil" mnemonicParsing="false" text="Eliminar Perfil" />
                           </items>
                         </MenuButton>
                      </children>
@@ -110,23 +116,17 @@
                         <FlowPane fx:id="flowPanePromotorVales" alignment="TOP_CENTER" hgap="30.0" prefHeight="405.0" prefWidth="770.0" styleClass="splitmenubutton" stylesheets="@../css/styleItem.css" vgap="30.0" />
                      </content>
                   </ScrollPane>
-                  <HBox alignment="CENTER" prefHeight="41.0" prefWidth="793.0" spacing="30.0">
+                  <HBox alignment="CENTER" prefHeight="41.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Buttons.css">
                      <children>
-                        <Button fx:id="btnIr_RegresarLista" mnemonicParsing="false" onAction="#handleClicks" stylesheets="@../css/styleItem.css" text="Regresar" />
-                        <Button fx:id="btnAccion_Liquidar" disable="true" mnemonicParsing="false" onAction="#handleClicks" stylesheets="@../css/styleItem.css" text="Liquidar" />
+                        <MFXButton fx:id="btnRegresar" styleClass="outline-button" text="Regresar" />
+                        <MFXButton fx:id="btnLiquidar" styleClass="outline-button" text="Liquidar" />
                      </children>
                   </HBox>
                </children>
             </VBox>
-            <VBox fx:id="vboxPromotor_Lista" prefHeight="554.0" prefWidth="793.0">
+            <VBox fx:id="vboxLista" prefHeight="554.0" prefWidth="793.0" visible="false">
                <children>
-                  <HBox alignment="CENTER" prefHeight="38.0" prefWidth="793.0" spacing="20.0">
-                     <children>
-                        <Button disable="true" mnemonicParsing="false" stylesheets="@../css/styleItem.css" text="Promotores" />
-                        <Button fx:id="btnIr_AgregarPromotor" mnemonicParsing="false" onAction="#handleClicks" stylesheets="@../css/styleItem.css" text="Agregar Promotor" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="793.0" spacing="40.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="793.0" spacing="40.0" stylesheets="@../css/Label.css">
                      <children>
                         <Label text="Nombre y Apellidos">
                            <HBox.margin>
@@ -156,7 +156,7 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Label text="Total">
+                        <Label text="Total por Pagar">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
@@ -170,17 +170,11 @@
                   </ScrollPane>
                </children>
             </VBox>
-            <VBox fx:id="vboxPromotor_Agregar" prefHeight="554.0" prefWidth="793.0" visible="false">
+            <VBox fx:id="vboxAgregar" prefHeight="554.0" prefWidth="793.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="38.0" prefWidth="793.0" spacing="20.0">
-                     <children>
-                        <Button fx:id="btnIr_PromotoresLista" mnemonicParsing="false" onAction="#handleClicks" stylesheets="@../css/styleItem.css" text="Promotores" />
-                        <Button disable="true" mnemonicParsing="false" stylesheets="@../css/styleItem.css" text="Agregar Promotor" />
-                     </children>
-                  </HBox>
                   <HBox alignment="CENTER" prefHeight="142.0" prefWidth="793.0" spacing="5.0">
                      <children>
-                        <VBox alignment="TOP_RIGHT" spacing="10.0">
+                        <VBox alignment="TOP_RIGHT" spacing="10.0" stylesheets="@../css/Label.css">
                            <children>
                               <Label stylesheets="@../css/styleItem.css" text="Nombre:">
                                  <padding>
@@ -198,30 +192,48 @@
                                  </padding>
                               </Label>
                            </children>
+                           <HBox.margin>
+                              <Insets left="-59.0" />
+                           </HBox.margin>
                         </VBox>
-                        <VBox prefHeight="346.0" prefWidth="246.0" spacing="15.0">
-                           <children>
-                              <TextField fx:id="txtPromotores_Nombre">
-                                 <VBox.margin>
-                                    <Insets top="10.0" />
-                                 </VBox.margin>
-                              </TextField>
-                              <TextField fx:id="txtPromotores_Apellidos" />
-                              <TextField fx:id="txtPromotores_Celular" />
-                           </children>
+                        <VBox prefHeight="346.0" prefWidth="246.0" stylesheets="@../css/TextFields.css">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
+                           <children>
+                              <MFXTextField id="customField" fx:id="txtNombre" floatMode="DISABLED" maxHeight="32.0" prefHeight="29.0" prefWidth="218.0">
+                                 <VBox.margin>
+                                    <Insets top="3.0" />
+                                 </VBox.margin>
+                              </MFXTextField>
+                              <Label fx:id="validacionNombre" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="217.0" styleClass="label-error" stylesheets="@../css/Label.css" />
+                              <MFXTextField id="customField" fx:id="txtApellidos" floatMode="DISABLED" maxHeight="32.0" prefHeight="29.0" prefWidth="218.0" />
+                              <Label fx:id="validacionApellidos" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="217.0" styleClass="label-error" stylesheets="@../css/Label.css" />
+                              <MFXTextField id="customField" fx:id="txtCelular" floatMode="DISABLED" maxHeight="32.0" prefHeight="29.0" prefWidth="218.0" />
+                              <Label fx:id="validacionCelular" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="217.0" styleClass="label-error" stylesheets="@../css/Label.css" />
+                           </children>
                         </VBox>
                      </children>
                      <VBox.margin>
                         <Insets top="66.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="64.0" prefWidth="793.0" spacing="10.0">
+                  <HBox alignment="CENTER" prefHeight="64.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css">
                      <children>
-                        <Button fx:id="btnAccion_Limpiar" mnemonicParsing="false" onAction="#handleClicks" stylesheets="@../css/styleItem.css" text="Limpiar" />
-                        <Button fx:id="btnAccion_Agregar" mnemonicParsing="false" onAction="#handleClicks" stylesheets="@../css/styleItem.css" text="Agregar" />
+                        <MFXButton fx:id="btnLimpiar" styleClass="outline-button" text="Limpiar" />
+                        <MFXButton fx:id="btnAgregar" styleClass="outline-button" text="Agregar" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="BOTTOM_RIGHT" prefHeight="99.0" prefWidth="739.0" stylesheets="@../css/Label.css">
+                     <children>
+                        <Label fx:id="labelEstado_AgregarPromotor" text="Estado">
+                           <HBox.margin>
+                              <Insets right="200.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
                      </children>
                   </HBox>
                </children>

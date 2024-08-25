@@ -3,11 +3,14 @@ package dev.yonel.utils.validation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.beans.binding.BooleanBinding;
+
 public class Validator {
 
     /********************************************************
-    *                        IMEI                           *
-    *********************************************************/
+     * IMEI *
+     *********************************************************/
 
     /**
      * Método para verificar que la cadena corresponde a un IMEI válido.
@@ -15,20 +18,18 @@ public class Validator {
      * @param imei el imei que se desea verificar.
      * @return true en caso de que sea válido, false caso contrario.
      */
-    public static boolean isIMEI(String imei){
-        //Expresión regular para validar el IMEI
+    public static boolean isIMEI(String imei) {
+        // Expresión regular para validar el IMEI
         String regex = "^\\d{15}$";
         return imei.matches(regex);
     }
 
-
     /********************************************************
-    *                        EMAIL                          *
-    *********************************************************/
+     * EMAIL *
+     *********************************************************/
 
-    private static final String EMAIL_PATTERN = 
-        "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" 
-        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     private static final Pattern patternEmail = Pattern.compile(EMAIL_PATTERN);
 
@@ -44,25 +45,27 @@ public class Validator {
         return matcher.matches();
     }
 
-
     /********************************************************
-    *                        TELÉFONO                       *
-    *********************************************************/
+     * TELÉFONO *
+     *********************************************************/
 
     private static final String PHONE_PATTERN = "^(\\+\\d{2}[- ]?)?\\d{8}$";
 
     private static final Pattern patternPhone = Pattern.compile(PHONE_PATTERN);
 
-    
-    /**
-     * Método que verifica si un número de telefono es válido.
-     * 
-     * @param phoneNumber el número de telefono que se desea validar.
-     * 
-     * @return true en caso de que el número de teléfono sea correcto, falso en caso contrario.
-     */
-    public static boolean isPhoneNumber(String phoneNumber){
-        Matcher matcher = patternPhone.matcher(phoneNumber);
-        return matcher.matches();
+
+    public static BooleanBinding isPhoneNumber(MFXTextField textField) {
+        return new BooleanBinding() {
+            {
+                super.bind(textField.textProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                Matcher matcher = patternPhone.matcher(textField.getText());
+                return matcher.matches();
+            }
+        };
+
     }
 }

@@ -23,6 +23,12 @@ public class MFXTextFieldUtil {
     private static final String[] specialCharacters_vDos = "! @ # & ( ) – [ { } ]: ; ' , ? / * ~ $ ^ + = < > -"
             .split(" ");
 
+    /**
+     * La cantidad de caracteres tiene que ser igual a 15.
+     * 
+     * @param textField
+     * @return
+     */
     private static Constraint getLengthConstraint(MFXTextField textField) {
         return Constraint.Builder.build()
                 .setSeverity(Severity.ERROR)
@@ -31,14 +37,26 @@ public class MFXTextFieldUtil {
                 .get();
     }
 
-    private static Constraint getLengthLessThanConstraint(MFXTextField textField){
+    /**
+     * La cantidad de caracteres tiene que ser menor que 16.
+     * 
+     * @param textField
+     * @return
+     */
+    private static Constraint getLengthLessThanConstraint(MFXTextField textField) {
         return Constraint.Builder.build()
-            .setSeverity(Severity.ERROR)
-            .setMessage("No pueden haber más de 15 dígitos.")
-            .setCondition(textField.textProperty().length().lessThan(16))
-            .get();
+                .setSeverity(Severity.ERROR)
+                .setMessage("No pueden haber más de 15 dígitos.")
+                .setCondition(textField.textProperty().length().lessThan(16))
+                .get();
     }
 
+    /**
+     * No puede contener letras minúsculas ni mayúsculas.
+     * 
+     * @param textField
+     * @return
+     */
     private static Constraint getCharactersConstraint(MFXTextField textField) {
         return Constraint.Builder.build()
                 .setSeverity(Severity.ERROR)
@@ -50,6 +68,12 @@ public class MFXTextFieldUtil {
                 .get();
     }
 
+    /**
+     * No puede contener espacios en blanco.
+     * 
+     * @param textField
+     * @return
+     */
     private static Constraint getSpaceInBlancConstraint(MFXTextField textField) {
         return Constraint.Builder.build()
                 .setSeverity(Severity.ERROR)
@@ -60,6 +84,12 @@ public class MFXTextFieldUtil {
                 .get();
     }
 
+    /**
+     * No puede contener caracteres especiales.
+     * 
+     * @param textField
+     * @return
+     */
     private static Constraint getSpecialCharactersConstraint(MFXTextField textField) {
         return Constraint.Builder.build()
                 .setSeverity(Severity.ERROR)
@@ -70,6 +100,12 @@ public class MFXTextFieldUtil {
                 .get();
     }
 
+    /**
+     * No puede contener caracteres especiales excepto el punto.
+     * 
+     * @param textField
+     * @return
+     */
     private static Constraint getSpecialCharactersVDosConstraint(MFXTextField textField) {
         return Constraint.Builder.build()
                 .setSeverity(Severity.ERROR)
@@ -80,6 +116,12 @@ public class MFXTextFieldUtil {
                 .get();
     }
 
+    /**
+     * Solo puede contener números.
+     * 
+     * @param textFiel
+     * @return
+     */
     @SuppressWarnings("unused")
     private static Constraint getDigitsConstraint(MFXTextField textFiel) {
         return Constraint.Builder.build()
@@ -89,6 +131,29 @@ public class MFXTextFieldUtil {
                         () -> containsAny(textFiel.getText(), "", digits),
                         textFiel.textProperty()))
                 .get();
+    }
+
+    /**
+     * No puede contener números.
+     * @param textFiel
+     * @return
+     */
+    private static Constraint getNotDigitsConstraint(MFXTextField textFiel) {
+        return Constraint.Builder.build()
+                .setSeverity(Severity.INFO)
+                .setMessage("No puede contener números.")
+                .setCondition(Bindings.createBooleanBinding(
+                        () -> !containsAny(textFiel.getText(), "", digits),
+                        textFiel.textProperty()))
+                .get();
+    }
+
+    private static Constraint getTelefonoCubano(MFXTextField textField){
+        return Constraint.Builder.build()
+            .setSeverity(Severity.ERROR)
+            .setMessage("Número de teléfono no válido")
+            .setCondition(Validator.isPhoneNumber(textField))
+            .get();
     }
 
     public static void validateIMEI(MFXTextField textField, Label validationLabel) {
@@ -123,7 +188,7 @@ public class MFXTextFieldUtil {
                     }
                 }
             } else {
-                //textField.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, true);
+                // textField.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, true);
                 validationLabel.setVisible(false);
             }
         });
@@ -167,7 +232,7 @@ public class MFXTextFieldUtil {
                     }
                 }
             } else {
-                //textField.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, true);
+                // textField.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, true);
                 validationLabel.setVisible(false);
             }
         });
@@ -184,6 +249,59 @@ public class MFXTextFieldUtil {
                 .constraint(getSpaceInBlancConstraint(textField))
                 .constraint(getSpecialCharactersVDosConstraint(textField))
                 .constraint(getCharactersConstraint(textField));
+
+        textField.getValidator().validProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                validationLabel.setVisible(false);
+                textField.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, false);
+            }
+        });
+
+        textField.delegateFocusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue && !newValue) {
+                List<Constraint> constraints = textField.validate();
+                if (!constraints.isEmpty()) {
+                    textField.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, true);
+                    validationLabel.setText(constraints.get(0).getMessage());
+                    validationLabel.setVisible(true);
+                    validationLabel.setAlignment(Pos.CENTER_RIGHT);
+                } else {
+                    validationLabel.setVisible(false);
+                }
+            }
+        });
+    }
+
+    public static void validateString(MFXTextField textField, Label validationLabel) {
+        textField.getValidator()
+                .constraint(getNotDigitsConstraint(textField))
+                .constraint(getSpecialCharactersConstraint(textField));
+
+        textField.getValidator().validProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                validationLabel.setVisible(false);
+                textField.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, false);
+            }
+        });
+
+        textField.delegateFocusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue && !newValue) {
+                List<Constraint> constraints = textField.validate();
+                if (!constraints.isEmpty()) {
+                    textField.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, true);
+                    validationLabel.setText(constraints.get(0).getMessage());
+                    validationLabel.setVisible(true);
+                    validationLabel.setAlignment(Pos.CENTER_RIGHT);
+                } else {
+                    validationLabel.setVisible(false);
+                }
+            }
+        });
+    }
+
+    public static void validatePhoneNumber(MFXTextField textField, Label validationLabel){
+        textField.getValidator()
+                .constraint(getTelefonoCubano(textField));
 
         textField.getValidator().validProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {

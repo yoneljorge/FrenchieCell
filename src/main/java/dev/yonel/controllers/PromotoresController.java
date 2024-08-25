@@ -2,130 +2,126 @@ package dev.yonel.controllers;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
-import javafx.event.ActionEvent;
+import dev.yonel.services.controllers.promotores.ServicePromotoresControllerAgregar;
+import dev.yonel.utils.ui.SetVisible;
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-public class PromotoresController implements Initializable{
+public class PromotoresController implements Initializable {
+
+    // Panel Agregar Promotor
+    @FXML
+    private VBox vboxAgregar;
 
     @FXML
-    private Button btnAccion_Agregar;
-
+    private MFXTextField txtNombre;
     @FXML
-    private Button btnAccion_Limpiar;
-
+    private MFXTextField txtApellidos;
     @FXML
-    private Button btnAccion_Liquidar;
-
+    private MFXTextField txtCelular;
     @FXML
-    private Button btnIr_AgregarPromotor;
-
+    private MFXButton btnLimpiar;
     @FXML
-    private Button btnIr_PromotoresLista;
-
+    private MFXButton btnAgregar;
     @FXML
-    private Button btnIr_RegresarLista;
-
-    
-
+    private Label validacionNombre;
     @FXML
-    private FlowPane flowPanePromotorVales;
-
-
-
+    private Label validacionApellidos;
     @FXML
-    private Label lblPromotor_EnGarantia;
-
+    private Label validacionCelular;
     @FXML
-    private Label lblPromotor_Nombre;
+    private Label labelEstado_AgregarPromotor;
 
+    // Panel View Promotores
     @FXML
-    private Label lblPromotor_PorPagar;
-
-    @FXML
-    private Label lblPromotor_Total;
-
-    @FXML
-    private Label lblPromotor_Ventas;
-
-
-
-    @FXML
-    private MenuItem menuItemPromotores_EditarPerfil;
-
-    @FXML
-    private MenuItem menuItemPromotores_EliminarPerfil;
-
-
-
-    @FXML
-    private StackPane stackPane;
-
-
-
-    @FXML
-    private TextField txtPromotores_Apellidos;
-    
-    @FXML 
-    private TextField txtPromotores_Celular;
-
-    @FXML
-    private TextField txtPromotores_Nombre;
-
-
-
-    @FXML
-    private VBox vboxPromotor_Agregar;
-
-    @FXML
-    private VBox vboxPromotor_Lista;
-
-    @FXML
-    private VBox vboxPromotor_Promotor;
+    private VBox vboxLista;
 
     @FXML
     private VBox vboxPromotor_ViewItems;
 
+    // Panel Promotor
     @FXML
-    private VBox Promotores;
+    private VBox vboxPromotor;
+
+    @FXML
+    private FlowPane flowPanePromotorVales;
+    @FXML
+    private MFXButton btnRegresar;
+    @FXML
+    private MFXButton btnLiquidar;
+    @FXML
+    private MenuItem menuItemEditarPerfil;
+    @FXML
+    private MenuItem menuItemEliminarPerfil;
+    @FXML
+    private Label lblDineroPorPagar;
+    @FXML
+    private Label lblValesPorPagar;
+    @FXML
+    private Label lblValesGarantia;
+    @FXML
+    private Label lblValesTotal;
+    
+
+    // General
+    @FXML
+    private StackPane stackPane;
+    @FXML
+    private MFXButton btnPromotores;
+    @FXML
+    private MFXButton btnAgregarPromotor;
 
     private ArrayList<VBox> listVBox = new ArrayList<>();
-    
-    public void initialize(URL location, ResourceBundle resources){
+    private Map<String, Object> listPaneAgregar = new HashMap<>();
 
-        //Agregamos los VBox al ArrayList
-        listVBox.add(vboxPromotor_Lista);
-        listVBox.add(vboxPromotor_Promotor);
-        listVBox.add(vboxPromotor_Agregar);
+    private ServicePromotoresControllerAgregar serviceAgregar;
 
-        //Ponemos visible el VBox donde aparece la lista de promotores
-        //setVisibleThis(vboxPromotor_Lista);
+    public void initialize(URL location, ResourceBundle resources) {
+        //Agregar Objetos al Map listPaneAgregar
+        listPaneAgregar.put("nombre", txtNombre);
+        listPaneAgregar.put("apellidos", txtApellidos);
+        listPaneAgregar.put("celular", txtCelular);
+        listPaneAgregar.put("limpiar", btnLimpiar);
+        listPaneAgregar.put("agregar", btnAgregar);
+        listPaneAgregar.put("validacionNombre", validacionNombre);
+        listPaneAgregar.put("validacionApellidos", validacionApellidos);
+        listPaneAgregar.put("validacionCelular", validacionCelular);
+        listPaneAgregar.put("estado", labelEstado_AgregarPromotor);
+        this.serviceAgregar = new ServicePromotoresControllerAgregar(listPaneAgregar);
+        //cargamos la configuración de la vista agregar
+        serviceAgregar.configure();
+        // Agregamos los VBox al ArrayList
+        listVBox.add(vboxAgregar);
+        listVBox.add(vboxLista);
+        listVBox.add(vboxPromotor);
+
+        // Ponemos visible el VBox donde aparece la lista de promotores
+        SetVisible.This(listVBox, vboxLista);
+        btnPromotores.setDisable(true);
+        btnAgregarPromotor.setDisable(false);
+
+        btnPromotores.setOnAction(event -> {
+            SetVisible.This(listVBox, vboxLista);
+            btnPromotores.setDisable(true);
+            btnAgregarPromotor.setDisable(false);
+        });
+
+        btnAgregarPromotor.setOnAction(event -> {
+            SetVisible.This(listVBox, vboxAgregar);
+            btnPromotores.setDisable(false);
+            btnAgregarPromotor.setDisable(true);
+        });
     }
 
-    public void handleClicks(ActionEvent event){
-        if(event.getSource() == btnIr_AgregarPromotor){ setVisibleThis(vboxPromotor_Agregar);}
-
-        if(event.getSource() == btnIr_PromotoresLista){ setVisibleThis(vboxPromotor_Lista);}
-
-        if(event.getSource() == btnIr_RegresarLista){ setVisibleThis(vboxPromotor_Lista);}
-    }
-
-    public void setVisibleThis(VBox vbox){
-        for (VBox vBoxElement : listVBox) {
-            if(vBoxElement != vbox){
-                vBoxElement.setVisible(false);
-            }else{
-                vBoxElement.setVisible(true);
-            }
-        }
-    }
 }

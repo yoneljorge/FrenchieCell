@@ -11,7 +11,7 @@ import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
-import dev.yonel.utils.others.SetVisible;
+import dev.yonel.utils.ui.SetVisible;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -90,6 +90,8 @@ public class CelularesController implements Initializable {
     private CheckBox checkDual;
     @FXML
     private CheckBox checkVendido;
+    @FXML
+    private Label labelCantidad;
 
     // **************************************************** */
     // **************************************************** */
@@ -151,6 +153,7 @@ public class CelularesController implements Initializable {
         listaControlesVista.put("validation", validationLabel_FilterImei);
         listaControlesVista.put("checkDual", checkDual);
         listaControlesVista.put("checkVendido", checkVendido);
+        listaControlesVista.put("cantidad", labelCantidad);
         this.serviceVista = new ServiceCelularControllerVista(listaControlesVista);
 
         serviceVista.configure();

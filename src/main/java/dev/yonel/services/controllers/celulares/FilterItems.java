@@ -59,6 +59,9 @@ public class FilterItems {
      */
     public void getAllItems() {
         Platform.runLater(() -> {
+            // Quitamos todos los items del VBox para que no se repitan
+            ServiceCelularControllerVista.cleanVBox();
+            
             Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
             try {
                 String hql = "FROM Celular"; // Tu entidad celular
@@ -112,7 +115,7 @@ public class FilterItems {
             if (celular.getVendido()) {
                 return verificarCelular(celular);
             }
-        }else{
+        } else {
             return verificarCelular(celular);
         }
 

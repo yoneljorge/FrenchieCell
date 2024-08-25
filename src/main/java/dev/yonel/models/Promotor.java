@@ -37,15 +37,18 @@ public class Promotor extends BaseEntity<Promotor, Long> implements Serializable
     @Column(name = "vales_por_pagar")
     private Long valesPorPagar;
 
-    @Column(name = "dinero_total")
-    private Long dineroTotal;
+    @Column(name = "dinero_total_por_pagar")
+    private Long dineroTotalPorPagar;
+
+    @Column(name = "dinero_total_pagado")
+    private Long dineroTotalPagado;
 
 
     public Promotor(){}
 
 
     public Promotor(Long idPromotor, String nombre, String apellidos, Long telfono, Long totalDeVales,
-            Long valesEnGarantia, Long valesPorPagar, Long dineroTotal) {
+            Long valesEnGarantia, Long valesPorPagar, Long dineroTotalPorPagar, Long dineroTotalPagado) {
         this.idPromotor = idPromotor;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -53,7 +56,8 @@ public class Promotor extends BaseEntity<Promotor, Long> implements Serializable
         this.totalDeVales = totalDeVales;
         this.valesEnGarantia = valesEnGarantia;
         this.valesPorPagar = valesPorPagar;
-        this.dineroTotal = dineroTotal;
+        this.dineroTotalPorPagar = dineroTotalPorPagar;
+        this.dineroTotalPagado = dineroTotalPagado;
     }
 
 
@@ -127,13 +131,23 @@ public class Promotor extends BaseEntity<Promotor, Long> implements Serializable
     }
 
 
-    public Long getDineroTotal() {
-        return dineroTotal;
+    public Long getDineroTotalPorPagar() {
+        return dineroTotalPorPagar;
     }
 
 
-    public void setDineroTotal(Long dineroTotal) {
-        this.dineroTotal = dineroTotal;
+    public void setDineroTotalPorPagar(Long dineroTotalPorPagar) {
+        this.dineroTotalPorPagar = dineroTotalPorPagar;
+    }
+
+
+    public Long getDineroTotalPagado() {
+        return dineroTotalPagado;
+    }
+
+
+    public void setDineroTotalPagado(Long dineroTotalPagado) {
+        this.dineroTotalPagado = dineroTotalPagado;
     }
 
 
@@ -141,5 +155,6 @@ public class Promotor extends BaseEntity<Promotor, Long> implements Serializable
     public String toString() {
         return nombre;
     }
+
     
 }

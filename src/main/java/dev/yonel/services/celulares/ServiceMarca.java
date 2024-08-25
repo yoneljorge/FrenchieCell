@@ -73,7 +73,7 @@ public class ServiceMarca {
                     ServiceCelularControllerVista.setNewItem(true);
                     System.out.println("Marca -> " + marca.getMarca() + " guardada.");
                     //Notificamos al ServiceList que hay cambios
-                    ServiceLista.cambioMarca = true;
+                    ServiceLista.setCambioMarca(true);;
                     configureComboBox(comboBox);
                     
                     return true;

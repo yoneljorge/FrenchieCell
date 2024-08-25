@@ -57,6 +57,7 @@ public class ServiceCelularControllerVista {
     private Label validarFiltrarImei;
     private CheckBox checkDual;
     private CheckBox checkVendido;
+    private static Label cantidad;
 
     // Lista para almacenar las instancias de ItemCelularController
     private static List<ItemCelularController> itemCelularControllers = new ArrayList<>();
@@ -72,6 +73,7 @@ public class ServiceCelularControllerVista {
         this.validarFiltrarImei = (Label) lista.get("validation");
         this.checkDual = (CheckBox) lista.get("checkDual");
         this.checkVendido = (CheckBox) lista.get("checkVendido");
+        this.cantidad = (Label) lista.get("cantidad");
         this.serviceFecha = new ServiceFecha(this.comboFecha, this.comboMarca, this.comboModelo);
     }
 
@@ -93,6 +95,8 @@ public class ServiceCelularControllerVista {
         getAllItems();
 
         invertirOrden();
+
+        System.out.println("Lista con: " + vBoxItems.getChildren().size() + "elementos");
     }
 
     private static void getAllItems() {
@@ -162,6 +166,9 @@ public class ServiceCelularControllerVista {
         List<ItemCelularController> invertedItemsCelular = new ArrayList<>(itemCelularControllers);
         Collections.reverse(invertedItemsCelular);
         itemCelularControllers = invertedItemsCelular;
+
+        //Mostramos la cantidad de celulares en el label cantidad.
+        cantidad.setText("Cantidad: " + vBoxItems.getChildren().size());
     }
 
     public static boolean getNewItem() {

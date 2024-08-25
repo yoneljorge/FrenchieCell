@@ -3,6 +3,7 @@ package dev.yonel.controllers.items;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import dev.yonel.services.promotores.ServicePromotor;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.mfxcore.controls.Label;
 import javafx.fxml.FXML;
@@ -43,9 +44,21 @@ public class ItemPromotoresController  implements Initializable{
         this.labelTotal.setText(total);
 
         itemPromotor.setOnMouseClicked(event -> {
-            System.out.println("me estas haciendo clic");
+            System.out.println("HBox -> me estas haciendo clic");
+        });
+
+        btnVer.setOnAction(event -> {
+            System.out.println("Boton -> me estás haciendo clic");
         });
     }
 
-    //public void setPromotor()
+    public void setPromotor(ServicePromotor servicePromotor){
+        this.nombre = servicePromotor.getNombre() + " " + servicePromotor.getApellidos();
+        this.celular = String.valueOf(servicePromotor.getTelefono());
+        this.ventas = String.valueOf(servicePromotor.getValesTotal());
+        this.enGarantia = String.valueOf(servicePromotor.getValesEnGarantia());
+        this.porPagar = String.valueOf(servicePromotor.getValesPorPagar());
+        this.total = String.valueOf(servicePromotor.getDineroTotalPagado());
+        
+    }
 }

@@ -205,7 +205,7 @@ public class ServiceCelular {
                 if (celular.save()) {
                     ServiceCelularControllerAgregar.setEstadoInformation("Celular guardado.");
                     // Notificamos al ServiceList que hay cambios
-                    ServiceLista.cambioCelular = true;
+                    ServiceLista.setCambioCelular(true);
                     return true;
                 } else {
                     ServiceCelularControllerAgregar.setEstadoError("Error en conexión con base de datos.");
@@ -228,7 +228,7 @@ public class ServiceCelular {
      * 
      * @return true en caso de que exista, false en caso contrario.
      */
-    public boolean existImei() {
+    private boolean existImei() {
         Map<String, Object> propiedades = new HashMap<>();
         propiedades.put("class", Celular.class);
         propiedades.put("imeiUno", imei_Uno);
