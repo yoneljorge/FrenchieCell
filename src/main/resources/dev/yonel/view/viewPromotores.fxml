@@ -3,6 +3,7 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
@@ -124,13 +125,19 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox fx:id="vboxLista" prefHeight="554.0" prefWidth="793.0" visible="false">
+            <VBox fx:id="vboxLista" prefHeight="554.0" prefWidth="793.0">
                <children>
+                  <HBox alignment="CENTER" prefHeight="54.0" prefWidth="793.0" spacing="25.0">
+                     <children>
+                        <CheckBox fx:id="checkPorPagar" mnemonicParsing="false" text="Por Pagar" />
+                        <CheckBox fx:id="checkEnGarantia" mnemonicParsing="false" text="En Garantia" />
+                     </children>
+                  </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="793.0" spacing="40.0" stylesheets="@../css/Label.css">
                      <children>
                         <Label text="Nombre y Apellidos">
                            <HBox.margin>
-                              <Insets left="23.0" />
+                              <Insets left="42.0" />
                            </HBox.margin>
                            <font>
                               <Font name="System Bold" size="15.0" />
@@ -140,30 +147,45 @@
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets left="24.0" />
+                           </HBox.margin>
                         </Label>
                         <Label text="Ventas">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets left="1.0" />
+                           </HBox.margin>
                         </Label>
                         <Label text="En Garantia">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets left="-19.0" />
+                           </HBox.margin>
                         </Label>
                         <Label text="Por Pagar">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets left="-20.0" />
+                           </HBox.margin>
                         </Label>
                         <Label text="Total por Pagar">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets left="-25.0" />
+                           </HBox.margin>
                         </Label>
                      </children>
                   </HBox>
-                  <ScrollPane prefHeight="462.0" prefWidth="793.0">
+                  <ScrollPane prefHeight="492.0" prefWidth="793.0">
                      <content>
                         <VBox fx:id="vboxPromotor_ViewItems" prefHeight="458.0" prefWidth="787.0" />
                      </content>
@@ -226,7 +248,7 @@
                   </HBox>
                   <HBox alignment="BOTTOM_RIGHT" prefHeight="99.0" prefWidth="739.0" stylesheets="@../css/Label.css">
                      <children>
-                        <Label fx:id="labelEstado_AgregarPromotor" text="Estado">
+                        <Label fx:id="labelEstado_AgregarPromotor" text="Estado" visible="false">
                            <HBox.margin>
                               <Insets right="200.0" />
                            </HBox.margin>

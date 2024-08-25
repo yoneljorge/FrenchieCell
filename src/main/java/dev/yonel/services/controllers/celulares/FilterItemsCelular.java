@@ -13,7 +13,7 @@ import dev.yonel.models.Modelo;
 import dev.yonel.utils.data_access.UtilsHibernate;
 import javafx.application.Platform;
 
-public class FilterItems {
+public class FilterItemsCelular {
 
     private static final SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
 
@@ -24,7 +24,7 @@ public class FilterItems {
     private boolean dual = false;
     private boolean vendido = false;
 
-    public FilterItems() {
+    public FilterItemsCelular() {
         ServiceCelularControllerVista.cleanVBox();
     }
 

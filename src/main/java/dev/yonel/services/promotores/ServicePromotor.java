@@ -125,6 +125,7 @@ public class ServicePromotor {
     }
 
     private boolean exist() {
+        
         Map<String, Object> propiedades = new HashMap<>();
         propiedades.put("class", Promotor.class);
         propiedades.put("nombre", promotor.getNombre());

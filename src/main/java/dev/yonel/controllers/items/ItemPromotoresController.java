@@ -5,9 +5,10 @@ import java.util.ResourceBundle;
 
 import dev.yonel.services.promotores.ServicePromotor;
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.mfxcore.controls.Label;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
 public class ItemPromotoresController  implements Initializable{

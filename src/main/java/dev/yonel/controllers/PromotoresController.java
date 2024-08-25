@@ -7,11 +7,13 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import dev.yonel.services.controllers.promotores.ServicePromotoresControllerAgregar;
+import dev.yonel.services.controllers.promotores.ServicePromotoresControllerVista;
 import dev.yonel.utils.ui.SetVisible;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.FlowPane;
@@ -49,6 +51,10 @@ public class PromotoresController implements Initializable {
 
     @FXML
     private VBox vboxPromotor_ViewItems;
+    @FXML 
+    private CheckBox checkEnGarantia;
+    @FXML
+    private CheckBox checkPorPagar;
 
     // Panel Promotor
     @FXML
@@ -84,8 +90,10 @@ public class PromotoresController implements Initializable {
 
     private ArrayList<VBox> listVBox = new ArrayList<>();
     private Map<String, Object> listPaneAgregar = new HashMap<>();
+    private Map<String, Object> listPaneVista = new HashMap<>();
 
     private ServicePromotoresControllerAgregar serviceAgregar;
+    private ServicePromotoresControllerVista serviceVista;
 
     public void initialize(URL location, ResourceBundle resources) {
         //Agregar Objetos al Map listPaneAgregar
@@ -101,6 +109,15 @@ public class PromotoresController implements Initializable {
         this.serviceAgregar = new ServicePromotoresControllerAgregar(listPaneAgregar);
         //cargamos la configuración de la vista agregar
         serviceAgregar.configure();
+
+        //Agregamos Objetos al Map listPaneVista
+        listPaneVista.put("vbox", vboxPromotor_ViewItems);
+        listPaneVista.put("checkEnGarantia", checkEnGarantia);
+        listPaneVista.put("checkPorPagar", checkPorPagar);
+        this.serviceVista = new ServicePromotoresControllerVista(listPaneVista);
+        //cargamos la configuración de la vista vista
+        serviceVista.configure();
+
         // Agregamos los VBox al ArrayList
         listVBox.add(vboxAgregar);
         listVBox.add(vboxLista);

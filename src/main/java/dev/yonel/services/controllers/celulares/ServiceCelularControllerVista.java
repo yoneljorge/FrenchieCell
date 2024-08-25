@@ -46,7 +46,7 @@ public class ServiceCelularControllerVista {
     private ServiceMarca serviceMarca = new ServiceMarca();
     private ServiceModelo serviceModelo = new ServiceModelo();
     private ServiceFecha serviceFecha;
-    private FilterItems filterItems;
+    private FilterItemsCelular filterItems;
 
     private static VBox vBoxItems;
     private MFXButton btnRecargar;
@@ -206,13 +206,13 @@ public class ServiceCelularControllerVista {
         });
 
         checkDual.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            filterItems = new FilterItems();
+            filterItems = new FilterItemsCelular();
             filtrar(filterItems);
             filterItems.getAllItems();
         });
 
         checkVendido.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            filterItems = new FilterItems();
+            filterItems = new FilterItemsCelular();
             filtrar(filterItems);
             filterItems.getAllItems();
         });
@@ -223,7 +223,7 @@ public class ServiceCelularControllerVista {
                 if (newValue != null) {
                     serviceFecha.configureComboBox();
 
-                    filterItems = new FilterItems();
+                    filterItems = new FilterItemsCelular();
                     filtrar(filterItems);
                     filterItems.getAllItems();
                     // Para que no vuelva a realizar la misma accion en el comboBox modelo
@@ -239,7 +239,7 @@ public class ServiceCelularControllerVista {
                     serviceFecha.configureComboBox();
 
                     if (!cambioEnMarca) {
-                        filterItems = new FilterItems();
+                        filterItems = new FilterItemsCelular();
                         filtrar(filterItems);
                         filterItems.getAllItems();
                     } else {
@@ -254,7 +254,7 @@ public class ServiceCelularControllerVista {
             public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
                     LocalDate newValue) {
                 if (newValue != null) {
-                    filterItems = new FilterItems();
+                    filterItems = new FilterItemsCelular();
                     filtrar(filterItems);
                     filterItems.getAllItems();
                 }
@@ -271,7 +271,7 @@ public class ServiceCelularControllerVista {
                         if (!newValue.matches("\\d*")) {
                             txtFiltrarImei.setText(oldValue);
                         }
-                        filterItems = new FilterItems();
+                        filterItems = new FilterItemsCelular();
                         filtrar(filterItems);
                         filterItems.getAllItems();
                     }
@@ -284,7 +284,7 @@ public class ServiceCelularControllerVista {
      * **********MÉTODOS***********************
      ******************************************/
 
-    private void filtrar(FilterItems filter) {
+    private void filtrar(FilterItemsCelular filter) {
         if (comboMarca.getValue() != null) {
             if (!comboMarca.getValue().getMarca().equals(todas.getMarca())) {
                 filter.setMarca(comboMarca.getValue());
