@@ -1,19 +1,31 @@
 package dev.yonel.services.promotores;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import dev.yonel.models.Promotor;
 import dev.yonel.services.ServiceLista;
 import dev.yonel.services.controllers.promotores.ServicePromotoresControllerAgregar;
 import dev.yonel.utils.AlertUtil;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.utils.StringUtils;
+import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.util.StringConverter;
 
 public class ServicePromotor {
 
+    private MFXFilterComboBox<Promotor> comboBox;
     private Promotor promotor;
-
     private boolean cambio = false;
-
+    private boolean asignadoComboBox = false;
+    private List<Promotor> list;
+    private ObservableList<Promotor> observableList;
     public ServicePromotor() {
         this.promotor = new Promotor();
     }
@@ -25,6 +37,10 @@ public class ServicePromotor {
     /*********************************************
      * **********SETTER AND GETTER****************
      *********************************************/
+
+    public Long getIdPromotor() {
+        return this.promotor.getIdPromotor();
+    }
 
     public void setNombre(String nombre) {
         this.promotor.setNombre(nombre);
@@ -110,7 +126,7 @@ public class ServicePromotor {
         if (!exist()) {
             if (promotor.save()) {
                 ServicePromotoresControllerAgregar.setEstadoInformativo("Gestor guardado.");
-                //Notificamos de que ha sido agregado un nuevo promotor.
+                // Notificamos de que ha sido agregado un nuevo promotor.
                 ServiceLista.setCambioPromotor(true);
                 return true;
             } else {
@@ -125,23 +141,62 @@ public class ServicePromotor {
     }
 
     private boolean exist() {
-        
+
         Map<String, Object> propiedades = new HashMap<>();
         propiedades.put("class", Promotor.class);
         propiedades.put("nombre", promotor.getNombre());
-        if(Promotor.existe(propiedades)){
+        if (Promotor.existe(propiedades)) {
             return true;
-        }else{
+        } else {
             propiedades.clear();
             propiedades.put("class", Promotor.class);
             propiedades.put("telfono", promotor.getTelfono());
 
-            if(Promotor.existe(propiedades)){
+            if (Promotor.existe(propiedades)) {
                 return true;
             }
         }
-        
-
         return false;
+    }
+
+    /**
+     * Método para configurar un MFXFilterComboBox<Promotor>.
+     * Con este método se le asigna el filtro al combo y la lista de promotores.
+     * 
+     * @param comboBox el comboBox que se desea configurar.
+     */
+    public void configureFilterComboBox(MFXFilterComboBox<Promotor> comboBox) {
+        if (!asignadoComboBox) {
+            this.comboBox = comboBox;
+            asignadoComboBox = true;
+        }
+
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        list.clear();
+        /*
+         * Cargamos los datos desde ServiceList para una mejor gestión, con esto
+         * evitamos cargar datos desde la base de dato in
+         * cesariamente.
+         */
+        list.addAll(ServiceLista.getListPromotores());
+
+        if(observableList == null){
+            observableList = FXCollections.observableArrayList();
+        }
+
+        observableList.clear();
+        observableList = FXCollections.observableArrayList(list);
+
+        StringConverter<Promotor> converter = FunctionalStringConverter
+        .to(promotor -> (promotor == null) ? "" : promotor.getNombre());
+        Function<String, Predicate<Promotor>> filterFunction = s -> promotor -> StringUtils
+        .containsIgnoreCase(converter.toString(promotor), s);
+
+        comboBox.setItems(observableList);
+        comboBox.setConverter(converter);
+        comboBox.setFilterFunction(filterFunction);
     }
 }

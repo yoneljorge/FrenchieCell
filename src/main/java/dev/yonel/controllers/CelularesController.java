@@ -24,6 +24,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import lombok.Setter;
 
 public class CelularesController implements Initializable {
     // ****************************************************************** */
@@ -106,6 +108,8 @@ public class CelularesController implements Initializable {
     // Servicios de las vistas
     private ServiceCelularControllerAgregar serviceAgregar;
     private ServiceCelularControllerVista serviceVista;
+
+    private @Setter Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

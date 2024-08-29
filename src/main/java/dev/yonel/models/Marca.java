@@ -9,7 +9,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "marca")
 public class Marca extends BaseEntity<Marca, Long> implements Serializable {
@@ -22,32 +30,8 @@ public class Marca extends BaseEntity<Marca, Long> implements Serializable {
     @Column(name = "marca")
     private String marca;
 
-    public Marca(){}
-
     public Marca(String marca){
         this.marca = marca;
-    }
-
-    public Marca(Long idMarca, String marca) {
-        this.idMarca = idMarca;
-        this.marca = marca;
-    }
-
-    public Long getIdMarca() {
-        return idMarca;
-    }
-
-    public void setIdMarca(Long idMarca) {
-        this.idMarca = idMarca;
-    }
-
-    public String getMarca() {
-        return marca;
-    }
-
-    public void setMarca(String marca) {
-
-        this.marca = marca.toUpperCase();
     }
 
     @Override

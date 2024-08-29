@@ -7,6 +7,8 @@ import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
 import dev.yonel.models.Promotor;
+import dev.yonel.models.Vale;
+import dev.yonel.services.vales.ServiceVales;
 import lombok.Setter;
 
 public class ServiceLista {
@@ -14,14 +16,16 @@ public class ServiceLista {
     private @Setter static boolean cambioModelo = true;
     private @Setter static boolean cambioCelular = true;
     private @Setter static boolean cambioImei = true;
-    
+    private @Setter static boolean cambioVale = true;
     private @Setter static boolean cambioPromotor = true;
+
+    private static Long idPromotor;
 
     private static List<Marca> marcas;
     private static List<Modelo> modelos;
     private static List<Celular> celulares;
     private static List<String> imeis;
-
+    private static List<Vale> vales;
     private static List<Promotor> promotores;
     
 
@@ -96,5 +100,31 @@ public class ServiceLista {
         }
 
         return promotores;
+    }
+
+    public static List<Vale> getListValesByPromotor(long i){
+        if(vales == null){
+            vales = new ArrayList<>();
+        }
+        if(idPromotor == null){
+            idPromotor = i;
+            vales.clear();
+            vales.addAll(ServiceVales.findValesByPromotor(idPromotor));
+            cambioVale = false;
+
+        }else if(idPromotor != i){
+            idPromotor = i;
+            vales.clear();
+            vales.addAll(ServiceVales.findValesByPromotor(idPromotor));
+            cambioVale = false;
+        }
+
+        if(cambioVale){
+            vales.clear();
+            vales.addAll(ServiceVales.findValesByPromotor(idPromotor));
+            cambioVale = false;
+        }
+
+        return vales;
     }
 }

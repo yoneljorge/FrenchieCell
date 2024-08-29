@@ -15,11 +15,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.yonel.controllers.CelularesController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER" prefHeight="36.0" prefWidth="793.0">
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="793.0">
          <children>
-            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="396.0" spacing="20.0">
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="396.0" spacing="20.0">
                <children>
                   <MFXButton id="custom" fx:id="btnVista" disable="true" onAction="#handleClicks" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Vista" />
                   <MFXButton id="custom" fx:id="btnAgregar" onAction="#handleClicks" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Agregar" />
@@ -29,7 +29,7 @@
       </HBox>
       <StackPane prefHeight="519.0" prefWidth="793.0">
          <children>
-            <Pane fx:id="pnlVista" prefHeight="293.0" prefWidth="793.0" StackPane.alignment="CENTER">
+            <Pane fx:id="pnlVista" prefHeight="293.0" prefWidth="793.0" visible="false" StackPane.alignment="CENTER">
                <children>
                   <VBox>
                      <children>
@@ -124,7 +124,7 @@
                   </VBox>
                </children>
             </Pane>
-            <Pane id="custDatePicker" fx:id="pnlAgregar" disable="true" prefHeight="512.0" prefWidth="793.0" visible="false">
+            <Pane id="custDatePicker" fx:id="pnlAgregar" disable="true" prefHeight="512.0" prefWidth="793.0">
                <children>
                   <VBox layoutX="111.0" layoutY="14.0" prefHeight="465.0" prefWidth="539.0">
                      <children>
@@ -217,19 +217,19 @@
                                           <MFXButton fx:id="btnAgregarModelo" disable="true" rippleAnimateShadow="true" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="+" />
                                        </children>
                                     </HBox>
-                                    <MFXTextField id="customField" fx:id="txtImeiUno" disable="true" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="IMEI 1" style="-fx-background-color: transparent;" styleClass="text-field" stylesheets="@../css/TextFields.css">
+                                    <MFXTextField id="customField" fx:id="txtImeiUno" disable="true" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="IMEI 1" styleClass="text-field" stylesheets="@../css/TextFields.css">
                                        <VBox.margin>
                                           <Insets />
                                        </VBox.margin>
                                     </MFXTextField>
                                     <Label id="validationLabel" fx:id="validationLabel_ImeiUno" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="232.0" styleClass="label-error" stylesheets="@../css/Label.css" />
-                                    <MFXTextField id="customField" fx:id="txtImeiDos" disable="true" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="IMEI 2 -&gt; tiene que estar para aparecer en las listas" style="-fx-background-color: transparent;" styleClass="text-field" stylesheets="@../css/TextFields.css">
+                                    <MFXTextField id="customField" fx:id="txtImeiDos" disable="true" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="IMEI 2 -&gt; tiene que estar para aparecer en las listas" styleClass="text-field" stylesheets="@../css/TextFields.css">
                                        <VBox.margin>
                                           <Insets />
                                        </VBox.margin>
                                     </MFXTextField>
                                     <Label id="validationLabel" fx:id="validationLabel_ImeiDos" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="232.0" styleClass="label-error" stylesheets="@../css/Label.css" />
-                                    <MFXTextField id="customField" fx:id="txtPrecio" disable="true" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="Precio" style="-fx-background-color: transparent;" styleClass="text-field" stylesheets="@../css/TextFields.css">
+                                    <MFXTextField id="customField" fx:id="txtPrecio" disable="true" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="Precio" styleClass="text-field" stylesheets="@../css/TextFields.css">
                                        <VBox.margin>
                                           <Insets />
                                        </VBox.margin>

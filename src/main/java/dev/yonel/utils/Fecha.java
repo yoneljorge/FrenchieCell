@@ -3,6 +3,7 @@ package dev.yonel.utils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 
 public class Fecha {
 
@@ -54,5 +55,21 @@ public class Fecha {
      */
     public static String getStringOfLocalDate(LocalDate date) {
         return date.format(formatter);
+    }
+
+    /**
+     * Método que obtiene la cantidad de días entre dos fechas una inicial y otra
+     * final.
+     * 
+     * @param fechaInicio fecha desde la que se quiere empezar a contar.
+     * @param fechaFin    fecha hasta la que se quiere contar.
+     * @return un Long que representa la cantidad de días que hay entre las dos
+     *         fechas.
+     */
+    public static Long getDiasEntre(LocalDate fechaInicio, LocalDate fechaFin) {
+        if(fechaInicio == null || fechaFin == null){
+            throw new IllegalArgumentException("El argumento no puede ser null");
+        }
+        return ChronoUnit.DAYS.between(fechaInicio, fechaFin);
     }
 }

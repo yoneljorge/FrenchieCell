@@ -1,93 +1,227 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-
-<VBox prefHeight="554.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.yonel.controllers.ValesController">
+<VBox prefHeight="554.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <StackPane prefHeight="554.0" prefWidth="793.0">
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0" visible="false">
+            <MFXButton id="custom" fx:id="btnLista" text="Lista" />
+            <MFXButton id="custom" fx:id="btnAgregar" text="Agregar" />
+         </children>
+      </HBox>
+      <StackPane prefHeight="500.0" prefWidth="793.0">
+         <children>
+            <VBox fx:id="vboxPanelLista" prefHeight="200.0" prefWidth="100.0" visible="false">
                <children>
-                  <HBox alignment="CENTER" prefHeight="38.0" prefWidth="793.0" spacing="10.0">
-                     <children>
-                        <Button disable="true" mnemonicParsing="false" stylesheets="@../css/styleItem.css" text="Ingresar Vale" />
-                        <Button fx:id="btnVerVales" mnemonicParsing="false" stylesheets="@../css/styleItem.css" text="Ver Vales" />
-                     </children>
-                  </HBox>
+                  <ScrollPane prefHeight="512.0" prefWidth="793.0">
+                     <content>
+                        <FlowPane alignment="TOP_CENTER" hgap="30.0" prefHeight="499.0" prefWidth="782.0" vgap="30.0" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+            <VBox fx:id="vboxPanelAgregar" prefHeight="200.0" prefWidth="100.0">
+               <children>
                   <HBox alignment="CENTER" prefHeight="298.0" prefWidth="793.0" spacing="5.0">
                      <children>
-                        <VBox alignment="TOP_RIGHT" spacing="15.0">
+                        <VBox alignment="TOP_RIGHT" stylesheets="@../css/Label.css">
                            <children>
-                              <Label stylesheets="@../css/styleItem.css" text="Promotor:" />
-                              <Label stylesheets="@../css/styleItem.css" text="Nombre del Cliente:" />
-                              <Label stylesheets="@../css/styleItem.css" text="Teléfono de localización:" />
-                              <Label stylesheets="@../css/styleItem.css" text="IMEI:" />
-                              <Label stylesheets="@../css/styleItem.css" text="Marca:" />
-                              <Label stylesheets="@../css/styleItem.css" text="Modelo:" />
-                              <Label stylesheets="@../css/styleItem.css" text="Precio:" />
-                              <Label stylesheets="@../css/styleItem.css" text="Servicio de Mensajería:" />
-                              <Label stylesheets="@../css/styleItem.css" text="Dirección:" />
-                              <Label stylesheets="@../css/styleItem.css" text="Costo de la Mensajería:" />
-                              <Label stylesheets="@../css/styleItem.css" text="Fecha de Venta:" />
-                              <Label stylesheets="@../css/styleItem.css" text="Comisión:" />
+                              <Label stylesheets="@../css/styleItem.css" text="Promotor:">
+                                 <VBox.margin>
+                                    <Insets top="6.0" />
+                                 </VBox.margin></Label>
+                              <Label stylesheets="@../css/styleItem.css" text="Nombre del Cliente:">
+                                 <VBox.margin>
+                                    <Insets top="19.0" />
+                                 </VBox.margin></Label>
+                              <Label stylesheets="@../css/styleItem.css" text="Teléfono de localización:">
+                                 <VBox.margin>
+                                    <Insets top="25.0" />
+                                 </VBox.margin></Label>
+                              <Label stylesheets="@../css/styleItem.css" text="IMEI:">
+                                 <VBox.margin>
+                                    <Insets top="28.0" />
+                                 </VBox.margin></Label>
+                              <Label stylesheets="@../css/styleItem.css" text="Marca:">
+                                 <VBox.margin>
+                                    <Insets top="16.0" />
+                                 </VBox.margin></Label>
+                              <Label stylesheets="@../css/styleItem.css" text="Modelo:">
+                                 <VBox.margin>
+                                    <Insets top="16.0" />
+                                 </VBox.margin></Label>
+                              <Label stylesheets="@../css/styleItem.css" text="Precio:">
+                                 <VBox.margin>
+                                    <Insets top="18.0" />
+                                 </VBox.margin></Label>
+                              <Label stylesheets="@../css/styleItem.css" text="Fecha de Venta:">
+                                 <VBox.margin>
+                                    <Insets top="22.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label stylesheets="@../css/styleItem.css" text="Comisión:">
+                                 <VBox.margin>
+                                    <Insets top="16.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox prefHeight="480.0" prefWidth="189.0">
+                           <children>
+                              <MFXFilterComboBox fx:id="filterComboBoxPromotor" floatMode="DISABLED" prefHeight="32.0" prefWidth="238.0" />
+                              <VBox prefHeight="34.0" prefWidth="240.0">
+                                 <children>
+                                    <MFXTextField id="customField" fx:id="txtCliente" floatMode="DISABLED" prefHeight="13.0" prefWidth="189.0">
+                                       <VBox.margin>
+                                          <Insets top="12.0" />
+                                       </VBox.margin>
+                                    </MFXTextField>
+                                    <Label fx:id="labelValidacionCliente" alignment="CENTER_RIGHT" prefHeight="6.0" prefWidth="237.0" styleClass="label-error" text="Label" visible="false" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <MFXTextField id="customField" fx:id="txtTelefonoCliente" floatMode="DISABLED" prefHeight="20.0" prefWidth="240.0" />
+                                    <Label fx:id="labelValidacionTelefonoCliente" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="237.0" styleClass="label-error" text="Label" visible="false" />
+                                 </children>
+                              </VBox>
+                              <MFXFilterComboBox fx:id="filterComboBoxImei" floatMode="DISABLED" prefHeight="32.0" prefWidth="238.0" />
+                              <MFXTextField id="customField" fx:id="txtMarca" disable="true" editable="false" floatMode="DISABLED" prefHeight="20.0" prefWidth="240.0">
+                                 <VBox.margin>
+                                    <Insets top="9.0" />
+                                 </VBox.margin>
+                              </MFXTextField>
+                              <MFXTextField id="customField" fx:id="txtModelo" disable="true" editable="false" floatMode="DISABLED" prefHeight="20.0" prefWidth="240.0">
+                                 <VBox.margin>
+                                    <Insets top="7.0" />
+                                 </VBox.margin>
+                              </MFXTextField>
+                              <VBox>
+                                 <children>
+                                    <MFXTextField id="customField" fx:id="txtPrecio" floatMode="DISABLED" prefHeight="20.0" prefWidth="240.0">
+                                       <VBox.margin>
+                                          <Insets top="9.0" />
+                                       </VBox.margin>
+                                    </MFXTextField>
+                                    <Label fx:id="labelValidacionPrecio" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="237.0" styleClass="label-error" text="Label" visible="false" />
+                                 </children>
+                              </VBox>
+                              <DatePicker fx:id="datePickerFechaVenta" prefHeight="32.0" prefWidth="189.0" stylesheets="@../css/Pickers.css" />
+                              <VBox>
+                                 <children>
+                                    <MFXTextField id="customField" fx:id="txtComision" floatMode="DISABLED" prefHeight="20.0" prefWidth="240.0" />
+                                    <Label fx:id="labelValidacionComision" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="237.0" styleClass="label-error" text="Label" visible="false" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="9.0" />
+                                 </VBox.margin>
+                              </VBox>
+                           </children>
+                           <stylesheets>
+                              <URL value="@../css/ComboBoxes.css" />
+                              <URL value="@../css/TextFields.css" />
+                              <URL value="@../css/Label.css" />
+                           </stylesheets>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox alignment="TOP_RIGHT" spacing="20.0" stylesheets="@../css/Label.css">
+                           <children>
+                              <Label stylesheets="@../css/styleItem.css" text="Dirección:">
+                                 <VBox.margin>
+                                    <Insets top="70.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label stylesheets="@../css/styleItem.css" text="Costo de la Mensajería:">
+                                 <VBox.margin>
+                                    <Insets top="27.0" />
+                                 </VBox.margin>
+                              </Label>
                            </children>
                         </VBox>
-                        <VBox spacing="5.0">
+                        <VBox prefHeight="480.0" prefWidth="189.0">
                            <children>
-                              <ComboBox editable="true" prefHeight="25.0" prefWidth="300.0" styleClass="combobox" stylesheets="@../css/styleItem.css" />
-                              <TextField prefHeight="25.0" prefWidth="300.0" styleClass="textfield" stylesheets="@../css/styleItem.css" text="sadfasdfasdf" />
-                              <TextField prefHeight="25.0" prefWidth="300.0" styleClass="textfield" stylesheets="@../css/styleItem.css" text="sadfasdfasdf" />
-                              <ComboBox editable="true" prefHeight="25.0" prefWidth="300.0" styleClass="combobox" stylesheets="@../css/styleItem.css">
+                              <HBox alignment="BOTTOM_LEFT">
+                                 <children>
+                                    <CheckBox fx:id="checkBoxServicioMensajeria" mnemonicParsing="false" styleClass="label" text="Servicio de Mensajería">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </CheckBox>
+                                 </children>
                                  <VBox.margin>
-                                    <Insets top="4.0" />
+                                    <Insets top="2.0" />
                                  </VBox.margin>
-                              </ComboBox>
-                              <ComboBox editable="true" prefHeight="25.0" prefWidth="300.0" styleClass="combobox" stylesheets="@../css/styleItem.css" />
-                              <ComboBox editable="true" prefHeight="25.0" prefWidth="300.0" styleClass="combobox" stylesheets="@../css/styleItem.css" />
-                              <TextField prefHeight="25.0" prefWidth="300.0" styleClass="textfield" stylesheets="@../css/styleItem.css" text="sadfasdfasdf" />
-                              <ComboBox prefHeight="30.0" prefWidth="101.0" styleClass="combobox" stylesheets="@../css/styleItem.css" />
-                              <TextField prefHeight="25.0" prefWidth="300.0" styleClass="textfield" stylesheets="@../css/styleItem.css" text="sadfasdfasdf" />
-                              <TextField prefHeight="25.0" prefWidth="300.0" styleClass="textfield" stylesheets="@../css/styleItem.css" text="sadfasdfasdf" />
-                              <TextField prefHeight="25.0" prefWidth="300.0" styleClass="textfield" stylesheets="@../css/styleItem.css" text="sadfasdfasdf" />
-                              <TextField prefHeight="25.0" prefWidth="300.0" styleClass="textfield" stylesheets="@../css/styleItem.css" text="sadfasdfasdf" />
+                              </HBox>
+                              <TextArea fx:id="txtDireccion" disable="true" prefHeight="79.0" prefWidth="189.0">
+                                 <VBox.margin>
+                                    <Insets top="17.0" />
+                                 </VBox.margin>
+                              </TextArea>
+                              <VBox prefHeight="34.0" prefWidth="240.0">
+                                 <children>
+                                    <MFXTextField id="customField" fx:id="txtCostoMensajeria" disable="true" floatMode="DISABLED" prefHeight="15.0" prefWidth="240.0">
+                                       <VBox.margin>
+                                          <Insets top="15.0" />
+                                       </VBox.margin>
+                                    </MFXTextField>
+                                    <Label fx:id="labelValidacionCostoMensajeria" alignment="CENTER_RIGHT" prefHeight="6.0" prefWidth="237.0" styleClass="label-error" text="Label" visible="false" />
+                                 </children>
+                              </VBox>
+                              <VBox />
                            </children>
+                           <stylesheets>
+                              <URL value="@../css/ComboBoxes.css" />
+                              <URL value="@../css/TextFields.css" />
+                              <URL value="@../css/Label.css" />
+                              <URL value="@../css/TextArea.css" />
+                           </stylesheets>
                         </VBox>
                      </children>
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                  <HBox alignment="CENTER_RIGHT" prefHeight="24.0" prefWidth="793.0" stylesheets="@../css/Label.css">
                      <children>
-                        <Button mnemonicParsing="false" stylesheets="@../css/styleItem.css" text="Limpiar" />
-                        <Button mnemonicParsing="false" stylesheets="@../css/styleItem.css" text="Guardar" />
+                        <Label fx:id="labelEstado" text="Label" visible="false">
+                           <HBox.margin>
+                              <Insets right="200.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
                      </children>
                   </HBox>
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <HBox alignment="CENTER" prefHeight="38.0" prefWidth="793.0" spacing="10.0">
+                  <HBox alignment="CENTER" prefHeight="54.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css">
                      <children>
-                        <Button fx:id="btnIngresarVale" mnemonicParsing="false" stylesheets="@../css/styleItem.css" text="Ingresar Vale" />
-                        <Button disable="true" mnemonicParsing="false" stylesheets="@../css/styleItem.css" text="Ver Vales" />
+                        <MFXButton fx:id="btnLimpiar" styleClass="outline-button" text="Limpiar" />
+                        <MFXButton fx:id="btnGuardar" styleClass="outline-button" text="Guardar" />
                      </children>
                   </HBox>
-                  <ScrollPane prefHeight="512.0" prefWidth="793.0">
-                     <content>
-                        <FlowPane alignment="TOP_CENTER" hgap="30.0" prefHeight="499.0" prefWidth="782.0" vgap="30.0" />
-                     </content>
-                  </ScrollPane>
                </children>
             </VBox>
          </children>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="360.0" prefWidth="350.0" styleClass="hbox" stylesheets="@../../css/styleItem.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vBox" prefHeight="409.0" prefWidth="350.0" styleClass="hbox" stylesheets="@../../css/styleItem.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="33.0" prefWidth="350.0">
          <children>
@@ -25,7 +25,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="Yonel Jorge Sánchez Cantillo" />
+                  <Label fx:id="lblPromotor" text="Yonel Jorge Sánchez Cantillo" />
                </children>
             </HBox>
          </children>
@@ -46,7 +46,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="Cheila" />
+                  <Label fx:id="lblCliente" text="Cheila" />
                </children>
             </HBox>
          </children>
@@ -67,7 +67,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="56391475" />
+                  <Label fx:id="lblTelefonoCliente" text="56391475" />
                </children>
             </HBox>
          </children>
@@ -88,7 +88,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="35468596124523" />
+                  <Label fx:id="lblImei" text="35468596124523" />
                </children>
             </HBox>
          </children>
@@ -109,7 +109,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="Samsung" />
+                  <Label fx:id="lblMarca" text="Samsung" />
                </children>
             </HBox>
          </children>
@@ -130,7 +130,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="A12" />
+                  <Label fx:id="lblModelo" text="A12" />
                </children>
             </HBox>
          </children>
@@ -151,7 +151,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="150" />
+                  <Label fx:id="lblPrecio" text="150" />
                </children>
             </HBox>
          </children>
@@ -172,7 +172,28 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="1800" />
+                  <Label fx:id="lblPrecioMensajeria" text="1800" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="75.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Dirección:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label fx:id="lblDireccion" text="Avenida 41 / 66 y 66a" wrapText="true" />
                </children>
             </HBox>
          </children>
@@ -193,7 +214,28 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="16/7/24" />
+                  <Label fx:id="lblFechaVenta" text="16/7/24" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Fecha de Garantía:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+               <children>
+                  <Label fx:id="lblFechaGarantia" text="16/7/24" />
                </children>
             </HBox>
          </children>
@@ -214,7 +256,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="7 días" />
+                  <Label fx:id="lblDiasGarantia" text="7 días" />
                </children>
             </HBox>
          </children>
@@ -235,15 +277,15 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
                <children>
-                  <Label text="10" />
+                  <Label fx:id="lblComision" text="10" />
                </children>
             </HBox>
          </children>
       </HBox>
-      <HBox alignment="CENTER" prefHeight="42.0" prefWidth="350.0" spacing="10.0">
+      <HBox alignment="CENTER" prefHeight="42.0" prefWidth="350.0" spacing="10.0" stylesheets="@../../css/Buttons.css">
          <children>
-            <Button mnemonicParsing="false" text="Editar" />
-            <Button mnemonicParsing="false" text="Eliminar" />
+            <MFXButton styleClass="outline-button" text="Editar" />
+            <MFXButton styleClass="outline-button" text="Eliminar" />
          </children>
       </HBox>
    </children>

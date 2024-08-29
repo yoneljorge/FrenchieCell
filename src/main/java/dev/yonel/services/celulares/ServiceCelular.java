@@ -1,16 +1,27 @@
 package dev.yonel.services.celulares;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
+import dev.yonel.models.Promotor;
 import dev.yonel.services.ServiceLista;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.utils.Fecha;
 import dev.yonel.utils.validation.Validator;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.utils.StringUtils;
+import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.util.StringConverter;
 
 public class ServiceCelular {
 
@@ -26,6 +37,8 @@ public class ServiceCelular {
     private String dualSim;
 
     private Celular celular;
+    private List<Celular> listImei;
+    private ObservableList<Celular> observableListImei;
 
     public ServiceCelular() {
         this.celular = new Celular();
@@ -222,6 +235,14 @@ public class ServiceCelular {
         }
     }
 
+    public boolean update(){
+        if(celular.update()){
+            ServiceLista.setCambioCelular(true);
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * Método con el que se comprueba si existe en la base de datos el IMEI
      * introducido.
@@ -238,5 +259,29 @@ public class ServiceCelular {
 
     public boolean delete() {
         return celular.delete();
+    }
+
+    public void configureFilterComboBoxImei(MFXFilterComboBox<Celular> comboBox){
+        if(listImei == null){
+            listImei = new ArrayList<>();
+        }
+        if(observableListImei == null){
+            observableListImei = FXCollections.observableArrayList();
+        }
+
+        listImei.clear(); 
+        listImei.addAll(ServiceLista.getListCelulares());
+
+        observableListImei.clear();
+        observableListImei = FXCollections.observableArrayList(listImei);
+
+        StringConverter<Celular> converter = FunctionalStringConverter
+        .to(celular -> (celular == null) ? "" : String.valueOf(celular.getImeiUno()));
+        Function<String, Predicate<Celular>> filteFunction = s -> celular -> StringUtils
+        .containsIgnoreCase(converter.toString(celular), s);
+        
+        comboBox.setItems(observableListImei);
+        comboBox.setConverter(converter);
+        comboBox.setFilterFunction(filteFunction);
     }
 }

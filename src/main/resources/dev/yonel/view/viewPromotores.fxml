@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vboxPromotores" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.yonel.controllers.PromotoresController">
+<VBox fx:id="vboxPromotores" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER" prefHeight="44.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css">
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css">
          <children>
             <MFXButton id="custom" fx:id="btnPromotores" disable="true" text="Promotores" />
             <MFXButton id="custom" fx:id="btnAgregarPromotor" text="Agregar Promotor" />
@@ -24,7 +24,7 @@
       </HBox>
       <StackPane fx:id="stackPane" prefHeight="525.0" prefWidth="793.0">
          <children>
-            <VBox fx:id="vboxPromotor" prefHeight="537.0" prefWidth="793.0" visible="false">
+            <VBox fx:id="vboxPromotor" prefHeight="537.0" prefWidth="793.0">
                <children>
                   <HBox alignment="CENTER" prefHeight="38.0" prefWidth="793.0" spacing="5.0">
                      <children>
@@ -33,7 +33,7 @@
                               <Font name="System Bold" size="19.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblPromotor_Nombre" text="Yone Jorge Sánchez Cantillo">
+                        <Label fx:id="lblPromotor" text="Yone Jorge Sánchez Cantillo">
                            <font>
                               <Font name="System Bold" size="19.0" />
                            </font>
@@ -46,7 +46,7 @@
                         <Insets left="14.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="53.0" prefWidth="793.0" spacing="30.0">
+                  <HBox alignment="CENTER" prefHeight="53.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Label.css">
                      <children>
                         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
                            <children>
@@ -55,7 +55,7 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblValesTotal" text="10" textFill="#ff4800">
+                              <Label fx:id="lblValesTotal" styleClass="label-error" text="10" textFill="#ff4800">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -69,7 +69,7 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblValesGarantia" text="10" textFill="#ff4800">
+                              <Label fx:id="lblValesGarantia" styleClass="label-error" text="10" textFill="#ff4800">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -83,7 +83,7 @@
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblValesPorPagar" text="10" textFill="#ff4800">
+                              <Label fx:id="lblValesPorPagar" styleClass="label-error" text="10" textFill="#ff4800">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -92,12 +92,26 @@
                         </VBox>
                         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <Label text="Total">
+                              <Label text="\$ por Pagar">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="lblDineroPorPagar" text="10" textFill="#ff4800">
+                              <Label fx:id="lblDineroPorPagar" styleClass="label-error" text="10" textFill="#ff4800">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Label text="\$ Pagado">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblDineroPagado" styleClass="label-error" text="10" textFill="#ff4800">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -120,12 +134,12 @@
                   <HBox alignment="CENTER" prefHeight="41.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Buttons.css">
                      <children>
                         <MFXButton fx:id="btnRegresar" styleClass="outline-button" text="Regresar" />
-                        <MFXButton fx:id="btnLiquidar" styleClass="outline-button" text="Liquidar" />
+                        <MFXButton fx:id="btnLiquidar" disable="true" styleClass="outline-button" text="Liquidar" />
                      </children>
                   </HBox>
                </children>
             </VBox>
-            <VBox fx:id="vboxLista" prefHeight="554.0" prefWidth="793.0">
+            <VBox fx:id="vboxLista" prefHeight="554.0" prefWidth="793.0" visible="false">
                <children>
                   <HBox alignment="CENTER" prefHeight="54.0" prefWidth="793.0" spacing="25.0">
                      <children>
@@ -187,7 +201,7 @@
                   </HBox>
                   <ScrollPane prefHeight="492.0" prefWidth="793.0">
                      <content>
-                        <VBox fx:id="vboxPromotor_ViewItems" prefHeight="458.0" prefWidth="787.0" />
+                        <VBox fx:id="vboxLista_Items" prefHeight="458.0" prefWidth="787.0" />
                      </content>
                   </ScrollPane>
                </children>

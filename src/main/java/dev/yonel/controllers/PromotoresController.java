@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import dev.yonel.services.controllers.promotores.ServicePromotoresControllerAgregar;
+import dev.yonel.services.controllers.promotores.ServicePromotoresControllerPromotor;
 import dev.yonel.services.controllers.promotores.ServicePromotoresControllerVista;
 import dev.yonel.utils.ui.SetVisible;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -19,6 +20,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import lombok.Setter;
 
 public class PromotoresController implements Initializable {
 
@@ -50,8 +53,8 @@ public class PromotoresController implements Initializable {
     private VBox vboxLista;
 
     @FXML
-    private VBox vboxPromotor_ViewItems;
-    @FXML 
+    private VBox vboxLista_Items;
+    @FXML
     private CheckBox checkEnGarantia;
     @FXML
     private CheckBox checkPorPagar;
@@ -78,7 +81,10 @@ public class PromotoresController implements Initializable {
     private Label lblValesGarantia;
     @FXML
     private Label lblValesTotal;
-    
+    @FXML
+    private Label lblPromotor;
+    @FXML
+    private Label lblDineroPagado;
 
     // General
     @FXML
@@ -88,15 +94,28 @@ public class PromotoresController implements Initializable {
     @FXML
     private MFXButton btnAgregarPromotor;
 
+    /*
+     * Creamos una instancia estática de PromotorController.
+     */
+    private static PromotoresController instance;
+
     private ArrayList<VBox> listVBox = new ArrayList<>();
+
     private Map<String, Object> listPaneAgregar = new HashMap<>();
     private Map<String, Object> listPaneVista = new HashMap<>();
+    private Map<String, Object> listPanePromotor = new HashMap<>();
 
     private ServicePromotoresControllerAgregar serviceAgregar;
     private ServicePromotoresControllerVista serviceVista;
+    private ServicePromotoresControllerPromotor servicePromotor;
 
+    private @Setter Stage stage;
+
+    @SuppressWarnings("static-access")
     public void initialize(URL location, ResourceBundle resources) {
-        //Agregar Objetos al Map listPaneAgregar
+        instance = this; // Asigna la instancia del controlador a la referencia estática
+
+        // Agregar Objetos al Map listPaneAgregar
         listPaneAgregar.put("nombre", txtNombre);
         listPaneAgregar.put("apellidos", txtApellidos);
         listPaneAgregar.put("celular", txtCelular);
@@ -107,16 +126,34 @@ public class PromotoresController implements Initializable {
         listPaneAgregar.put("validacionCelular", validacionCelular);
         listPaneAgregar.put("estado", labelEstado_AgregarPromotor);
         this.serviceAgregar = new ServicePromotoresControllerAgregar(listPaneAgregar);
-        //cargamos la configuración de la vista agregar
+        // cargamos la configuración de la vista agregar
         serviceAgregar.configure();
 
-        //Agregamos Objetos al Map listPaneVista
-        listPaneVista.put("vbox", vboxPromotor_ViewItems);
+        // Agregamos Objetos al Map listPaneVista
+        listPaneVista.put("vbox", vboxLista_Items);
         listPaneVista.put("checkEnGarantia", checkEnGarantia);
         listPaneVista.put("checkPorPagar", checkPorPagar);
         this.serviceVista = new ServicePromotoresControllerVista(listPaneVista);
-        //cargamos la configuración de la vista vista
+        // cargamos la configuración de la vista vista
         serviceVista.configure();
+
+        // Agregamos Objetos al Map listPanePromotor
+        listPanePromotor.put("promotorVales", flowPanePromotorVales);
+        listPanePromotor.put("regresar", btnRegresar);
+        listPanePromotor.put("liquidar", btnLimpiar);
+        listPanePromotor.put("editar", menuItemEditarPerfil);
+        listPanePromotor.put("eliminar", menuItemEliminarPerfil);
+        listPanePromotor.put("dineroPorPagar", lblDineroPorPagar);
+        listPanePromotor.put("valesPorPagar", lblValesPorPagar);
+        listPanePromotor.put("valesGarantia", lblValesGarantia);
+        listPanePromotor.put("valesTotal", lblValesTotal);
+        listPanePromotor.put("promotor", lblPromotor);
+        listPanePromotor.put("dineroPagado", lblDineroPagado);
+        this.servicePromotor = new ServicePromotoresControllerPromotor(listPanePromotor, stage);
+        servicePromotor.configure();
+        //servicePromotor.setListVBox(listVBox);
+        //servicePromotor.setVboxLista(vboxLista);
+        //servicePromotor.setVboxPromotor(vboxPromotor);
 
         // Agregamos los VBox al ArrayList
         listVBox.add(vboxAgregar);
@@ -124,21 +161,36 @@ public class PromotoresController implements Initializable {
         listVBox.add(vboxPromotor);
 
         // Ponemos visible el VBox donde aparece la lista de promotores
-        SetVisible.This(listVBox, vboxLista);
-        btnPromotores.setDisable(true);
-        btnAgregarPromotor.setDisable(false);
+        goToLista();
 
         btnPromotores.setOnAction(event -> {
-            SetVisible.This(listVBox, vboxLista);
-            btnPromotores.setDisable(true);
-            btnAgregarPromotor.setDisable(false);
+            goToLista();
         });
 
         btnAgregarPromotor.setOnAction(event -> {
-            SetVisible.This(listVBox, vboxAgregar);
-            btnPromotores.setDisable(false);
-            btnAgregarPromotor.setDisable(true);
+            goToAgregar();
         });
     }
 
+    private static PromotoresController getInstance() {
+        return instance;
+    }
+
+    public static void goToLista() {
+        getInstance().changeView(getInstance().vboxLista, true, false);
+    }
+
+    public static void goToAgregar() {
+        getInstance().changeView(getInstance().vboxAgregar, false, true);
+    }
+
+    public static void goToPromotor() {
+        getInstance().changeView(getInstance().vboxPromotor, true, true);
+    }
+
+    private void changeView(VBox vboxToShow, boolean promotoresDisable, boolean agregarPromotorDisable) {
+        SetVisible.This(listVBox, vboxToShow);
+        btnPromotores.setDisable(promotoresDisable);
+        btnAgregar.setDisable(agregarPromotorDisable);
+    }
 }

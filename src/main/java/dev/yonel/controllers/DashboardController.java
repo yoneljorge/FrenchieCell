@@ -1,11 +1,10 @@
 package dev.yonel.controllers;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import dev.yonel.App;
+import dev.yonel.services.LoadControllers;
 import dev.yonel.utils.AlertUtil;
 import dev.yonel.utils.ui.SetVisible;
 import javafx.application.Platform;
@@ -15,6 +14,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 
 public class DashboardController implements Initializable {
 
@@ -49,36 +51,34 @@ public class DashboardController implements Initializable {
     private VBox promotores;
     private VBox vales;
 
-    private final ArrayList<VBox> listVBox = new ArrayList<>();
+    private @Setter Stage stage;
+    private @Getter static final ArrayList<VBox> listVBox = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         
-        try {
-            principal = (VBox) App.loadFXML("viewPrincipal");
-            stackPane.getChildren().add(principal);
-            listVBox.add(principal);
+        PrincipalController principalController = new PrincipalController();
+        principalController.setStage(stage);
+        stackPane.getChildren().add(principal = LoadControllers.load("viewPrincipal", principalController, stage));
 
-            celulares = (VBox) App.loadFXML("viewCelulares");
-            stackPane.getChildren().add(celulares);
-            celulares.setVisible(false);
-            listVBox.add(celulares);
+        CelularesController celularesController = new CelularesController();
+        celularesController.setStage(stage);
+        stackPane.getChildren().add(celulares = LoadControllers.load("viewCelulares", celularesController, stage));
+        celulares.setVisible(false);
 
-            promotores = (VBox) App.loadFXML("viewPromotores");
-            stackPane.getChildren().add(promotores);
-            promotores.setVisible(false);
-            listVBox.add(promotores);
+        PromotoresController promotoresController = new PromotoresController();
+        promotoresController.setStage(stage);
+        stackPane.getChildren().add(promotores = LoadControllers.load("viewPromotores", promotoresController, stage));
+        promotores.setVisible(false);
 
-            vales = (VBox) App.loadFXML("viewVales");
-            stackPane.getChildren().add(vales);
-            vales.setVisible(false);
-            listVBox.add(vales);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ValesController valesController = new ValesController();
+        valesController.setStage(stage);
+        stackPane.getChildren().add(vales = LoadControllers.load("viewVales", valesController, stage));
+        vales.setVisible(false);
     }
+
 
     // ********************BOTONES DEL MENU*********** */
     // *********************************************** */

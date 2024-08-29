@@ -9,6 +9,8 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
+import dev.yonel.controllers.DashboardController;
+
 
 /**
  * JavaFX App
@@ -20,8 +22,12 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+		FXMLLoader loader = fxmlLoader("viewDashboard");
+		DashboardController dashboardController = new DashboardController();
+		dashboardController.setStage(primaryStage);
+		loader.setController(dashboardController);
+		Parent root = loader.load();
 
-		Parent root = loadFXML("viewDashboard");
 		primaryStage.setScene(new Scene(root));
 		//set stage borderless
 		primaryStage.initStyle(StageStyle.UNDECORATED);

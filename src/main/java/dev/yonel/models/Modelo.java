@@ -11,7 +11,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "modelo")
 public class Modelo extends BaseEntity<Modelo, Long> implements Serializable{
@@ -28,41 +36,9 @@ public class Modelo extends BaseEntity<Modelo, Long> implements Serializable{
     @Column(name = "modelo")
     private String modelo;
 
-    public Modelo(){}
-
     public Modelo(String modelo, Marca marca){
         this.modelo = modelo;
         this.marca = marca;
-    }
-
-    public Modelo(Long idModelo, Marca marca, String modelo) {
-        this.idModelo = idModelo;
-        this.marca = marca;
-        this.modelo = modelo;
-    }
-
-    public Long getIdModelo() {
-        return idModelo;
-    }
-
-    public void setIdModelo(Long idModelo) {
-        this.idModelo = idModelo;
-    }
-
-    public Marca getMarca() {
-        return marca;
-    }
-
-    public void setMarca(Marca marca) {
-        this.marca = marca;
-    }
-
-    public String getModelo() {
-        return modelo;
-    }
-
-    public void setModelo(String modelo) {
-        this.modelo = modelo.toUpperCase();
     }
 
     @Override

@@ -1,13 +1,13 @@
 package dev.yonel.utils.ui;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class SetVisible {
 
-    public static void This(ArrayList<VBox> listVBox, VBox vBox){
+    public static void This(List<VBox> listVBox, VBox vBox){
         for (VBox vboxElement : listVBox) {
             if (vboxElement != vBox) {
                 vboxElement.setVisible(false);
@@ -19,7 +19,7 @@ public class SetVisible {
         }
     }
 
-    public static void This(ArrayList<Pane> listPane, Pane pane){
+    public static void This(List<Pane> listPane, Pane pane){
         for (Pane paneElement : listPane) {
             if (paneElement != pane) {
                 paneElement.setVisible(false);

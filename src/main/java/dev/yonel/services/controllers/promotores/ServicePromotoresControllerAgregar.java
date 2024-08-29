@@ -61,10 +61,11 @@ public class ServicePromotoresControllerAgregar {
             promotor.setTelefono(Long.parseLong(txtCelular.getText()));
 
             if (promotor.save()) {
-                
+                txtNombre.setText("");
+                txtApellidos.setText("");
+                txtCelular.setText("");
             } else {
-                
-                
+                setEstadoInformativo("Gestor no guardado");
             }
         } else {
             setEstadoError("Verifique los campos.");

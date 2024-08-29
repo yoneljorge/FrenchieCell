@@ -209,5 +209,8 @@ public class Celular extends BaseEntity<Celular, Long> implements Serializable{
         return true;
     }
 
-    
+    @Override
+    public String toString() {
+        return String.valueOf(imeiUno);
+    }
 }
