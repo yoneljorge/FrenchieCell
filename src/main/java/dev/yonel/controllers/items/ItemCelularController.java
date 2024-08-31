@@ -37,6 +37,7 @@ public class ItemCelularController implements Initializable {
     private boolean vendido;
 
     private ServiceCelular serviceCelular;
+    private ServiceCelularControllerVista serviceVista = ServiceCelularControllerVista.getInstance();
 
     public ItemCelularController() {
     }
@@ -58,9 +59,8 @@ public class ItemCelularController implements Initializable {
         btnQuitar.setOnAction(event -> {
             AlertUtil.advertencia("Desea eliminar el celular de la base de datos?", getInfoCelular(), () -> {
                 if (serviceCelular.delete()) {
-                    ServiceCelularControllerVista
-                            .removeItem(ServiceCelularControllerVista.getIndexItemCelularController(this));
-                    ServiceCelularControllerVista.cargarItems();
+                    serviceVista.removeItem(serviceVista.getIndexItemCelularController(this));
+                    serviceVista.cargarItems();
                 } else {
                     AlertUtil.error("Error en base de datos?",
                             "No se pudo eliminar el celular\nsi el error persiste contacte\nal desarrolador.");

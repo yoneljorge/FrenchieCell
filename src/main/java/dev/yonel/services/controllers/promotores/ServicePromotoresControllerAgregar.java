@@ -1,15 +1,17 @@
 package dev.yonel.services.controllers.promotores;
 
-import java.util.Map;
-
+import dev.yonel.controllers.PromotoresController;
 import dev.yonel.services.promotores.ServicePromotor;
 import dev.yonel.utils.validation.MFXTextFieldUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 
 public class ServicePromotoresControllerAgregar {
+
+    private static ServicePromotoresControllerAgregar instance; 
 
     private MFXTextField txtNombre;
     private MFXTextField txtApellidos;
@@ -19,19 +21,35 @@ public class ServicePromotoresControllerAgregar {
     private Label validacionNombre;
     private Label validacionApellidos;
     private Label validacionCelular;
-    private static Label labelEstado;
+    private Label labelEstado;
 
-    @SuppressWarnings("static-access")
-    public ServicePromotoresControllerAgregar(Map<String, Object> lista) {
-        this.txtNombre = (MFXTextField) lista.get("nombre");
-        this.txtApellidos = (MFXTextField) lista.get("apellidos");
-        this.txtCelular = (MFXTextField) lista.get("celular");
-        this.btnAgregar = (MFXButton) lista.get("agregar");
-        this.btnLimpiar = (MFXButton) lista.get("limpiar");
-        this.validacionNombre = (Label) lista.get("validacionNombre");
-        this.validacionApellidos = (Label) lista.get("validacionApellidos");
-        this.validacionCelular = (Label) lista.get("validacionCelular");
-        this.labelEstado = (Label) lista.get("estado");
+    private PromotoresController promotoresController = PromotoresController.getInstance();
+
+    private ServicePromotoresControllerAgregar(){
+        instance = this;
+
+        Platform.runLater(()->{
+            setObjects();
+        });
+    }
+
+    public static ServicePromotoresControllerAgregar getInstance(){
+        if(instance == null){
+            instance = new ServicePromotoresControllerAgregar();
+        }
+        return instance;
+    }
+
+    private void setObjects() {
+    this.txtNombre = promotoresController.getTxtNombre();
+    this.txtApellidos = promotoresController.getTxtApellidos();
+    this.txtCelular = promotoresController.getTxtCelular();
+    this.btnLimpiar = promotoresController.getBtnLimpiar();
+    this.btnAgregar = promotoresController.getBtnAgregar();
+    this.validacionNombre = promotoresController.getValidacionNombre();
+    this.validacionApellidos = promotoresController.getValidacionApellidos();
+    this.validacionCelular = promotoresController.getValidacionCelular();
+    this.labelEstado = promotoresController.getLabelEstado_AgregarPromotor();
     }
 
     /*********************************************
@@ -39,6 +57,7 @@ public class ServicePromotoresControllerAgregar {
      *********************************************/
 
     public void configure() {
+       Platform.runLater(()->{
         MFXTextFieldUtil.validateString(txtNombre, validacionNombre);
         MFXTextFieldUtil.validateString(txtApellidos, validacionApellidos);
         MFXTextFieldUtil.validatePhoneNumber(txtCelular, validacionCelular);
@@ -50,6 +69,7 @@ public class ServicePromotoresControllerAgregar {
         btnLimpiar.setOnAction(event -> {
             limpiar();
         });
+       });
     }
 
     private void agreagar() {
@@ -117,17 +137,13 @@ public class ServicePromotoresControllerAgregar {
         txtCelular.clear();
     }
 
-    /*********************************************
-     * **********MÉTODOS ESTÁTICOS****************
-     *********************************************/
-
     /**
-     * Método estático con el cual vamos a pasar mensajes de información al Label de
+     * Método con el cual vamos a pasar mensajes de información al Label de
      * estado.
      * 
      * @param estado el mensaje que se desea mostrar.
      */
-    public static void setEstadoInformativo(String estado) {
+    public void setEstadoInformativo(String estado) {
         labelEstado.setText(estado);
         labelEstado.getStyleClass().add("label");
 
@@ -139,12 +155,12 @@ public class ServicePromotoresControllerAgregar {
     }
 
     /**
-     * Método estático con el que vamos a pasar mensajes de error al Label de
+     * Método con el que vamos a pasar mensajes de error al Label de
      * estado.
      * 
      * @param estado el mensaje que se desea mostrar.
      */
-    public static void setEstadoError(String estado) {
+    public void setEstadoError(String estado) {
         labelEstado.setText(estado);
         labelEstado.getStyleClass().add("label-error");
 

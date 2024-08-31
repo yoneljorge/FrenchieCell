@@ -1,9 +1,9 @@
 package dev.yonel.services.controllers.celulares;
 
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.Optional;
 
+import dev.yonel.controllers.CelularesController;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
 import dev.yonel.services.celulares.ServiceCelular;
@@ -14,6 +14,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -22,13 +23,18 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ServiceCelularControllerAgregar {
-    public static boolean banderaMarcaExiste = false;
-    public static boolean banderaModeloExiste = false;
 
-    private ServiceMarca serviceMarca = new ServiceMarca();
-    private ServiceModelo serviceModelo = new ServiceModelo();
+    private static ServiceCelularControllerAgregar instance;
+
+    private @Setter boolean banderaMarcaExiste;
+    private @Setter @Getter boolean banderaModeloExiste;
+
+    private ServiceMarca serviceMarca;
+    private ServiceModelo serviceModelo;
 
     private MFXFilterComboBox<Marca> marcaCombo;
     private MFXFilterComboBox<Modelo> modeloCombo;
@@ -41,68 +47,57 @@ public class ServiceCelularControllerAgregar {
     private MFXTextField txtPrecio;
     private TextArea txtObservaciones;
     private DatePicker fecha;
-    private static Label lblEstado;
+    private Label lblEstado;
     private Label validationLabel_ImeiUno;
     private Label validationLabel_ImeiDos;
     private Label validationLabel_Precio;
     private Label validationLabel_Fecha;
 
-    @SuppressWarnings({ "rawtypes", "unchecked", "static-access" })
-    public ServiceCelularControllerAgregar(Map<String, Object> listaControlesVistaAgregar) {
-        this.marcaCombo = (MFXFilterComboBox) listaControlesVistaAgregar.get("marca");
-        this.modeloCombo = (MFXFilterComboBox) listaControlesVistaAgregar.get("modelo");
-        this.btnAgregarMarca = (MFXButton) listaControlesVistaAgregar.get("agregarMarca");
-        this.btnAgregarModelo = (MFXButton) listaControlesVistaAgregar.get("agregarModelo");
-        this.btnGuardar = (MFXButton) listaControlesVistaAgregar.get("btnGuardar");
-        this.btnLimpiar = (MFXButton) listaControlesVistaAgregar.get("btnLimpiar");
-        this.txtImeiUno = (MFXTextField) listaControlesVistaAgregar.get("imeiUno");
-        this.txtImeiDos = (MFXTextField) listaControlesVistaAgregar.get("imeiDos");
-        this.txtPrecio = (MFXTextField) listaControlesVistaAgregar.get("precio");
-        this.txtObservaciones = (TextArea) listaControlesVistaAgregar.get("observaciones");
-        this.fecha = (DatePicker) listaControlesVistaAgregar.get("fecha");
-        this.lblEstado = (Label) listaControlesVistaAgregar.get("estado");
-        this.validationLabel_ImeiUno = (Label) listaControlesVistaAgregar.get("validation_ImeiUno");
-        this.validationLabel_ImeiDos = (Label) listaControlesVistaAgregar.get("validation_ImeiDos");
-        this.validationLabel_Precio = (Label) listaControlesVistaAgregar.get("validation_Precio");
-        this.validationLabel_Fecha = (Label) listaControlesVistaAgregar.get("validation_Fecha");
+    private ServiceCelularControllerVista serviceVista;
+    private CelularesController celularesController;
+
+    private ServiceCelularControllerAgregar() {
+        instance = this;
+
+        Platform.runLater(() -> {
+            this.banderaMarcaExiste = false;
+            this.banderaModeloExiste = false;
+            this.serviceMarca = new ServiceMarca();
+            this.serviceModelo = new ServiceModelo();
+            this.serviceVista = ServiceCelularControllerVista.getInstance();
+            this.celularesController = CelularesController.getInstance();
+
+            setObjects();
+        });
+    }
+
+    public static ServiceCelularControllerAgregar getInstance() {
+        if (instance == null) {
+            instance = new ServiceCelularControllerAgregar();
+        }
+        return instance;
+    }
+
+    private void setObjects() {
+
+        this.marcaCombo = celularesController.getCmbMarcaAgregar();
+        this.modeloCombo = celularesController.getCmbModeloAgregar();
+        this.btnAgregarMarca = celularesController.getBtnAgregarMarca();
+        this.btnAgregarModelo = celularesController.getBtnAgregarModelo();
+        this.btnGuardar = celularesController.getBtnGuardar();
+        this.btnLimpiar = celularesController.getBtnLimpiar();
+        this.txtImeiUno = celularesController.getTxtImeiUno();
+        this.txtImeiDos = celularesController.getTxtImeiDos();
+        this.txtPrecio = celularesController.getTxtPrecio();
+        this.txtObservaciones = celularesController.getTxtObservaciones();
+        this.fecha = celularesController.getDateFechaInventario();
+        this.lblEstado = celularesController.getLblEstado();
+        this.validationLabel_ImeiUno = celularesController.getValidationLabel_ImeiUno();
+        this.validationLabel_ImeiDos = celularesController.getValidationLabel_ImeiDos();
+        this.validationLabel_Precio = celularesController.getValidationLabel_Precio();
+        this.validationLabel_Fecha = celularesController.getValidationLabel_Fecha();
+
         setEstadoInformation("");
-    }
-
-    /**************************************************
-     ***************** MÉTODOS ESTÁTICOS*****************
-     **************************************************/
-    /**
-     * Método estático con el cual vamos a pasar mensajes de información al Label de
-     * estado.
-     * 
-     * @param estado el mensaje que se desea mostrar.
-     */
-    public static void setEstadoInformation(String estado) {
-        lblEstado.setText(estado);
-        lblEstado.getStyleClass().add("label");
-
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(10));
-        pause.setOnFinished(event -> {
-            lblEstado.setText("");
-        });
-        pause.play();
-    }
-
-    /**
-     * Método estático con el que vamos a pasar mensajes de error al Label de
-     * estado.
-     * 
-     * @param estado el mensaje que se desea mostrar.
-     */
-    public static void setEstadoError(String estado) {
-        lblEstado.setText(estado);
-        lblEstado.getStyleClass().add("label-error");
-
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(10));
-        pause.setOnFinished(event -> {
-            lblEstado.setText(null);
-        });
-        pause.play();
     }
 
     /*******************************************************
@@ -110,62 +105,98 @@ public class ServiceCelularControllerAgregar {
      *******************************************************/
 
     public void configure() {
-        serviceMarca.configureComboBox(marcaCombo);
-        serviceModelo.configureComboBox(modeloCombo, marcaCombo, btnAgregarModelo);
+        Platform.runLater(() -> {
+            serviceMarca.configureComboBox(marcaCombo);
+            serviceModelo.configureComboBox(modeloCombo, marcaCombo, btnAgregarModelo);
 
-        MFXTextFieldUtil.validateIMEI(txtImeiUno, validationLabel_ImeiUno);
-        MFXTextFieldUtil.validateIMEI(txtImeiDos, validationLabel_ImeiDos);
+            MFXTextFieldUtil.validateIMEI(txtImeiUno, validationLabel_ImeiUno);
+            MFXTextFieldUtil.validateIMEI(txtImeiDos, validationLabel_ImeiDos);
 
-        MFXTextFieldUtil.validatePrecio(txtPrecio, validationLabel_Precio);
+            MFXTextFieldUtil.validatePrecio(txtPrecio, validationLabel_Precio);
 
-        btnAgregarMarca.setOnAction(event -> {
-            agregarMarca();
-        });
+            btnAgregarMarca.setOnAction(event -> {
+                guardarMarca();
+            });
 
-        btnAgregarModelo.setOnAction(event -> {
-            agregarModelo();
-        });
+            btnAgregarModelo.setOnAction(event -> {
+                guardarModelo();
+            });
 
-        btnLimpiar.setOnAction(event -> {
-            limpiar();
-        });
+            btnLimpiar.setOnAction(event -> {
+                limpiar();
+            });
 
-        btnGuardar.setOnAction(event -> {
-            guardar();
-        });
+            btnGuardar.setOnAction(event -> {
+                guardarCelular();
+            });
 
-        // Escuchamos los cambios del modeloCombo
-        modeloCombo.selectedItemProperty().addListener(new ChangeListener<Modelo>() {
-            @Override
-            public void changed(ObservableValue<? extends Modelo> observable, Modelo oldValue, Modelo newValue) {
-                if (newValue != null) {
-                    txtImeiUno.setDisable(false);
-                    txtImeiDos.setDisable(false);
-                    txtPrecio.setDisable(false);
-                    fecha.setDisable(false);
-                    txtObservaciones.setDisable(false);
+            // Escuchamos los cambios del modeloCombo
+            modeloCombo.selectedItemProperty().addListener(new ChangeListener<Modelo>() {
+                @Override
+                public void changed(ObservableValue<? extends Modelo> observable, Modelo oldValue, Modelo newValue) {
+                    if (newValue != null) {
+                        txtImeiUno.setDisable(false);
+                        txtImeiDos.setDisable(false);
+                        txtPrecio.setDisable(false);
+                        fecha.setDisable(false);
+                        txtObservaciones.setDisable(false);
+                    }
                 }
-            }
-        });
+            });
 
-        // Escuchamos los cambios de la fecha
-        fecha.valueProperty().addListener(new ChangeListener<LocalDate>() {
-            @Override
-            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
-                    LocalDate newValue) {
-                if (newValue != null) {
-                    validationLabel_Fecha.setVisible(false);
-                    validationLabel_Fecha.setText("");
+            // Escuchamos los cambios de la fecha
+            fecha.valueProperty().addListener(new ChangeListener<LocalDate>() {
+                @Override
+                public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
+                        LocalDate newValue) {
+                    if (newValue != null) {
+                        validationLabel_Fecha.setVisible(false);
+                        validationLabel_Fecha.setText("");
+                    }
                 }
-            }
+            });
         });
     }
 
-    /***************************************************
-     * *****************MÉTODOS*************************
-     ***************************************************/
+    /**************************************************
+     ***************** MÉTODOS*************************
+     **************************************************/
 
-    private void agregarMarca() {
+    /**
+     * Método con el cual vamos a pasar mensajes de información al Label de
+     * estado.
+     * 
+     * @param estado el mensaje que se desea mostrar.
+     */
+    public void setEstadoInformation(String estado) {
+        getInstance().lblEstado.setText(estado);
+        getInstance().lblEstado.getStyleClass().add("label");
+
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(10));
+        pause.setOnFinished(event -> {
+            getInstance().lblEstado.setText("");
+        });
+        pause.play();
+    }
+
+    /**
+     * Método con el que vamos a pasar mensajes de error al Label de
+     * estado.
+     * 
+     * @param estado el mensaje que se desea mostrar.
+     */
+    public void setEstadoError(String estado) {
+        getInstance().lblEstado.setText(estado);
+        getInstance().lblEstado.getStyleClass().add("label-error");
+
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(10));
+        pause.setOnFinished(event -> {
+            getInstance().lblEstado.setText(null);
+        });
+        pause.play();
+    }
+
+    private void guardarMarca() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Vista Agregar Celular");
         dialog.setHeaderText("Introduzca la marca que desea agregar.");
@@ -173,31 +204,29 @@ public class ServiceCelularControllerAgregar {
         Optional<String> result = dialog.showAndWait();
 
         result.ifPresent(name -> {
-            Marca marca = new Marca();
-            marca.setMarca(name);
+            serviceMarca.setMarca(new Marca(name));
 
-            if (serviceMarca.save(marca)) {
+            if (serviceMarca.save()) {
                 // Igualar el modelo existente por el de la lista para evitar el error al
                 // seleccionar el item en el combobox
                 ObservableList<Marca> newObservableList = marcaCombo.getItems();
                 for (Marca m : newObservableList) {
-                    if(marca.getMarca().equals(m.getMarca())){
-                        marca = m;
+                    if (serviceMarca.getMarca().getMarca().equals(m.getMarca())) {
+                        serviceMarca.setMarca(m);
                     }
                 }
-                marcaCombo.selectItem(marca);
+                marcaCombo.selectItem(serviceMarca.getMarca());
 
-                ServiceCelularControllerAgregar
-                        .setEstadoInformation("Marca " + marca.getMarca() + " agregada.");
-                        
+                setEstadoInformation("Marca " + serviceMarca.getMarca().getMarca() + " agregada.");
+
             } else if (banderaMarcaExiste) {
-                agregarMarca();
+                guardarMarca();
                 banderaMarcaExiste = false;
             }
         });
     }
 
-    private void agregarModelo() {
+    private void guardarModelo() {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Vista Agregar Celular");
         dialog.setHeaderText("Introduzca el modelo que desea agregar.");
@@ -210,7 +239,9 @@ public class ServiceCelularControllerAgregar {
             modelo.setMarca(marcaCombo.getValue());
             modelo.setModelo(name);
 
-            if (serviceModelo.save(modelo)) {
+            serviceModelo.setModelo(modelo);
+
+            if (serviceModelo.save()) {
 
                 // Igualar el modelo existente por el de la lista para eviatar el error en
                 // selectItem.
@@ -221,25 +252,24 @@ public class ServiceCelularControllerAgregar {
                     }
                 }
                 modeloCombo.selectItem(modelo);
-                ServiceCelularControllerAgregar.setEstadoInformation("Modelo " + modelo.getModelo() + " agregado.");
+                setEstadoInformation("Modelo " + modelo.getModelo() + " agregado.");
             } else if (banderaModeloExiste) {
-                agregarModelo();
+                guardarModelo();
                 banderaModeloExiste = false;
-
             }
         });
     }
 
-    private void guardar() {
+    private void guardarCelular() {
         // Parte de validación
         if (marcaCombo.getValue() == null) {
-            ServiceCelularControllerAgregar.setEstadoError("Seleccione una MARCA");
+            setEstadoError("Seleccione una MARCA");
         } else if (modeloCombo.getValue() == null) {
-            ServiceCelularControllerAgregar.setEstadoError("Seleccione un MODELO");
+            setEstadoError("Seleccione un MODELO");
         } else if (isValid()) {
 
             // Parte de guardado
-            ServiceCelularControllerAgregar.setEstadoInformation("Guardando...");
+            setEstadoInformation("Guardando...");
             ServiceCelular serviceCelular = new ServiceCelular();
             serviceCelular.setMarca(marcaCombo.getValue());
             serviceCelular.setModelo(modeloCombo.getValue());
@@ -259,7 +289,7 @@ public class ServiceCelularControllerAgregar {
                 validationLabel_Precio.setVisible(false);
                 // Establecemos que se ha agregado un nuevo celular para que al pasar a la vista
                 // este recargue los celulares
-                ServiceCelularControllerVista.setNewItem(true);
+                serviceVista.setNewItem(true);
             }
         }
     }
@@ -301,11 +331,11 @@ public class ServiceCelularControllerAgregar {
                 validationLabel_Fecha.setVisible(true);
             }
 
-            ServiceCelularControllerAgregar.setEstadoError("Verifique los campos.");
+            setEstadoError("Verifique los campos.");
             return false;
         } else if (!txtImeiUno.isValid() || !txtPrecio.isValid()
                 || !txtImeiDos.isValid() && txtImeiDos.getLength() > 0) {
-            ServiceCelularControllerAgregar.setEstadoError("Verifique los campos");
+            setEstadoError("Verifique los campos");
             return false;
         } else {
             return true;

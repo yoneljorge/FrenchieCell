@@ -51,7 +51,7 @@ public class ItemPromotoresController  implements Initializable{
 
         btnVer.setOnAction(event -> {
             System.out.println("Boton -> me estás haciendo clic");
-            ServicePromotoresControllerPromotor.loadPromotor(idPromotor);
+            ServicePromotoresControllerPromotor.getInstance().loadPromotor(idPromotor);
         });
     }
 

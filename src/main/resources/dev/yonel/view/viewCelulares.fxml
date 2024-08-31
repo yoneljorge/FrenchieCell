@@ -21,8 +21,8 @@
          <children>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="396.0" spacing="20.0">
                <children>
-                  <MFXButton id="custom" fx:id="btnVista" disable="true" onAction="#handleClicks" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Vista" />
-                  <MFXButton id="custom" fx:id="btnAgregar" onAction="#handleClicks" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Agregar" />
+                  <MFXButton id="custom" fx:id="btnVista" disable="true" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Vista" />
+                  <MFXButton id="custom" fx:id="btnAgregar" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Agregar" />
                </children>
             </HBox>
          </children>

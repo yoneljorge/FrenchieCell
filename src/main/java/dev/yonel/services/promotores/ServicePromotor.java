@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import dev.yonel.models.Promotor;
+import dev.yonel.models.Vale;
 import dev.yonel.services.ServiceLista;
 import dev.yonel.services.controllers.promotores.ServicePromotoresControllerAgregar;
 import dev.yonel.utils.AlertUtil;
@@ -20,12 +21,12 @@ import javafx.util.StringConverter;
 
 public class ServicePromotor {
 
-    private MFXFilterComboBox<Promotor> comboBox;
     private Promotor promotor;
-    private boolean cambio = false;
-    private boolean asignadoComboBox = false;
+
+    // Listas para los promotores
     private List<Promotor> list;
     private ObservableList<Promotor> observableList;
+
     public ServicePromotor() {
         this.promotor = new Promotor();
     }
@@ -122,20 +123,68 @@ public class ServicePromotor {
      * **********MÉTODOS**************************
      *********************************************/
 
+    /**
+     * Método para configurar un MFXFilterComboBox<Promotor>.
+     * Con este método se le asigna el filtro al combo y la lista de promotores.
+     * 
+     * @param comboBox el comboBox que se desea configurar.
+     */
+    public void configureFilterComboBox(MFXFilterComboBox<Promotor> comboBox) {
+
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        list.clear();
+        /*
+         * Cargamos los datos desde ServiceList para una mejor gestión, con esto
+         * evitamos cargar datos desde la base de dato in
+         * cesariamente.
+         */
+        list.addAll(ServiceLista.getListPromotores());
+
+        if (observableList == null) {
+            observableList = FXCollections.observableArrayList();
+        }
+
+        observableList.clear();
+        observableList = FXCollections.observableArrayList(list);
+
+        StringConverter<Promotor> converter = FunctionalStringConverter
+                .to(promotor -> (promotor == null) ? "" : promotor.getNombre());
+        Function<String, Predicate<Promotor>> filterFunction = s -> promotor -> StringUtils
+                .containsIgnoreCase(converter.toString(promotor), s);
+
+        comboBox.setItems(observableList);
+        comboBox.setConverter(converter);
+        comboBox.setFilterFunction(filterFunction);
+    }
+
     public boolean save() {
         if (!exist()) {
             if (promotor.save()) {
-                ServicePromotoresControllerAgregar.setEstadoInformativo("Gestor guardado.");
+                ServicePromotoresControllerAgregar.getInstance().setEstadoInformativo("Gestor guardado.");
                 // Notificamos de que ha sido agregado un nuevo promotor.
                 ServiceLista.setCambioPromotor(true);
                 return true;
             } else {
-                ServicePromotoresControllerAgregar.setEstadoError("Error en conexióncon base de datos.");
+                ServicePromotoresControllerAgregar.getInstance().setEstadoError("Error en conexióncon base de datos.");
                 AlertUtil.error(null, "Error en base de datos.\nSi el error persiste contacte al desarrolador.");
                 return false;
             }
         } else {
-            ServicePromotoresControllerAgregar.setEstadoError("Gestor no guardado, ya existe.");
+            ServicePromotoresControllerAgregar.getInstance().setEstadoError("Gestor no guardado, ya existe.");
+            return false;
+        }
+    }
+
+    public boolean update() {
+
+        if (promotor.update()) {
+            ServiceLista.setCambioPromotor(true);
+            return true;
+        } else {
+
             return false;
         }
     }
@@ -159,44 +208,67 @@ public class ServicePromotor {
         return false;
     }
 
-    /**
-     * Método para configurar un MFXFilterComboBox<Promotor>.
-     * Con este método se le asigna el filtro al combo y la lista de promotores.
-     * 
-     * @param comboBox el comboBox que se desea configurar.
-     */
-    public void configureFilterComboBox(MFXFilterComboBox<Promotor> comboBox) {
-        if (!asignadoComboBox) {
-            this.comboBox = comboBox;
-            asignadoComboBox = true;
-        }
 
-        if (list == null) {
-            list = new ArrayList<>();
-        }
+    public void updateVales() {
+        System.out.println("Actualizando vales Promotor: " + promotor.getNombre());
+        List<Vale> listVales = ServiceLista.getListValesByPromotor(promotor.getIdPromotor());
+        long enGarantia = 0l;
+        long liquidados = 0l;
+        long porPagar = 0l;
 
+        for (Vale v : listVales) {
+            if (v.getLiquidado() != null || v.getLiquidado()) {
+                liquidados++;
+            } else {
+                if (v.getGarantia() == null || v.getGarantia()) {
+                    enGarantia++;
+                } else {
+                    porPagar++;
+                }
+            }
+        }
+        promotor.setValesEnGarantia(enGarantia);
+        promotor.setValesPagados(liquidados);
+        promotor.setValesPorPagar(porPagar);
+
+        promotor.setTotalDeVales(
+                promotor.getValesEnGarantia() + promotor.getValesPagados() + promotor.getValesPorPagar());
+    }
+
+    private void updateVales(long idPromotor) {
+        
+        Promotor promotor = Promotor.getById(Promotor.class, idPromotor);
+
+        System.out.println("Actualizando vales Promotor: " + promotor.getNombre());
+        List<Vale> listVales = ServiceLista.getListValesByPromotor(promotor.getIdPromotor());
+        long enGarantia = 0l;
+        long liquidados = 0l;
+        long porPagar = 0l;
+
+        for (Vale v : listVales) {
+            if (v.getLiquidado()) {
+                liquidados++;
+            } else {
+                if (v.getGarantia()) {
+                    enGarantia++;
+                } else {
+                    porPagar++;
+                }
+            }
+        }
+        promotor.setValesEnGarantia(enGarantia);
+        promotor.setValesPagados(liquidados);
+        promotor.setValesPorPagar(porPagar);
+
+        promotor.setTotalDeVales(
+                promotor.getValesEnGarantia() + promotor.getValesPagados() + promotor.getValesPorPagar());
+    }
+
+    public void updateValesAllPromotor(){
         list.clear();
-        /*
-         * Cargamos los datos desde ServiceList para una mejor gestión, con esto
-         * evitamos cargar datos desde la base de dato in
-         * cesariamente.
-         */
         list.addAll(ServiceLista.getListPromotores());
-
-        if(observableList == null){
-            observableList = FXCollections.observableArrayList();
+        for(Promotor p : list){
+            updateVales(p.getIdPromotor());
         }
-
-        observableList.clear();
-        observableList = FXCollections.observableArrayList(list);
-
-        StringConverter<Promotor> converter = FunctionalStringConverter
-        .to(promotor -> (promotor == null) ? "" : promotor.getNombre());
-        Function<String, Predicate<Promotor>> filterFunction = s -> promotor -> StringUtils
-        .containsIgnoreCase(converter.toString(promotor), s);
-
-        comboBox.setItems(observableList);
-        comboBox.setConverter(converter);
-        comboBox.setFilterFunction(filterFunction);
     }
 }

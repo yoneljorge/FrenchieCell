@@ -13,11 +13,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(fluent = false, chain = true)
 @Entity
 @Table(name = "promotor")
 public class Promotor extends BaseEntity<Promotor, Long> implements Serializable{
@@ -29,25 +31,24 @@ public class Promotor extends BaseEntity<Promotor, Long> implements Serializable
 
     @Column(name = "nombre")
     private String nombre;
-
     @Column(name = "apellidos")
     private String apellidos;
-
     @Column(name = "telefono")
     private Long telfono;
 
     @Column(name = "total_de_vales")
-    private Long totalDeVales;
-
+    private Long totalDeVales =0l;
     @Column(name = "vales_en_garantia")
-    private Long valesEnGarantia;
-
+    private Long valesEnGarantia = 0l;
     @Column(name = "vales_por_pagar")
-    private Long valesPorPagar;
+    private Long valesPorPagar = 0l;
+    @Column(name= "vales_pagados")
+    private Long valesPagados = 0l;
 
+    @Column(name = "dinero_total")
+    private Long dineroTotal = 0l;
     @Column(name = "dinero_total_por_pagar")
-    private Long dineroTotalPorPagar;
-
+    private Long dineroTotalPorPagar = 0l;
     @Column(name = "dinero_total_pagado")
-    private Long dineroTotalPagado;
+    private Long dineroTotalPagado = 0l;
 }

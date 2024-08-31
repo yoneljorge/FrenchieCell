@@ -8,7 +8,6 @@ import dev.yonel.services.LoadControllers;
 import dev.yonel.utils.AlertUtil;
 import dev.yonel.utils.ui.SetVisible;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -57,56 +56,44 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        
         PrincipalController principalController = new PrincipalController();
         principalController.setStage(stage);
-        stackPane.getChildren().add(principal = LoadControllers.load("viewPrincipal", principalController, stage));
+        stackPane.getChildren().add(principal = LoadControllers.load("viewPrincipal", principalController));
 
-        CelularesController celularesController = new CelularesController();
+        CelularesController celularesController = CelularesController.getInstance();
         celularesController.setStage(stage);
-        stackPane.getChildren().add(celulares = LoadControllers.load("viewCelulares", celularesController, stage));
+        stackPane.getChildren().add(celulares = LoadControllers.load("viewCelulares", celularesController));
         celulares.setVisible(false);
 
-        PromotoresController promotoresController = new PromotoresController();
+        PromotoresController promotoresController = PromotoresController.getInstance();
         promotoresController.setStage(stage);
-        stackPane.getChildren().add(promotores = LoadControllers.load("viewPromotores", promotoresController, stage));
+        stackPane.getChildren().add(promotores = LoadControllers.load("viewPromotores", promotoresController));
         promotores.setVisible(false);
 
-
-        ValesController valesController = new ValesController();
+        ValesController valesController = ValesController.getInstance();
         valesController.setStage(stage);
-        stackPane.getChildren().add(vales = LoadControllers.load("viewVales", valesController, stage));
+        stackPane.getChildren().add(vales = LoadControllers.load("viewVales", valesController));
         vales.setVisible(false);
-    }
 
-
-    // ********************BOTONES DEL MENU*********** */
-    // *********************************************** */
-
-    public void handleClicks(ActionEvent actionEvent) {
-
-        if (actionEvent.getSource() == btnGeneral) {
+        btnGeneral.setOnAction(event -> {
             SetVisible.This(listVBox, principal);
-        }
+        });
 
-        if (actionEvent.getSource() == btnCelulares) {
+        btnCelulares.setOnAction(event -> {
             SetVisible.This(listVBox, celulares);
-        }
+        });
 
-        if (actionEvent.getSource() == btnPromotores) {
+        btnPromotores.setOnAction(event -> {
             SetVisible.This(listVBox, promotores);
-        }
+        });
 
-        if (actionEvent.getSource() == btnVales) {
+        btnVales.setOnAction(event -> {
             SetVisible.This(listVBox, vales);
-        }
+        });
 
-        if (actionEvent.getSource() == btnSignout) {
+        btnSignout.setOnAction(event -> {
             AlertUtil.advertencia("Desea salir?", null, () -> Platform.exit());
-        }
+        });
+
     }
-
-    // ***********************MÉTODOS***************** */
-    // ********************************************** */
-
 }

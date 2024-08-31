@@ -3,17 +3,18 @@ package dev.yonel.services.controllers.promotores;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import dev.yonel.App;
+import dev.yonel.controllers.PromotoresController;
 import dev.yonel.controllers.items.ItemPromotoresController;
 import dev.yonel.models.Promotor;
 import dev.yonel.services.promotores.ServicePromotor;
 import dev.yonel.utils.data_access.UtilsHibernate;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
@@ -21,28 +22,62 @@ import javafx.scene.layout.VBox;
 
 public class ServicePromotoresControllerVista {
 
-    private static final SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
+    private static ServicePromotoresControllerVista instance;
 
-    private static VBox vBoxItems;
+    private VBox vBoxItems;
     private CheckBox checkEnGarantia;
     private CheckBox checkPorPagar;
 
+    private final SessionFactory sessionFactory;
     private FiltrarItemsPromotor filterItems;
+    private List<ItemPromotoresController> itemPromotorControllers;
 
-    private static List<ItemPromotoresController> itemPromotorControllers = new ArrayList<>();
+    private PromotoresController promotoresController = PromotoresController.getInstance();
 
-    @SuppressWarnings("static-access")
-    public ServicePromotoresControllerVista(Map<String, Object> list) {
-        this.vBoxItems = (VBox) list.get("vbox");
-        this.checkEnGarantia = (CheckBox) list.get("checkEnGarantia");
-        this.checkPorPagar = (CheckBox) list.get("checkPorPagar");
+    private ServicePromotoresControllerVista() {
+        instance = this;
+
+        this.sessionFactory = UtilsHibernate.getSessionFactory();
+        Platform.runLater(() -> {
+
+            this.itemPromotorControllers = new ArrayList<>();
+            setObjects();
+        });
     }
 
-    /******************************************
-     * **********MÉTODOS ESTÁTICO**************
-     ******************************************/
+    public static ServicePromotoresControllerVista getInstance() {
+        if (instance == null) {
+            instance = new ServicePromotoresControllerVista();
+        }
+        return instance;
+    }
 
-    private static void getAllItems() {
+    private void setObjects() {
+        this.vBoxItems = promotoresController.getVboxLista_Items();
+        this.checkEnGarantia = promotoresController.getCheckEnGarantia();
+        this.checkPorPagar = promotoresController.getCheckPorPagar();
+    }
+
+    public void configure() {
+        Platform.runLater(() -> {
+            cleanVBox();
+            getAllItems();
+
+            checkEnGarantia.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                filterItems = new FiltrarItemsPromotor();
+                filtrar(filterItems);
+                filterItems.getAllItems();
+            });
+
+            checkPorPagar.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                filterItems = new FiltrarItemsPromotor();
+                filtrar(filterItems);
+                filterItems.getAllItems();
+            });
+        });
+    }
+
+    private void getAllItems() {
         Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
         try {
             String hql = "FROM Promotor"; // Tu entidad promotor
@@ -72,7 +107,7 @@ public class ServicePromotoresControllerVista {
         }
     }
 
-    public static void setItems(Promotor promotor) {
+    public void setItems(Promotor promotor) {
         // Si el promotor no coincide con el filtrado se pasa un null para que no haga
         // nada.
         if (promotor != null) {
@@ -93,41 +128,20 @@ public class ServicePromotoresControllerVista {
         }
     }
 
-    public static void cleanVBox() {
+    public void cleanVBox() {
         vBoxItems.getChildren().clear();
         itemPromotorControllers.clear();
     }
 
-    public static int getIndexItemPromotorController(ItemPromotoresController controller) {
+    public int getIndexItemPromotorController(ItemPromotoresController controller) {
         return itemPromotorControllers.indexOf(controller);
     }
 
-    public static void removeItem(int i) {
+    public void removeItem(int i) {
         vBoxItems.getChildren().remove(i);
     }
 
-    /******************************************
-     * **********MÉTODOS***********************
-     ******************************************/
-
-    public void configure(){
-        cleanVBox();
-        getAllItems();
-
-        checkEnGarantia.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            filterItems = new FiltrarItemsPromotor();
-            filtrar(filterItems);
-            filterItems.getAllItems();
-        });
-
-        checkPorPagar.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            filterItems = new FiltrarItemsPromotor();
-            filtrar(filterItems);
-            filterItems.getAllItems();
-        });
-    }
-
-    private void filtrar(FiltrarItemsPromotor filter){
+    private void filtrar(FiltrarItemsPromotor filter) {
         filter.setEnGarantia(checkEnGarantia.isSelected());
         filter.setPorPagar(checkPorPagar.isSelected());
     }

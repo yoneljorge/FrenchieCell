@@ -5,13 +5,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import dev.yonel.App;
+import dev.yonel.controllers.CelularesController;
 import dev.yonel.controllers.items.ItemCelularController;
 import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
@@ -25,6 +25,7 @@ import dev.yonel.utils.validation.MFXTextFieldUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -37,18 +38,20 @@ import javafx.scene.layout.VBox;
 
 public class ServiceCelularControllerVista {
 
-    private static final SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
-    private static boolean newItem = false;
-    private static Marca todas = new Marca("TODAS");
-    private static Modelo todos = new Modelo("TODOS", todas);
-    private static boolean cambioEnMarca = true;
+    private static ServiceCelularControllerVista instance;
 
-    private ServiceMarca serviceMarca = new ServiceMarca();
-    private ServiceModelo serviceModelo = new ServiceModelo();
+    private final SessionFactory sessionFactory;
+    private boolean newItem;
+    private Marca todas;
+    private Modelo todos;
+    private boolean cambioEnMarca;
+
     private ServiceFecha serviceFecha;
+    private ServiceMarca serviceMarca;
+    private ServiceModelo serviceModelo;
     private FilterItemsCelular filterItems;
 
-    private static VBox vBoxItems;
+    private VBox vBoxItems;
     private MFXButton btnRecargar;
     private MFXFilterComboBox<Marca> comboMarca;
     private MFXFilterComboBox<Modelo> comboModelo;
@@ -57,49 +60,162 @@ public class ServiceCelularControllerVista {
     private Label validarFiltrarImei;
     private CheckBox checkDual;
     private CheckBox checkVendido;
-    private static Label cantidad;
+    private Label cantidad;
 
     // Lista para almacenar las instancias de ItemCelularController
-    private static List<ItemCelularController> itemCelularControllers = new ArrayList<>();
+    private List<ItemCelularController> itemCelularControllers;
 
-    @SuppressWarnings({ "static-access", "rawtypes", "unchecked" })
-    public ServiceCelularControllerVista(Map<String, Object> lista) {
-        this.vBoxItems = (VBox) lista.get("vbox");
-        this.btnRecargar = (MFXButton) lista.get("recargar");
-        this.comboMarca = (MFXFilterComboBox) lista.get("comboMarca");
-        this.comboModelo = (MFXFilterComboBox) lista.get("comboModelo");
-        this.comboFecha = (MFXFilterComboBox) lista.get("comboFecha");
-        this.txtFiltrarImei = (MFXTextField) lista.get("filtrarImei");
-        this.validarFiltrarImei = (Label) lista.get("validation");
-        this.checkDual = (CheckBox) lista.get("checkDual");
-        this.checkVendido = (CheckBox) lista.get("checkVendido");
-        this.cantidad = (Label) lista.get("cantidad");
-        this.serviceFecha = new ServiceFecha(this.comboFecha, this.comboMarca, this.comboModelo);
+    private CelularesController celularesController;
+
+    private ServiceCelularControllerVista() {
+        instance = this;
+
+        // Se inicializa aqui porque no afecta el funcionamiento de la aplicación.
+        this.sessionFactory = UtilsHibernate.getSessionFactory();
+        Platform.runLater(() -> {
+            this.newItem = false;
+            this.todas = new Marca("TODAS");
+            this.todos = new Modelo("TODOS", todas);
+            this.cambioEnMarca = true;
+            this.serviceMarca = new ServiceMarca();
+            this.serviceModelo = new ServiceModelo();
+            this.serviceFecha = new ServiceFecha();
+            this.itemCelularControllers = new ArrayList<>();
+            this.celularesController = CelularesController.getInstance();
+
+            setObjects();
+        });
+
     }
 
-    /******************************************
-     * **********MÉTODOS ESTÁTICO**************
-     ******************************************/
+    public static ServiceCelularControllerVista getInstance() {
+        if (instance == null) {
+            instance = new ServiceCelularControllerVista();
+        }
+        return instance;
+    }
 
-    public static int getIndexItemCelularController(ItemCelularController controller) {
+    private void setObjects() {
+        this.vBoxItems = celularesController.getVboxItemVista();
+        this.btnRecargar = celularesController.getBtnRecargar();
+        this.comboMarca = celularesController.getCmbMarcaVista();
+        this.comboModelo = celularesController.getCmbModeloVista();
+        this.comboFecha = celularesController.getCmbFechaVista();
+        this.txtFiltrarImei = celularesController.getTxtFiltrarImei();
+        this.validarFiltrarImei = celularesController.getValidationLabel_FilterImei();
+        this.checkDual = celularesController.getCheckDual();
+        this.checkVendido = celularesController.getCheckVendido();
+        this.cantidad = celularesController.getLabelCantidad();
+    }
+
+    public void configure() {
+        Platform.runLater(() -> {
+            cargarItems();
+
+            serviceMarca.configureComboBox(comboMarca, ServiceCelularControllerVista.class);
+            serviceModelo.configureComboBox(comboModelo, comboMarca);
+            serviceFecha.configureComboBox(comboFecha, comboMarca, comboModelo);
+
+            // Validación para el txtFiltrarImei
+            MFXTextFieldUtil.validateFilterIMEI(txtFiltrarImei, validarFiltrarImei);
+
+            btnRecargar.setOnAction(event -> {
+                recargar();
+            });
+
+            checkDual.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                filterItems = new FilterItemsCelular();
+                filtrar(filterItems);
+                filterItems.getAllItems();
+            });
+
+            checkVendido.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                filterItems = new FilterItemsCelular();
+                filtrar(filterItems);
+                filterItems.getAllItems();
+            });
+
+            comboMarca.selectedItemProperty().addListener(new ChangeListener<Marca>() {
+                @Override
+                public void changed(ObservableValue<? extends Marca> observable, Marca oldValue, Marca newValue) {
+                    if (newValue != null) {
+                        serviceFecha.configureComboBox(comboFecha, comboMarca, comboModelo);
+
+                        filterItems = new FilterItemsCelular();
+                        filtrar(filterItems);
+                        filterItems.getAllItems();
+                        // Para que no vuelva a realizar la misma accion en el comboBox modelo
+                        cambioEnMarca = true;
+                    }
+                }
+            });
+
+            comboModelo.selectedItemProperty().addListener(new ChangeListener<Modelo>() {
+                @Override
+                public void changed(ObservableValue<? extends Modelo> observable, Modelo oldValue, Modelo newValue) {
+                    if (newValue != null) {
+                        serviceFecha.configureComboBox(comboFecha, comboMarca, comboModelo);
+
+                        if (!cambioEnMarca) {
+                            filterItems = new FilterItemsCelular();
+                            filtrar(filterItems);
+                            filterItems.getAllItems();
+                        } else {
+                            cambioEnMarca = false;
+                        }
+                    }
+                }
+            });
+
+            comboFecha.selectedItemProperty().addListener(new ChangeListener<LocalDate>() {
+                @Override
+                public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
+                        LocalDate newValue) {
+                    if (newValue != null) {
+                        filterItems = new FilterItemsCelular();
+                        filtrar(filterItems);
+                        filterItems.getAllItems();
+                    }
+                }
+            });
+
+            // Falta programar para que cuando se escirba en el txtfilterimei solo se
+            // permita numeros y que busque los celulares que contengan solo ese imei.
+            txtFiltrarImei.textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    if (newValue != null) {
+                        if (txtFiltrarImei.isValid()) {
+                            if (!newValue.matches("\\d*")) {
+                                txtFiltrarImei.setText(oldValue);
+                            }
+                            filterItems = new FilterItemsCelular();
+                            filtrar(filterItems);
+                            filterItems.getAllItems();
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    public int getIndexItemCelularController(ItemCelularController controller) {
         return itemCelularControllers.indexOf(controller);
     }
 
-    public static void removeItem(int i) {
+    public void removeItem(int i) {
         vBoxItems.getChildren().remove(i);
     }
 
-    public static void cargarItems() {
+    public void cargarItems() {
         cleanVBox();
 
         getAllItems();
 
         invertirOrden();
-
-        System.out.println("Lista con: " + vBoxItems.getChildren().size() + "elementos");
     }
 
-    private static void getAllItems() {
+    private void getAllItems() {
         Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
         try {
             String hql = "FROM Celular"; // Tu entidad celular
@@ -113,7 +229,6 @@ public class ServiceCelularControllerVista {
                     break; // Si no hay más resultados, salir
                 }
                 setItems(resultList.get(0));
-                System.out.println("imei del celular -> " + resultList.get(0).getImeiUno());
 
                 // Incrementa el desplazamiento para el siguiente
                 int currentFirstResult = query.getFirstResult();
@@ -129,7 +244,7 @@ public class ServiceCelularControllerVista {
         }
     }
 
-    public static void setItems(Celular celular) {
+    public void setItems(Celular celular) {
         // Si el celular no coincide con el filtrado se pasa un null para que no haga
         // nada.
         if (celular != null) {
@@ -150,12 +265,12 @@ public class ServiceCelularControllerVista {
         }
     }
 
-    public static void cleanVBox() {
+    public void cleanVBox() {
         vBoxItems.getChildren().clear();
         itemCelularControllers.clear();
     }
 
-    public static void invertirOrden() {
+    public void invertirOrden() {
         // Invertimos el orden de los nodos en el VBox
         ObservableList<Node> children = vBoxItems.getChildren();
         List<Node> invertedList = new ArrayList<>(children);
@@ -167,122 +282,25 @@ public class ServiceCelularControllerVista {
         Collections.reverse(invertedItemsCelular);
         itemCelularControllers = invertedItemsCelular;
 
-        //Mostramos la cantidad de celulares en el label cantidad.
+        // Mostramos la cantidad de celulares en el label cantidad.
         cantidad.setText("Cantidad: " + vBoxItems.getChildren().size());
     }
 
-    public static boolean getNewItem() {
+    public boolean getNewItem() {
         return newItem;
     }
 
-    public static void setNewItem(boolean estado) {
+    public void setNewItem(boolean estado) {
         newItem = estado;
     }
 
-    public static Marca getMarca() {
+    public Marca getMarca() {
         return todas;
     }
 
-    public static Modelo getModelo() {
+    public Modelo getModelo() {
         return todos;
     }
-
-    /******************************************
-     * **********CONFIGURACION*****************
-     ******************************************/
-    public void configure() {
-
-        cargarItems();
-
-        serviceMarca.configureComboBox(comboMarca, ServiceCelularControllerVista.class);
-        serviceModelo.configureComboBox(comboModelo, comboMarca);
-        serviceFecha.configureComboBox();
-
-        // Validación para el txtFiltrarImei
-        MFXTextFieldUtil.validateFilterIMEI(txtFiltrarImei, validarFiltrarImei);
-
-        btnRecargar.setOnAction(event -> {
-            recargar();
-        });
-
-        checkDual.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            filterItems = new FilterItemsCelular();
-            filtrar(filterItems);
-            filterItems.getAllItems();
-        });
-
-        checkVendido.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            filterItems = new FilterItemsCelular();
-            filtrar(filterItems);
-            filterItems.getAllItems();
-        });
-
-        comboMarca.selectedItemProperty().addListener(new ChangeListener<Marca>() {
-            @Override
-            public void changed(ObservableValue<? extends Marca> observable, Marca oldValue, Marca newValue) {
-                if (newValue != null) {
-                    serviceFecha.configureComboBox();
-
-                    filterItems = new FilterItemsCelular();
-                    filtrar(filterItems);
-                    filterItems.getAllItems();
-                    // Para que no vuelva a realizar la misma accion en el comboBox modelo
-                    cambioEnMarca = true;
-                }
-            }
-        });
-
-        comboModelo.selectedItemProperty().addListener(new ChangeListener<Modelo>() {
-            @Override
-            public void changed(ObservableValue<? extends Modelo> observable, Modelo oldValue, Modelo newValue) {
-                if (newValue != null) {
-                    serviceFecha.configureComboBox();
-
-                    if (!cambioEnMarca) {
-                        filterItems = new FilterItemsCelular();
-                        filtrar(filterItems);
-                        filterItems.getAllItems();
-                    } else {
-                        cambioEnMarca = false;
-                    }
-                }
-            }
-        });
-
-        comboFecha.selectedItemProperty().addListener(new ChangeListener<LocalDate>() {
-            @Override
-            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
-                    LocalDate newValue) {
-                if (newValue != null) {
-                    filterItems = new FilterItemsCelular();
-                    filtrar(filterItems);
-                    filterItems.getAllItems();
-                }
-            }
-        });
-
-        // Falta programar para que cuando se escirba en el txtfilterimei solo se
-        // permita numeros y que busque los celulares que contengan solo ese imei.
-        txtFiltrarImei.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue != null) {
-                    if (txtFiltrarImei.isValid()) {
-                        if (!newValue.matches("\\d*")) {
-                            txtFiltrarImei.setText(oldValue);
-                        }
-                        filterItems = new FilterItemsCelular();
-                        filtrar(filterItems);
-                        filterItems.getAllItems();
-                    }
-                }
-            }
-        });
-    }
-
-    /******************************************
-     * **********MÉTODOS***********************
-     ******************************************/
 
     private void filtrar(FilterItemsCelular filter) {
         if (comboMarca.getValue() != null) {
@@ -329,7 +347,7 @@ public class ServiceCelularControllerVista {
 
         serviceMarca.configureComboBox(comboMarca, ServiceCelularControllerVista.class);
         serviceModelo.configureComboBox(comboModelo, comboMarca);
-        serviceFecha.configureComboBox();
+        serviceFecha.configureComboBox(comboFecha, comboMarca, comboModelo);
 
     }
 }

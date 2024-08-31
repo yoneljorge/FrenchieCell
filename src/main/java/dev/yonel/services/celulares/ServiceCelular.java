@@ -11,7 +11,6 @@ import java.util.function.Predicate;
 import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
-import dev.yonel.models.Promotor;
 import dev.yonel.services.ServiceLista;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.utils.Fecha;
@@ -39,6 +38,8 @@ public class ServiceCelular {
     private Celular celular;
     private List<Celular> listImei;
     private ObservableList<Celular> observableListImei;
+
+    private ServiceCelularControllerAgregar serviceAgregar = ServiceCelularControllerAgregar.getInstance();
 
     public ServiceCelular() {
         this.celular = new Celular();
@@ -213,36 +214,37 @@ public class ServiceCelular {
     public boolean saveCelular() {
         if (isFull()) {
             updateCelular();
-            ServiceCelularControllerAgregar.setEstadoInformation("Actualizando");
+            serviceAgregar.setEstadoInformation("Actualizando");
             if (!existImei()) {
                 if (celular.save()) {
-                    ServiceCelularControllerAgregar.setEstadoInformation("Celular guardado.");
+                    serviceAgregar.setEstadoInformation("Celular guardado.");
                     // Notificamos al ServiceList que hay cambios
                     ServiceLista.setCambioCelular(true);
                     return true;
                 } else {
-                    ServiceCelularControllerAgregar.setEstadoError("Error en conexión con base de datos.");
+                    serviceAgregar.setEstadoError("Error en conexión con base de datos.");
                     return false;
                 }
             } else {
-                ServiceCelularControllerAgregar.setEstadoError("Celular no guardado, el imei existe.");
+                serviceAgregar.setEstadoError("Celular no guardado, el imei existe.");
                 return false;
             }
 
         } else {
-            ServiceCelularControllerAgregar.setEstadoError("Celular no guardado, faltan datos.");
+            serviceAgregar.setEstadoError("Celular no guardado, faltan datos.");
             return false;
         }
     }
 
-    public boolean update(){
-        if(celular.update()){
+    public boolean update() {
+        if (celular.update()) {
             ServiceLista.setCambioCelular(true);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
+
     /**
      * Método con el que se comprueba si existe en la base de datos el IMEI
      * introducido.
@@ -261,25 +263,57 @@ public class ServiceCelular {
         return celular.delete();
     }
 
-    public void configureFilterComboBoxImei(MFXFilterComboBox<Celular> comboBox){
-        if(listImei == null){
+    public void configureFilterComboBoxImei(MFXFilterComboBox<Celular> comboBox) {
+        if (listImei == null) {
             listImei = new ArrayList<>();
         }
-        if(observableListImei == null){
+        if (observableListImei == null) {
             observableListImei = FXCollections.observableArrayList();
         }
 
-        listImei.clear(); 
+        listImei.clear();
         listImei.addAll(ServiceLista.getListCelulares());
 
         observableListImei.clear();
         observableListImei = FXCollections.observableArrayList(listImei);
 
         StringConverter<Celular> converter = FunctionalStringConverter
-        .to(celular -> (celular == null) ? "" : String.valueOf(celular.getImeiUno()));
+                .to(celular -> (celular == null) ? "" : String.valueOf(celular.getImeiUno()));
         Function<String, Predicate<Celular>> filteFunction = s -> celular -> StringUtils
-        .containsIgnoreCase(converter.toString(celular), s);
-        
+                .containsIgnoreCase(converter.toString(celular), s);
+
+        comboBox.setItems(observableListImei);
+        comboBox.setConverter(converter);
+        comboBox.setFilterFunction(filteFunction);
+    }
+
+    public void configureFilterComboBoxImeiForAgregarVales(MFXFilterComboBox<Celular> comboBox) {
+        if (listImei == null) {
+            listImei = new ArrayList<>();
+        }
+        if (observableListImei == null) {
+            observableListImei = FXCollections.observableArrayList();
+        }
+
+        listImei.clear();
+        /*
+         * En caso de que el celular no esté vendido entonces es que se agrega a la
+         * lista de celulares.
+         */
+        for (Celular c : ServiceLista.getListCelulares()) {
+            if (!c.getVendido()) {
+                listImei.add(c);
+            }
+        }
+
+        observableListImei.clear();
+        observableListImei = FXCollections.observableArrayList(listImei);
+
+        StringConverter<Celular> converter = FunctionalStringConverter
+                .to(celular -> (celular == null) ? "" : String.valueOf(celular.getImeiUno()));
+        Function<String, Predicate<Celular>> filteFunction = s -> celular -> StringUtils
+                .containsIgnoreCase(converter.toString(celular), s);
+
         comboBox.setItems(observableListImei);
         comboBox.setConverter(converter);
         comboBox.setFilterFunction(filteFunction);

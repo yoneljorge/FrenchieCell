@@ -18,25 +18,79 @@ import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class ServiceMarca {
-    private List<Marca> listMarca;
-    private ObservableList<Marca> observableListMarca;
+
+    private List<Marca> listMarca = new ArrayList<>();
+    private ObservableList<Marca> observableListMarca = FXCollections.observableArrayList();
+
     private MFXFilterComboBox<Marca> comboBox;
     private boolean asignadoComboBox = false;
+    private Marca marca;
 
-    public ServiceMarca() {
+    private ServiceCelularControllerVista serviceVista = ServiceCelularControllerVista.getInstance();
+    private ServiceCelularControllerAgregar serviceAgregar = ServiceCelularControllerAgregar.getInstance();
 
+    public void setMarca(Marca marca) {
+        this.marca = marca;
+        this.marca.setMarca(this.marca.getMarca().toUpperCase());
+    }
+
+    public Marca getMarca() {
+        return this.marca;
+    }
+
+    /**
+     * Método con el que guardamos un objeto marca.
+     * 
+     * @param marca el objeto que se desea guardar.
+     * @return true en caso de que se guarde, false en caso contrario.
+     */
+    public boolean save() {
+        if (isFull()) {
+            if (!exist()) {
+                if (this.marca.save()) {
+                    AlertUtil.information("Exito", "Marca: " + this.marca.getMarca() + " guardada.");
+                    serviceAgregar.setEstadoInformation("Marca guardada.");
+                    serviceVista.setNewItem(true);
+                    System.out.println("Marca -> " + this.marca.getMarca() + " guardada.");
+                    // Notificamos al ServiceList que hay cambios
+                    ServiceLista.setCambioMarca(true);
+                    ;
+                    configureComboBox(comboBox);
+
+                    return true;
+                } else {
+                    AlertUtil.error("Error en guardado.",
+                            "Error interno. Si el problema persiste \ncontacte con el desarrollador.");
+                    serviceAgregar.setEstadoError("Error en conexión con base de datos.");
+                    System.out.println("No se pudo guardar la marca ->" + marca.getMarca());
+
+                    return false;
+                }
+            } else {
+                AlertUtil.error("Error en guardado.", "La marca que desea guardar \nya existe.");
+                serviceAgregar.setEstadoError("Marca no guardada. Ya existe.");
+                System.out.println("Marca -> " + marca.getMarca() + " ya existe.");
+                serviceAgregar.setBanderaMarcaExiste(true);;
+                return false;
+            }
+        } else {
+            AlertUtil.error("Error en guardado.", "Faltan datos.");
+            serviceAgregar.setEstadoError("Marca no guardada. Faltan datos.");
+            return false;
+        }
     }
 
     /**
      * Método con el que comprobamos que el objeto marca no esté vacío o sea nulo.
      * 
-     * @param marca el objeto que deseamos comparar.
      * @return true en caso de que esté completo, false en caso contrario.
      */
-    public boolean isFull(Marca marca) {
-        if (marca.getMarca().equals("") || marca == null) {
+    private boolean isFull() {
+        if (this.marca.getMarca().equals("") || this.marca == null) {
             System.err.println("Marca vacía o null.");
             return false;
         }
@@ -47,56 +101,14 @@ public class ServiceMarca {
     /**
      * Método que verifica si existe el objeto en la base de datos.
      * 
-     * @param marcaBuscar
      * @return true si existe, false caso contrario.
      */
-    public boolean exist(Marca marcaBuscar) {
+    private boolean exist() {
         Map<String, Object> propiedades = new HashMap<>();
         propiedades.put("class", Marca.class);
-        propiedades.put("marca", marcaBuscar.getMarca());
+        propiedades.put("marca", this.marca.getMarca());
 
         return Marca.existe(propiedades);
-    }
-
-    /**
-     * Método con el que guardamos un objeto marca.
-     * 
-     * @param marca el objeto que se desea guardar.
-     * @return true en caso de que se guarde, false en caso contrario.
-     */
-    public boolean save(Marca marca) {
-        if (isFull(marca)) {
-            if (!exist(marca)) {
-                if (marca.save()) {
-                    AlertUtil.information("Exito", "Marca: " + marca.getMarca() + " guardada.");
-                    ServiceCelularControllerAgregar.setEstadoInformation("Marca guardada.");
-                    ServiceCelularControllerVista.setNewItem(true);
-                    System.out.println("Marca -> " + marca.getMarca() + " guardada.");
-                    //Notificamos al ServiceList que hay cambios
-                    ServiceLista.setCambioMarca(true);;
-                    configureComboBox(comboBox);
-                    
-                    return true;
-                } else {
-                    AlertUtil.error("Error en guardado.",
-                            "Error interno. Si el problema persiste \ncontacte con el desarrollador.");
-                    ServiceCelularControllerAgregar.setEstadoError("Error en conexión con base de datos.");
-                    System.out.println("No se pudo guardar la marca ->" + marca.getMarca());
-                    
-                    return false;
-                }
-            } else {
-                AlertUtil.error("Error en guardado.", "La marca que desea guardar \nya existe.");
-                ServiceCelularControllerAgregar.setEstadoError("Marca no guardada. Ya existe.");
-                System.out.println("Marca -> " + marca.getMarca() + " ya existe.");
-                ServiceCelularControllerAgregar.banderaMarcaExiste = true;
-                return false;
-            }
-        } else {
-            AlertUtil.error("Error en guardado.", "Faltan datos.");
-            ServiceCelularControllerAgregar.setEstadoError("Marca no guardada. Faltan datos.");
-            return false;
-        }
     }
 
     /**
@@ -110,15 +122,9 @@ public class ServiceMarca {
             asignadoComboBox = true;
         }
 
-        if (listMarca == null) {
-            listMarca = new ArrayList<>();
-        }
         listMarca.clear();
         listMarca.addAll(ServiceLista.getListMarcas());// Cargamos los datos desde la base de datos
 
-        if (observableListMarca == null) {
-            observableListMarca = FXCollections.observableArrayList();
-        }
         observableListMarca.clear();
         observableListMarca = FXCollections.observableArrayList(listMarca);
 
@@ -146,17 +152,11 @@ public class ServiceMarca {
             asignadoComboBox = true;
         }
 
-        if (listMarca == null) {
-            listMarca = new ArrayList<>();
-        }
         listMarca.clear();
         // Agregamos el elemento Todos a la lista observable.
-        listMarca.add(ServiceCelularControllerVista.getMarca());
+        listMarca.add(serviceVista.getMarca());
         listMarca.addAll(ServiceLista.getListMarcas());// Cargamos los datos desde la base de datos
 
-        if (observableListMarca == null) {
-            observableListMarca = FXCollections.observableArrayList();
-        }
         observableListMarca.clear();
         observableListMarca = FXCollections.observableArrayList(listMarca);
 
@@ -169,15 +169,11 @@ public class ServiceMarca {
             comboBox.setItems(observableListMarca);
             comboBox.setConverter(converter);
             comboBox.setFilterFunction(filterFunction);
-            //Seleccionamos Todas 
+            // Seleccionamos Todas
             System.out.println("Seleccionado TOdas en ComboMarca -> ServicioMarca");
-            comboBox.selectItem(ServiceCelularControllerVista.getMarca());
+            comboBox.selectItem(serviceVista.getMarca());
         }
 
     }
 
-
-    /*************************************************
-     * PRUEBAS
-     **************************************************/
 }

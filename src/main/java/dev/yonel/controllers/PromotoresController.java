@@ -2,8 +2,6 @@ package dev.yonel.controllers;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import dev.yonel.services.controllers.promotores.ServicePromotoresControllerAgregar;
@@ -12,6 +10,7 @@ import dev.yonel.services.controllers.promotores.ServicePromotoresControllerVist
 import dev.yonel.utils.ui.SetVisible;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -21,9 +20,14 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import lombok.Getter;
 import lombok.Setter;
+import lombok.AccessLevel;
 
+@Getter
 public class PromotoresController implements Initializable {
+
+    private static PromotoresController instance;
 
     // Panel Agregar Promotor
     @FXML
@@ -87,105 +91,84 @@ public class PromotoresController implements Initializable {
     private Label lblDineroPagado;
 
     // General
+    @Getter(AccessLevel.NONE)
     @FXML
     private StackPane stackPane;
+    @Getter(AccessLevel.NONE)
     @FXML
     private MFXButton btnPromotores;
+    @Getter(AccessLevel.NONE)
     @FXML
     private MFXButton btnAgregarPromotor;
 
-    /*
-     * Creamos una instancia estática de PromotorController.
-     */
-    private static PromotoresController instance;
-
+    @Getter(AccessLevel.NONE)
     private ArrayList<VBox> listVBox = new ArrayList<>();
 
-    private Map<String, Object> listPaneAgregar = new HashMap<>();
-    private Map<String, Object> listPaneVista = new HashMap<>();
-    private Map<String, Object> listPanePromotor = new HashMap<>();
-
+    @Getter(AccessLevel.NONE)
     private ServicePromotoresControllerAgregar serviceAgregar;
+    @Getter(AccessLevel.NONE)
     private ServicePromotoresControllerVista serviceVista;
+    @Getter(AccessLevel.NONE)
     private ServicePromotoresControllerPromotor servicePromotor;
 
+    @Getter(AccessLevel.NONE)
     private @Setter Stage stage;
 
-    @SuppressWarnings("static-access")
-    public void initialize(URL location, ResourceBundle resources) {
-        instance = this; // Asigna la instancia del controlador a la referencia estática
-
-        // Agregar Objetos al Map listPaneAgregar
-        listPaneAgregar.put("nombre", txtNombre);
-        listPaneAgregar.put("apellidos", txtApellidos);
-        listPaneAgregar.put("celular", txtCelular);
-        listPaneAgregar.put("limpiar", btnLimpiar);
-        listPaneAgregar.put("agregar", btnAgregar);
-        listPaneAgregar.put("validacionNombre", validacionNombre);
-        listPaneAgregar.put("validacionApellidos", validacionApellidos);
-        listPaneAgregar.put("validacionCelular", validacionCelular);
-        listPaneAgregar.put("estado", labelEstado_AgregarPromotor);
-        this.serviceAgregar = new ServicePromotoresControllerAgregar(listPaneAgregar);
-        // cargamos la configuración de la vista agregar
-        serviceAgregar.configure();
-
-        // Agregamos Objetos al Map listPaneVista
-        listPaneVista.put("vbox", vboxLista_Items);
-        listPaneVista.put("checkEnGarantia", checkEnGarantia);
-        listPaneVista.put("checkPorPagar", checkPorPagar);
-        this.serviceVista = new ServicePromotoresControllerVista(listPaneVista);
-        // cargamos la configuración de la vista vista
-        serviceVista.configure();
-
-        // Agregamos Objetos al Map listPanePromotor
-        listPanePromotor.put("promotorVales", flowPanePromotorVales);
-        listPanePromotor.put("regresar", btnRegresar);
-        listPanePromotor.put("liquidar", btnLimpiar);
-        listPanePromotor.put("editar", menuItemEditarPerfil);
-        listPanePromotor.put("eliminar", menuItemEliminarPerfil);
-        listPanePromotor.put("dineroPorPagar", lblDineroPorPagar);
-        listPanePromotor.put("valesPorPagar", lblValesPorPagar);
-        listPanePromotor.put("valesGarantia", lblValesGarantia);
-        listPanePromotor.put("valesTotal", lblValesTotal);
-        listPanePromotor.put("promotor", lblPromotor);
-        listPanePromotor.put("dineroPagado", lblDineroPagado);
-        this.servicePromotor = new ServicePromotoresControllerPromotor(listPanePromotor, stage);
-        servicePromotor.configure();
-        //servicePromotor.setListVBox(listVBox);
-        //servicePromotor.setVboxLista(vboxLista);
-        //servicePromotor.setVboxPromotor(vboxPromotor);
-
-        // Agregamos los VBox al ArrayList
-        listVBox.add(vboxAgregar);
-        listVBox.add(vboxLista);
-        listVBox.add(vboxPromotor);
-
-        // Ponemos visible el VBox donde aparece la lista de promotores
-        goToLista();
-
-        btnPromotores.setOnAction(event -> {
-            goToLista();
-        });
-
-        btnAgregarPromotor.setOnAction(event -> {
-            goToAgregar();
-        });
+    private PromotoresController() {
+        instance = this;
     }
 
-    private static PromotoresController getInstance() {
+    public static PromotoresController getInstance() {
+        if (instance == null) {
+            instance = new PromotoresController();
+        }
         return instance;
     }
 
-    public static void goToLista() {
-        getInstance().changeView(getInstance().vboxLista, true, false);
+    public void initialize(URL location, ResourceBundle resources) {
+        instance = this; // Asigna la instancia del controlador a la referencia estática
+
+        Platform.runLater(() -> {
+            this.serviceAgregar = ServicePromotoresControllerAgregar.getInstance();
+            this.serviceVista = ServicePromotoresControllerVista.getInstance();
+            this.servicePromotor = ServicePromotoresControllerPromotor.getInstance();
+
+            // cargamos la configuración de la vista agregar
+            serviceAgregar.configure();
+            // cargamos la configuración de la vista vista
+            serviceVista.configure();
+            // Agregamos Objetos al Map listPanePromotor
+            servicePromotor.configure();
+
+            // Agregamos los VBox al ArrayList
+            listVBox.add(vboxAgregar);
+            listVBox.add(vboxLista);
+            listVBox.add(vboxPromotor);
+
+            // Ponemos visible el VBox donde aparece la lista de promotores
+            goToLista();
+
+            btnPromotores.setOnAction(event -> {
+                goToLista();
+            });
+
+            btnAgregarPromotor.setOnAction(event -> {
+                goToAgregar();
+            });
+        });
+
     }
 
-    public static void goToAgregar() {
-        getInstance().changeView(getInstance().vboxAgregar, false, true);
+    public void goToLista() {
+        changeView(getInstance().vboxLista, true, false);
     }
 
-    public static void goToPromotor() {
-        getInstance().changeView(getInstance().vboxPromotor, true, true);
+    public void goToAgregar() {
+        changeView(getInstance().vboxAgregar, false, true);
+    }
+
+    public void goToPromotor() {
+        changeView(getInstance().vboxPromotor, true, true);
     }
 
     private void changeView(VBox vboxToShow, boolean promotoresDisable, boolean agregarPromotorDisable) {

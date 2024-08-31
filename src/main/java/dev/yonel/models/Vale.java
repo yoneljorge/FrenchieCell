@@ -36,47 +36,43 @@ public class Vale extends BaseEntity<Vale, Long> implements Serializable{
     @JoinColumn(name = "promotor", referencedColumnName = "nombre")
     private Promotor promotor;
 
+    @Column(name = "comision")
+    private Long comision = 0l;
+
+
+    @Column(name = "imei")
+    private Long imei =0l;
     @ManyToOne
     @JoinColumn(name = "marca", referencedColumnName = "marca")
     private Marca marca;
-
     @ManyToOne
     @JoinColumn(name = "modelo", referencedColumnName = "modelo")
     private Modelo modelo;
-
     @Column(name = "precio")
-    private Double precio;
-
-    @Column(name = "moneda")
-    private String moneda;
+    private Double precio = 0d;
 
     @Column(name = "mensajeria")
-    private Boolean mensajeria;
-
+    private Boolean mensajeria = false;
     @Column(name = "direccion")
-    private String direccion;
-
+    private String direccion = "";
     @Column(name = "costo_mensajeria")
-    private Long costoMensajeria;
+    private Long costoMensajeria = 0l;
 
     @Column(name = "fecha_venta")
     private LocalDate fechaVenta;
-
     @Column(name = "fecha_garantia")
     private LocalDate fechaGarantia;
+    @Column(name =  "garantia")
+    private Boolean garantia = true;
 
-    @Column(name = "comision")
-    private Long comision;
+    
 
-    @Column(name = "imei")
-    private Long imei;
+    
 
     @Column(name = "cliente")
-    private String cliente;
-
+    private String cliente = "";
     @Column(name = "cliente_telefono")
-    private Long clienteTelefono;
-
+    private Long clienteTelefono = 0l;
     @Column(name = "liquidado")
-    private Boolean liquidado;
+    private Boolean liquidado = false;
 }

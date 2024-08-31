@@ -12,7 +12,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "celulares")
 public class Celular extends BaseEntity<Celular, Long> implements Serializable{
@@ -31,26 +39,23 @@ public class Celular extends BaseEntity<Celular, Long> implements Serializable{
     private Modelo modelo;
 
     @Column(name = "imei_uno")
-    private Long imeiUno;
+    private Long imeiUno = 0l;
 
     @Column(name = "imei_dos")
-    private Long imeiDos;
+    private Long imeiDos = 0l;
 
     @Column(name = "fecha_inventario")
     private LocalDate fechaInventario;
 
     @Column(name = "vendido")
-    private Boolean vendido;
+    private Boolean vendido = false;
     
     @Column(name = "precio")
-    private Double precio;
+    private Double precio = 0d;
 
     @Column(name = "observaciones")
-    private String observaciones;
+    private String observaciones = "";
 
-    
-    public Celular() {
-    }
 
     //Constructor para un IMEI
     public Celular(Long idCelular, Marca marca, Modelo modelo, Long imeiUno, LocalDate fechaInventario,
@@ -62,95 +67,6 @@ public class Celular extends BaseEntity<Celular, Long> implements Serializable{
         this.fechaInventario = fechaInventario;
         this.vendido = vendido;
         this.precio = precio;
-        this.observaciones = observaciones;
-    }
-
-    //Constructor para dos IMEI
-    public Celular(Long idCelular, Marca marca, Modelo modelo, Long imeiUno, Long imeiDos,
-            LocalDate fechaInventario, Boolean vendido, Double precio, String observaciones) {
-        this.idCelular = idCelular;
-        this.marca = marca;
-        this.modelo = modelo;
-        this.imeiUno = imeiUno;
-        this.imeiDos = imeiDos;
-        this.fechaInventario = fechaInventario;
-        this.vendido = vendido;
-        this.precio = precio;
-        this.observaciones = observaciones;
-    }
-
-    public Long getIdCelular() {
-        return idCelular;
-    }
-
-    public void setIdCelular(Long idCelular) {
-        this.idCelular = idCelular;
-    }
-
-    public Marca getMarca() {
-        return marca;
-    }
-
-    public void setMarca(Marca marca) {
-        this.marca = marca;
-    }
-
-    public Modelo getModelo() {
-        return modelo;
-    }
-
-    public void setModelo(Modelo modelo) {
-        this.modelo = modelo;
-    }
-
-    public Long getImeiUno() {
-        return imeiUno;
-    }
-
-    public void setImeiUno(Long imeiUno) {
-        this.imeiUno = imeiUno;
-    }
-
-    public Long getImeiDos() {
-        return imeiDos;
-    }
-
-    public void setImeiDos(Long imeiDos) {
-        this.imeiDos = imeiDos;
-    }
-
-    public LocalDate getFechaInventario() {
-        return fechaInventario;
-    }
-
-    public void setFechaInventario(LocalDate fechaInventario) {
-        this.fechaInventario = fechaInventario;
-    }
-
-    public Boolean getVendido() {
-        if(vendido == null){
-            return false;
-        }
-        return vendido;
-    }
-
-    public void setVendido(Boolean vendido) {
-        this.vendido = vendido;
-    }
-
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Double precio) {
-        this.precio = precio;
-    }
-
-    public String getObservaciones() {
-        return observaciones;
-    }
-
-    public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
 

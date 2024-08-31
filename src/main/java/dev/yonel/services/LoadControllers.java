@@ -6,11 +6,10 @@ import dev.yonel.App;
 import dev.yonel.controllers.DashboardController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class LoadControllers {
 
-    public static VBox load(String fxml, Object controllerInstance, Stage stage){
+    public static VBox load(String fxml, Object controllerInstance){
         try {
             VBox vBox;
             FXMLLoader loader = App.fxmlLoader(fxml);

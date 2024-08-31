@@ -24,8 +24,9 @@ public class FilterItemsCelular {
     private boolean dual = false;
     private boolean vendido = false;
 
+    private ServiceCelularControllerVista serviceVista = ServiceCelularControllerVista.getInstance();
     public FilterItemsCelular() {
-        ServiceCelularControllerVista.cleanVBox();
+        serviceVista.cleanVBox();
     }
 
     public void setMarca(Marca marca) {
@@ -60,7 +61,7 @@ public class FilterItemsCelular {
     public void getAllItems() {
         Platform.runLater(() -> {
             // Quitamos todos los items del VBox para que no se repitan
-            ServiceCelularControllerVista.cleanVBox();
+            serviceVista.cleanVBox();
             
             Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
             try {
@@ -76,7 +77,7 @@ public class FilterItemsCelular {
                     }
 
                     // setItems(resultList.get(0));
-                    ServiceCelularControllerVista.setItems(filtrar(resultList.get(0)));
+                    serviceVista.setItems(filtrar(resultList.get(0)));
 
                     // Incrementa el desplazamiento para el siguiente
                     int currentFirstResult = query.getFirstResult();
@@ -92,7 +93,7 @@ public class FilterItemsCelular {
             }
 
             // Invertimos el orden de los celulares
-            ServiceCelularControllerVista.invertirOrden();
+            serviceVista.invertirOrden();
         });
 
     }

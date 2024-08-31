@@ -29,14 +29,25 @@ public class ServiceFecha {
     private MFXFilterComboBox<Marca> comboMarca;
     private MFXFilterComboBox<Modelo> comboModelo;
 
-    public ServiceFecha(MFXFilterComboBox<LocalDate> comboFecha, MFXFilterComboBox<Marca> comboMarca,
-            MFXFilterComboBox<Modelo> comboModelo) {
-        this.comboFecha = comboFecha;
-        this.comboMarca = comboMarca;
-        this.comboModelo = comboModelo;
+    private ServiceCelularControllerVista serviceVista = ServiceCelularControllerVista.getInstance();
+
+    public ServiceFecha() {
+
     }
 
-    public void configureComboBox() {
+    public void configureComboBox(MFXFilterComboBox<LocalDate> comboFecha, MFXFilterComboBox<Marca> comboMarca,
+            MFXFilterComboBox<Modelo> comboModelo) {
+
+        if (this.comboFecha == null) {
+            this.comboFecha = comboFecha;
+        }
+        if (this.comboMarca == null) {
+            this.comboMarca = comboMarca;
+        }
+        if (this.comboModelo == null) {
+            this.comboModelo = comboModelo;
+        }
+
         StringConverter<LocalDate> converter = FunctionalStringConverter
                 .to(fecha -> (fecha == null) ? "" : Fecha.getStringOfLocalDate(fecha));
         Function<String, Predicate<LocalDate>> filterFunction = s -> fecha -> StringUtils
@@ -80,7 +91,7 @@ public class ServiceFecha {
          */
 
         if (comboMarca.getValue() != null) {
-            if (ServiceCelularControllerVista.getMarca().equals(this.comboMarca.getValue())) {
+            if (serviceVista.getMarca().equals(this.comboMarca.getValue())) {
                 for (Celular c : listCelulares) {
                     if (!listFechas.contains(c.getFechaInventario())) {
                         listFechas.add(c.getFechaInventario());
@@ -88,7 +99,7 @@ public class ServiceFecha {
                 }
             } else if (this.comboModelo.getValue() != null) {
 
-                if (this.comboModelo.getValue().equals(ServiceCelularControllerVista.getModelo())) {
+                if (this.comboModelo.getValue().equals(serviceVista.getModelo())) {
                     for (Celular c : listCelulares) {
                         if (c.getMarca().equals(this.comboMarca.getValue())) {
                             if (!listFechas.contains(c.getFechaInventario())) {
@@ -98,7 +109,7 @@ public class ServiceFecha {
                     }
                 } else {
                     System.out.println("ComboMarca: " + comboMarca.getValue().getMarca() +
-                        "\nComboModelo: " + comboModelo.getValue().getModelo());
+                            "\nComboModelo: " + comboModelo.getValue().getModelo());
                     for (Celular c : listCelulares) {
                         if (c.getMarca().getMarca().equals(this.comboMarca.getValue().getMarca())
                                 && c.getModelo().getModelo().equals(this.comboModelo.getValue().getModelo())) {

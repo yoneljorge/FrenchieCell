@@ -4,17 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import dev.yonel.App;
 import dev.yonel.controllers.PromotoresController;
-import dev.yonel.controllers.items.ItemValePromotorController;
+import dev.yonel.controllers.items.ItemValeController;
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
 import dev.yonel.services.ServiceLista;
 import dev.yonel.services.promotores.ServicePromotor;
-import dev.yonel.utils.ui.SetVisible;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -27,63 +26,76 @@ import lombok.Setter;
 
 public class ServicePromotoresControllerPromotor {
 
+    private static ServicePromotoresControllerPromotor instance;
 
-
-    private static FlowPane promotorVales;
+    private FlowPane promotorVales;
     private MFXButton btnRegresar;
-    private static MFXButton btnLiquidar;
+    private MFXButton btnLiquidar;
     private MenuItem editarPerfil;
     private MenuItem eliminarPerfil;
-    private static Label dineroPorPagar;
-    private static Label valesPorPagar;
-    private static Label valesGarantia;
-    private static Label valesTotal;
-    private static Label labelPromotor;
-    private static Label dineroPagado;
+    private Label dineroPorPagar;
+    private Label valesPorPagar;
+    private Label valesGarantia;
+    private Label valesTotal;
+    private Label labelPromotor;
+    private Label dineroPagado;
+    private @Setter Stage stage;
 
-    private @Setter static Long idPromotor;
-    private static List<Vale> listVales = new ArrayList<>();
-    private static List<Vale> listValesLiquidar = new ArrayList<>();
-    private static List<ItemValePromotorController> itemValePromotorControllers = new ArrayList<>();
+    private List<Vale> listVales;
+    private List<Vale> listValesLiquidar;
 
-    private @Setter static Stage stage;
+    private List<ItemValeController> itemValePromotorControllers;
 
-    @SuppressWarnings("static-access")
-    public ServicePromotoresControllerPromotor(Map<String, Object> list, Stage stage) {
-        this.promotorVales = (FlowPane) list.get("promotorVales");
-        this.btnRegresar = (MFXButton) list.get("regresar");
-        this.btnLiquidar = (MFXButton) list.get("liquidar");
-        this.editarPerfil = (MenuItem) list.get("editar");
-        this.eliminarPerfil = (MenuItem) list.get("eliminar");
-        this.dineroPorPagar = (Label) list.get("dineroPorPagar");
-        this.valesPorPagar = (Label) list.get("valesPorPagar");
-        this.valesGarantia = (Label) list.get("valesGarantia");
-        this.valesTotal = (Label) list.get("valesTotal");
-        this.labelPromotor = (Label) list.get("promotor");
-        this.dineroPagado = (Label) list.get("dineroPagado");
-        this.stage = stage;
+    private PromotoresController promotoresController = PromotoresController.getInstance();
+
+    private ServicePromotoresControllerPromotor() {
+        instance = this;
+
+        Platform.runLater(() -> {
+            this.listVales = new ArrayList<>();
+            this.listValesLiquidar = new ArrayList<>();
+            this.itemValePromotorControllers = new ArrayList<>();
+
+            setObjects();
+        });
+    }
+
+    public static ServicePromotoresControllerPromotor getInstance() {
+        if (instance == null) {
+            instance = new ServicePromotoresControllerPromotor();
+        }
+        return instance;
+    }
+
+    private void setObjects() {
+        this.promotorVales = promotoresController.getFlowPanePromotorVales();
+        this.btnRegresar = promotoresController.getBtnRegresar();
+        this.btnLiquidar = promotoresController.getBtnLiquidar();
+        this.editarPerfil = promotoresController.getMenuItemEditarPerfil();
+        this.eliminarPerfil = promotoresController.getMenuItemEliminarPerfil();
+        this.dineroPorPagar = promotoresController.getLblDineroPorPagar();
+        this.valesPorPagar = promotoresController.getLblValesPorPagar();
+        this.valesGarantia = promotoresController.getLblValesGarantia();
+        this.valesTotal = promotoresController.getLblValesTotal();
+        this.labelPromotor = promotoresController.getLblPromotor();
+        this.dineroPagado = promotoresController.getLblDineroPagado();
     }
 
     public void configure() {
-        btnRegresar.setOnAction(event -> {
-            PromotoresController.goToLista();
-        });
+        Platform.runLater(() -> {
+            btnRegresar.setOnAction(event -> {
+                promotoresController.goToLista();
+            });
 
-        btnLiquidar.setOnAction(event -> {
+            btnLiquidar.setOnAction(event -> {
 
+            });
         });
     }
 
-    private void liquidar(){
-        
-    }
-    /*********************************************
-     * **********MÉTODOS ESTÁTICOS****************
-     *********************************************/
+    public void loadPromotor(Long i) {
 
-    public static void loadPromotor(Long i) {
-
-        PromotoresController.goToPromotor();
+        promotoresController.goToPromotor();
 
         ServicePromotor promotor = new ServicePromotor(Promotor.getById(Promotor.class, i));
 
@@ -119,7 +131,7 @@ public class ServicePromotoresControllerPromotor {
         invertirOrden();
     }
 
-    private static void setDatosInPanel(ServicePromotor promotor) {
+    private void setDatosInPanel(ServicePromotor promotor) {
 
         // Ingresamos los datos del promotor en cada label.
         labelPromotor.setText(promotor.getNombre() + " " + promotor.getApellidos());
@@ -130,14 +142,14 @@ public class ServicePromotoresControllerPromotor {
         dineroPagado.setText(String.valueOf(promotor.getDineroTotalPagado()));
     }
 
-    private static void setItems(Vale vale) {
+    private void setItems(Vale vale) {
         // Si el vale no coincide con el filtrado se pasa un null para que no haga
         // nada.
         if (vale != null) {
             try {
                 VBox vbox;
-                FXMLLoader loader = App.fxmlLoader("items/itemValePromotor");
-                ItemValePromotorController controller = new ItemValePromotorController();
+                FXMLLoader loader = App.fxmlLoader("items/itemVale");
+                ItemValeController controller = new ItemValeController();
                 // ----> Todo lo que se le va a agregar al controlador
                 controller.setVale(vale);
                 controller.setStage(stage);
@@ -156,23 +168,23 @@ public class ServicePromotoresControllerPromotor {
     /**
      * Método para limpiar el vbox.
      */
-    public static void cleanVbox() {
-        //vboxLista.getChildren().clear();
+    public void cleanVbox() {
+        promotorVales.getChildren().clear();
     }
 
     /**
      * Método para invertir el orden de los nodos en el VBox
      * Se invierte el orden de las instancias de los controladores de cada Vale.
      */
-    public static void invertirOrden() {
+    public void invertirOrden() {
         // Invertimos el orden de los nodos en el VBox
-        //ObservableList<Node> children = vboxLista.getChildren();
-        //List<Node> invertedList = new ArrayList<>(children);
-       // Collections.reverse(invertedList);
-        //vboxLista.getChildren().setAll(invertedList);
+        ObservableList<Node> children = promotorVales.getChildren();
+        List<Node> invertedList = new ArrayList<>(children);
+        Collections.reverse(invertedList);
+        promotorVales.getChildren().setAll(invertedList);
 
         // Invertimos el orden de los nodos en la lista
-        List<ItemValePromotorController> invertedItemsValePromotor = new ArrayList<>(itemValePromotorControllers);
+        List<ItemValeController> invertedItemsValePromotor = new ArrayList<>(itemValePromotorControllers);
         Collections.reverse(invertedItemsValePromotor);
         itemValePromotorControllers = invertedItemsValePromotor;
     }
@@ -184,7 +196,7 @@ public class ServicePromotoresControllerPromotor {
      * 
      * @param vale el vale que se va a liquidar.
      */
-    public static void addValeLiquidar(Vale vale) {
+    public void addValeLiquidar(Vale vale) {
         listValesLiquidar.add(vale);
         if (listValesLiquidar.size() > 0) {
             btnLiquidar.setDisable(false);
@@ -198,12 +210,10 @@ public class ServicePromotoresControllerPromotor {
      * 
      * @param vale
      */
-    public static void removeValeLiquidar(Vale vale) {
+    public void removeValeLiquidar(Vale vale) {
         listValesLiquidar.remove(vale);
         if (listValesLiquidar.size() == 0) {
             btnLiquidar.setDisable(true);
         }
     }
-
-    
 }

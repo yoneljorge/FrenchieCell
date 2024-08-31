@@ -1,20 +1,8 @@
 package dev.yonel.controllers;
 
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import lombok.Setter;
-
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import dev.yonel.models.Celular;
@@ -24,10 +12,26 @@ import dev.yonel.utils.ui.SetVisible;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
-public class ValesController implements Initializable{
+@Getter
+public class ValesController implements Initializable {
 
-    //General
+    @Getter(AccessLevel.NONE)
+    private static ValesController instance;
+
+    // General
     @FXML
     private MFXButton btnLista;
     @FXML
@@ -37,7 +41,7 @@ public class ValesController implements Initializable{
     @FXML
     private VBox vboxPanelAgregar;
 
-    //Panel Agregar
+    // Panel Agregar
     @FXML
     private MFXButton btnGuardar;
     @FXML
@@ -62,7 +66,7 @@ public class ValesController implements Initializable{
     private MFXTextField txtPrecio;
     @FXML
     private Label labelValidacionPrecio;
-    @FXML 
+    @FXML
     private DatePicker datePickerFechaVenta;
     @FXML
     private MFXTextField txtComision;
@@ -80,70 +84,58 @@ public class ValesController implements Initializable{
     private Label labelEstado;
 
     /*
-     * Lista con la que vamos a pasar los objetos al servicio agregar.
-     */
-    private Map<String, Object> listAgregar = new HashMap<>();
-
-    /*
      * Cargamos cada servicio de cada vista.
      */
+    @Getter(AccessLevel.NONE)
     private ServiceValesControllerAgregar serviceAgregar;
 
     /*
      * Lista para agregar los VBox de las vistas para una mejor gestión.
      */
-    private List<VBox> listVBoxs = new ArrayList<>();
+    @Getter(AccessLevel.NONE)
+    private List<VBox> listVBoxs;
 
+    @Getter(AccessLevel.NONE)
     private @Setter Stage stage;
 
-    public void initialize(URL location, ResourceBundle resource){
+    private ValesController() {
+        instance = this;
+    }
+
+    public static ValesController getInstance() {
+        if (instance == null) {
+            instance = new ValesController();
+        }
+        return instance;
+    }
+
+    public void initialize(URL location, ResourceBundle resource) {
         /*
          * Agregamos los VBox de cada vista a la lista
          * VBox de la lista de promotores lo ponemos visible y el de agregar no.
          * Boton lista lo deshabilitamos.
          */
-        listVBoxs.add(vboxPanelAgregar);
-        listVBoxs.add(vboxPanelLista);
-        SetVisible.This(listVBoxs, vboxPanelLista);
-        btnLista.setDisable(true);
-
-        /*
-         * Agregamos todos los objetos del panel agregar a la lista agregar
-         */
-        listAgregar.put("guardar", btnGuardar);
-        listAgregar.put("limpiar", btnLimpiar);
-        listAgregar.put("comboPromotor", filterComboBoxPromotor);
-        listAgregar.put("cliente", txtCliente);
-        listAgregar.put("validarCliente", labelValidacionCliente);
-        listAgregar.put("telefonoCliente", txtTelefonoCliente);
-        listAgregar.put("validacionTelefonoCliente", labelValidacionTelefonoCliente);
-        listAgregar.put("comboImei", filterComboBoxImei);
-        listAgregar.put("marca", txtMarca);
-        listAgregar.put("modelo", txtModelo);
-        listAgregar.put("precio", txtPrecio);
-        listAgregar.put("validacionPrecio", labelValidacionPrecio);
-        listAgregar.put("fechaVenta", datePickerFechaVenta);
-        listAgregar.put("comision", txtComision);
-        listAgregar.put("validacionComision", labelValidacionComision);
-        listAgregar.put("checkMensajeria", checkBoxServicioMensajeria);
-        listAgregar.put("direccion", txtDireccion);
-        listAgregar.put("costoMensajeria", txtCostoMensajeria);
-        listAgregar.put("validacionCostoMensajeria", labelValidacionCostoMensajeria);
-        listAgregar.put("labelEstado", labelEstado);
-        this.serviceAgregar = new ServiceValesControllerAgregar(listAgregar);
-        this.serviceAgregar.configure();
-
-
-
-        btnAgregar.setOnAction(event -> {
-            SetVisible.This(listVBoxs, vboxPanelAgregar);
-            btnAgregar.setDisable(true);
-            btnLista.setDisable(false);
-        });
-        btnLista.setOnAction(event -> {
+        
+        Platform.runLater(() -> {
+            this.listVBoxs = new ArrayList<>();
+            this.serviceAgregar = ServiceValesControllerAgregar.getInstance();
+            listVBoxs.add(vboxPanelAgregar);
+            listVBoxs.add(vboxPanelLista);
             SetVisible.This(listVBoxs, vboxPanelLista);
-            btnAgregar.setDisable(false);
             btnLista.setDisable(true);
+
+            this.serviceAgregar.configure();
+
+            btnAgregar.setOnAction(event -> {
+                SetVisible.This(listVBoxs, vboxPanelAgregar);
+                btnAgregar.setDisable(true);
+                btnLista.setDisable(false);
+            });
+            btnLista.setOnAction(event -> {
+                SetVisible.This(listVBoxs, vboxPanelLista);
+                btnAgregar.setDisable(false);
+                btnLista.setDisable(true);
+            });
         });
     }
 }

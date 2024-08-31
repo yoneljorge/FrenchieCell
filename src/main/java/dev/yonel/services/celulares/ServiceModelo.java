@@ -22,40 +22,96 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class ServiceModelo {
 
-    private List<Modelo> listModelo;
-    private List<Modelo> listModeloNew;
-    private ObservableList<Modelo> observableListModelo;
+    private List<Modelo> listModelo = new ArrayList<>();
+    private List<Modelo> listModeloNew = new ArrayList<>();
+    private ObservableList<Modelo> observableListModelo = FXCollections.observableArrayList();
+    private Modelo modelo;
 
     private MFXFilterComboBox<Marca> comboBoxMarca;
     private MFXFilterComboBox<Modelo> comboBoxModelo;
     private MFXButton btnAsociado;
 
-    public ServiceModelo() {
-        this.listModelo = new ArrayList<>();
-        this.listModeloNew = new ArrayList<>();
-        this.observableListModelo = FXCollections.observableArrayList();
+    private ServiceCelularControllerVista serviceVista = ServiceCelularControllerVista.getInstance();
+    private ServiceCelularControllerAgregar serviceAgregar = ServiceCelularControllerAgregar.getInstance();
+
+    public ServiceModelo(Modelo modelo) {
+        this.modelo = modelo;
+        this.modelo.setModelo(this.modelo.getModelo().toUpperCase());
+    }
+
+    public Modelo getModelo() {
+        return this.modelo;
+    }
+
+    public void setModelo(Modelo modelo) {
+        this.modelo = modelo;
+        this.modelo.setModelo(this.modelo.getModelo().toUpperCase());
+    }
+
+    /**
+     * Méotodo para guardar un objeto de tipo Modelo en la base de datos.
+     * 
+     * @param modelo el objeto.
+     * @return true en caso de que se guarde, false en caso de que exista, no se
+     *         guarde o le falten datos.
+     */
+    public boolean save() {
+        if (isFull()) {
+
+            if (!exist()) {
+                if (this.modelo.save()) {
+                    // Notificamos al ServiceList que hay cambios
+                    ServiceLista.setCambioModelo(true);
+                    serviceVista.setNewItem(true);
+                    AlertUtil.information("Éxito", "Modelo: " + modelo.getModelo() + " guardado.");
+                    configureComboBox(comboBoxModelo, comboBoxMarca, btnAsociado);
+                    updateListaAgregar();
+                    serviceAgregar.setEstadoInformation("Modelo guardado.");
+
+                    return true;
+                } else {
+                    AlertUtil.error("Error en guardado.",
+                            "Error interno. Si el problema persiste \ncontacte con el desarrollador.");
+                    serviceAgregar.setEstadoError("Error en conexión con base de datos.");
+                    return false;
+                }
+
+            } else {
+                AlertUtil.error("Error en guardado.", "El modelo que desea guardar \nya existe.");
+                serviceAgregar.setEstadoError("Modelo no guardado. Ya existe.");
+                System.err.println("Modelo no guardado -> ya existe.");
+                serviceAgregar.setBanderaModeloExiste(true);
+                return false;
+            }
+        } else {
+            AlertUtil.error("Error en guardado.", "Faltan datos.");
+            serviceAgregar.setEstadoError("Modelo no guardado. Faltan datos.");
+            System.err.println("Modelo no guardado -> faltan datos.");
+            return false;
+        }
     }
 
     /**
      * Método que verifica si el objeto modelo no es nulo o si no está vacío.
      * 
-     * @param modelo el objeto que se desea verificar.
      * @return true en caso de que este lleno, false
      *         en caso contrario.
      */
-    private boolean isFull(Modelo modelo) {
-        if (modelo.getModelo() == null) {
+    private boolean isFull() {
+        if (this.modelo.getModelo() == null) {
             System.err.println("Modelo is null.");
             return false;
         }
-        if (modelo.getModelo().equals("")) {
+        if (this.modelo.getModelo().equals("")) {
             System.err.println("Modelo está vacío.");
             return false;
         }
-        if (modelo.getMarca().getMarca().equals("") || modelo.getMarca() == null) {
+        if (this.modelo.getMarca().getMarca().equals("") || this.modelo.getMarca() == null) {
             System.err.println("Marca está vacia o es null.");
             return false;
         }
@@ -66,58 +122,74 @@ public class ServiceModelo {
     /**
      * Método que verifica si existe un objeto de tipo modelo en la base de datos.
      * 
-     * @param modelo el objeto que se desea verificar.
      * @return true en caso de que exista, false en caso contrario.
      */
-    public boolean exist(Modelo modelo) {
+    public boolean exist() {
         Map<String, Object> propiedades = new HashMap<>();
         propiedades.put("class", Modelo.class);
-        propiedades.put("modelo", modelo.getModelo());
+        propiedades.put("modelo", this.modelo.getModelo());
 
         return Modelo.existe(propiedades);
     }
 
-    /**
-     * Méotodo para guardar un objeto de tipo Modelo en la base de datos.
-     * 
-     * @param modelo el objeto.
-     * @return true en caso de que se guarde, false en caso de que exista, no se
-     *         guarde o le falten datos.
-     */
-    public boolean save(Modelo modelo) {
-        if (isFull(modelo)) {
-            // ServiceMarca.save(modelo.getMarca());
-            if (!exist(modelo)) {
-                if (modelo.save()) {
-                    //Notificamos al ServiceList que hay cambios
-                    ServiceLista.setCambioModelo(true);
-                    ServiceCelularControllerVista.setNewItem(true);
-                    AlertUtil.information("Éxito", "Modelo: " + modelo.getModelo() + " guardado.");
-                    configureComboBox(comboBoxModelo, comboBoxMarca, btnAsociado);
-                    updateListaAgregar();
-                    ServiceCelularControllerAgregar.setEstadoInformation("Modelo guardado.");
-                    
-                    return true;
-                } else {
-                    AlertUtil.error("Error en guardado.",
-                            "Error interno. Si el problema persiste \ncontacte con el desarrollador.");
-                    ServiceCelularControllerAgregar.setEstadoError("Error en conexión con base de datos.");
-                    return false;
-                }
+    public void updateListaAgregar() {
+        this.listModelo.clear();
+        this.listModelo.addAll(ServiceLista.getListModelos());// Cargamos los datos desde la base de datos
 
-            } else {
-                AlertUtil.error("Error en guardado.", "El modelo que desea guardar \nya existe.");
-                ServiceCelularControllerAgregar.setEstadoError("Modelo no guardado. Ya existe.");
-                System.err.println("Modelo no guardado -> ya existe.");
-                ServiceCelularControllerAgregar.banderaModeloExiste = true;
-                return false;
+        // Lista en la que vamos a almacenar los modelos en dependencia de la marca
+        // seleccionada.
+        this.listModeloNew.clear();
+
+        if (this.comboBoxMarca.getValue() != null) {
+            for (Modelo m : listModelo) {
+                if (m.getMarca().getMarca().equals(this.comboBoxMarca.getValue().getMarca())) {
+                    this.listModeloNew.add(m);
+                }
             }
-        } else {
-            AlertUtil.error("Error en guardado.", "Faltan datos.");
-            ServiceCelularControllerAgregar.setEstadoError("Modelo no guardado. Faltan datos.");
-            System.err.println("Modelo no guardado -> faltan datos.");
-            return false;
         }
+
+        this.observableListModelo.clear();
+        this.observableListModelo = FXCollections.observableArrayList(this.listModeloNew);
+
+        StringConverter<Modelo> converter = FunctionalStringConverter
+                .to(modelo -> (modelo == null) ? "" : modelo.getModelo());
+        Function<String, Predicate<Modelo>> filterFunction = s -> modelo -> StringUtils
+                .containsIgnoreCase(converter.toString(modelo), s);
+        this.comboBoxModelo.setItems(observableListModelo);
+        this.comboBoxModelo.setConverter(converter);
+        this.comboBoxModelo.setFilterFunction(filterFunction);
+        this.comboBoxModelo.getSelectionModel().clearSelection();
+    }
+
+    public void updateListaVista() {
+        this.listModelo.clear();
+        this.listModelo.addAll(ServiceLista.getListModelos());// Cargamos los datos desde la base de datos
+
+        // Lista en la que vamos a almacenar los modelos en dependencia de la marca
+        // seleccionada.
+        this.listModeloNew.clear();
+
+        this.listModeloNew.add(serviceVista.getModelo());
+        if (this.comboBoxMarca.getValue() != null) {
+            for (Modelo m : listModelo) {
+                if (m.getMarca().getMarca().equals(this.comboBoxMarca.getValue().getMarca())) {
+                    this.listModeloNew.add(m);
+                }
+            }
+        }
+
+        this.observableListModelo.clear();
+        this.observableListModelo = FXCollections.observableArrayList(listModeloNew);
+
+        StringConverter<Modelo> converter = FunctionalStringConverter
+                .to(modelo -> (modelo == null) ? "" : modelo.getModelo());
+        Function<String, Predicate<Modelo>> filterFunction = s -> modelo -> StringUtils
+                .containsIgnoreCase(converter.toString(modelo), s);
+        this.comboBoxModelo.setItems(observableListModelo);
+        this.comboBoxModelo.setConverter(converter);
+        this.comboBoxModelo.setFilterFunction(filterFunction);
+
+        this.comboBoxModelo.selectItem(serviceVista.getModelo());
     }
 
     /**
@@ -186,7 +258,7 @@ public class ServiceModelo {
                         updateListaVista();
 
                         comboBoxModelo.setDisable(false);
-                        //comboBoxModelo.getSelectionModel().clearSelection();
+                        // comboBoxModelo.getSelectionModel().clearSelection();
                     } else {
                         comboBoxModelo.setDisable(true);
                     }
@@ -197,68 +269,6 @@ public class ServiceModelo {
             }
         });
 
-    }
-
-    public void updateListaAgregar() {
-        this.listModelo.clear();
-        this.listModelo.addAll(ServiceLista.getListModelos());// Cargamos los datos desde la base de datos
-
-        // Lista en la que vamos a almacenar los modelos en dependencia de la marca
-        // seleccionada.
-        listModeloNew.clear();
-
-        if(comboBoxMarca.getValue() != null){
-            for (Modelo modelo : listModelo) {
-                if (modelo.getMarca().getMarca().equals(comboBoxMarca.getValue().getMarca())) {
-                    listModeloNew.add(modelo);
-                }
-            }
-        }
-        
-
-        observableListModelo.clear();
-        observableListModelo = FXCollections.observableArrayList(listModeloNew);
-
-        StringConverter<Modelo> converter = FunctionalStringConverter
-                .to(modelo -> (modelo == null) ? "" : modelo.getModelo());
-        Function<String, Predicate<Modelo>> filterFunction = s -> modelo -> StringUtils
-                .containsIgnoreCase(converter.toString(modelo), s);
-        comboBoxModelo.setItems(observableListModelo);
-        comboBoxModelo.setConverter(converter);
-        comboBoxModelo.setFilterFunction(filterFunction);
-        comboBoxModelo.getSelectionModel().clearSelection();
-    }
-
-    public void updateListaVista() {
-        this.listModelo.clear();
-        this.listModelo.addAll(ServiceLista.getListModelos());// Cargamos los datos desde la base de datos
-
-        // Lista en la que vamos a almacenar los modelos en dependencia de la marca
-        // seleccionada.
-        listModeloNew.clear();
-
-        listModeloNew.add(ServiceCelularControllerVista.getModelo());
-        if(comboBoxMarca.getValue() != null){
-            for (Modelo modelo : listModelo) {
-                if (modelo.getMarca().getMarca().equals(comboBoxMarca.getValue().getMarca())) {
-                    listModeloNew.add(modelo);
-                }
-            }
-        }
-        
-
-        observableListModelo.clear();
-        observableListModelo = FXCollections.observableArrayList(listModeloNew);
-
-        StringConverter<Modelo> converter = FunctionalStringConverter
-                .to(modelo -> (modelo == null) ? "" : modelo.getModelo());
-        Function<String, Predicate<Modelo>> filterFunction = s -> modelo -> StringUtils
-                .containsIgnoreCase(converter.toString(modelo), s);
-        comboBoxModelo.setItems(observableListModelo);
-        comboBoxModelo.setConverter(converter);
-        comboBoxModelo.setFilterFunction(filterFunction);
-        
-        comboBoxModelo.selectItem(ServiceCelularControllerVista.getModelo());
     }
 
 }

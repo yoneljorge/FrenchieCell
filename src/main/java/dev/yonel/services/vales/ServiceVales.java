@@ -7,15 +7,18 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import dev.yonel.models.Celular;
+import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
 import dev.yonel.services.ServiceLista;
 import dev.yonel.services.celulares.ServiceCelular;
+import dev.yonel.services.promotores.ServicePromotor;
 import dev.yonel.utils.data_access.UtilsHibernate;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class ServiceVales {
 
+    private static ServiceVales instance;
     private Vale vale;
 
     public ServiceVales(Vale vale) {
@@ -23,29 +26,40 @@ public class ServiceVales {
         if(this.vale.getFechaGarantia() == null){
             this.vale.setFechaGarantia(this.vale.getFechaVenta().plusWeeks(1));
         }
+        instance = this;
     }
 
-    public boolean save(Celular celular){
-        ServiceCelular serviceCelular = new ServiceCelular(celular);
+    public boolean save(Celular celular, Promotor promotor){
         celular.setVendido(true);
+        ServiceCelular serviceCelular = new ServiceCelular(celular);
+    
+        ServicePromotor servicePromotor = new ServicePromotor(promotor);
 
-        if(serviceCelular.update()){
-            if(this.vale.save()){
-                ServiceLista.setCambioVale(true);
-                
-                return true;
+        
+            if(serviceCelular.update()){
+                if(this.vale.save()){
+                    ServiceLista.setCambioVale(true);
+                    
+                    servicePromotor.updateVales();
+                    servicePromotor.update();
+
+                    return true;
+                }else{
+                    return false;
+                }
             }else{
                 return false;
             }
-        }else{
-            return false;
-        }
-       
+        
     }
 
     /*********************************************
      * **********MÉTODOS ESTÁTICOS****************
      *********************************************/
+
+    private static ServiceVales getInstance(){
+        return instance;
+    }
 
     /*
      * Variable de tipo SessionFactory que nos permite interactuar con la base de

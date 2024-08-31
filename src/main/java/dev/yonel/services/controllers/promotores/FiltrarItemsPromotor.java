@@ -19,10 +19,13 @@ public class FiltrarItemsPromotor {
     private @Setter boolean porPagar = false;
     private @Setter boolean enGarantia = false;
 
+    private ServiceCelularControllerVista serviceCelularesVista = ServiceCelularControllerVista.getInstance();
+    private ServicePromotoresControllerVista servicePromotoresVista = ServicePromotoresControllerVista.getInstance();
+
     public void getAllItems() {
         Platform.runLater(() -> {
             // Quitamos todos los items del VBox para que no se repitan
-            ServicePromotoresControllerVista.cleanVBox();
+            serviceCelularesVista.cleanVBox();
 
             Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
             try {
@@ -38,7 +41,7 @@ public class FiltrarItemsPromotor {
                     }
 
                     // setItems(resultList.get(0));
-                    ServicePromotoresControllerVista.setItems(filtrar(resultList.get(0)));
+                    servicePromotoresVista.setItems(filtrar(resultList.get(0)));
 
                     // Incrementa el desplazamiento para el siguiente
                     int currentFirstResult = query.getFirstResult();
@@ -54,16 +57,16 @@ public class FiltrarItemsPromotor {
             }
 
             // Invertimos el orden de los celulares
-            ServiceCelularControllerVista.invertirOrden();
+            serviceCelularesVista.invertirOrden();
         });
     }
 
     private Promotor filtrar(Promotor promotor) {
-        
+
         if (enGarantia) {
             if (porPagar) {
                 if (promotor.getValesEnGarantia() != null && promotor.getValesEnGarantia() > 0) {
-                    if (promotor.getValesPorPagar() != null &&promotor.getValesPorPagar() > 0 ) {
+                    if (promotor.getValesPorPagar() != null && promotor.getValesPorPagar() > 0) {
                         return promotor;
                     }
                 }
@@ -76,7 +79,7 @@ public class FiltrarItemsPromotor {
             if (promotor.getValesPorPagar() != null && promotor.getValesPorPagar() > 0) {
                 return promotor;
             }
-        }else{
+        } else {
             return promotor;
         }
 
