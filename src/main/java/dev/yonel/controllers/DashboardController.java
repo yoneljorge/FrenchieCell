@@ -15,7 +15,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
-import lombok.Setter;
 
 public class DashboardController implements Initializable {
 
@@ -50,28 +49,31 @@ public class DashboardController implements Initializable {
     private VBox promotores;
     private VBox vales;
 
-    private @Setter Stage stage;
+    private Stage stage;
     private @Getter static final ArrayList<VBox> listVBox = new ArrayList<>();
+
+    // Declarar los controladores como variables de instancia
+    private PrincipalController principalController;
+    private CelularesController celularesController;
+    private PromotoresController promotoresController;
+    private ValesController valesController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        PrincipalController principalController = new PrincipalController();
-        principalController.setStage(stage);
+
+        principalController = new PrincipalController();
         stackPane.getChildren().add(principal = LoadControllers.load("viewPrincipal", principalController));
 
-        CelularesController celularesController = CelularesController.getInstance();
-        celularesController.setStage(stage);
+        celularesController = CelularesController.getInstance();
         stackPane.getChildren().add(celulares = LoadControllers.load("viewCelulares", celularesController));
         celulares.setVisible(false);
 
-        PromotoresController promotoresController = PromotoresController.getInstance();
-        promotoresController.setStage(stage);
+        promotoresController = PromotoresController.getInstance();
         stackPane.getChildren().add(promotores = LoadControllers.load("viewPromotores", promotoresController));
         promotores.setVisible(false);
 
-        ValesController valesController = ValesController.getInstance();
-        valesController.setStage(stage);
+        valesController = ValesController.getInstance();
         stackPane.getChildren().add(vales = LoadControllers.load("viewVales", valesController));
         vales.setVisible(false);
 
@@ -95,5 +97,27 @@ public class DashboardController implements Initializable {
             AlertUtil.advertencia("Desea salir?", null, () -> Platform.exit());
         });
 
+        btnSettings.setOnAction(event ->{
+            if(stage != null){
+                System.out.println(">>>>>>>>>>stage ok");
+            }
+        });
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+
+        if (principalController != null) {
+            principalController.setStage(stage);
+        }
+        if (celularesController != null) {
+            celularesController.setStage(stage);
+        }
+        if (promotoresController != null) {
+            promotoresController.setStage(stage);
+        }
+        if (valesController != null) {
+            valesController.setStage(stage);
+        }
     }
 }

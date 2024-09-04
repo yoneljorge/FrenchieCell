@@ -18,17 +18,29 @@ import dev.yonel.controllers.DashboardController;
 public class App extends Application {
 	private double x, y;
 
-    private static Scene scene;
+    private Scene mainScene;
+	private Parent root;
+	private DashboardController dashboardController;
+
+
+	@Override 
+	public void init() throws IOException{
+
+		FXMLLoader loader = fxmlLoader("viewDashboard");
+		this.dashboardController = new DashboardController();
+		
+		loader.setController(dashboardController);
+		this.root = loader.load();
+		this.mainScene = new Scene(root);
+	}
+
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-		FXMLLoader loader = fxmlLoader("viewDashboard");
-		DashboardController dashboardController = new DashboardController();
-		dashboardController.setStage(primaryStage);
-		loader.setController(dashboardController);
-		Parent root = loader.load();
 
-		primaryStage.setScene(new Scene(root));
+		dashboardController.setStage(primaryStage);
+
+		primaryStage.setScene(mainScene);
 		//set stage borderless
 		primaryStage.initStyle(StageStyle.UNDECORATED);
 		
@@ -46,9 +58,6 @@ public class App extends Application {
 		primaryStage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
 
     public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("view/" + fxml + ".fxml"));
@@ -60,7 +69,8 @@ public class App extends Application {
 	}
 
     public static void main(String[] args) {
-        launch();
+        System.setProperty("javafx.preloader", "dev.yonel.MyPreloader");
+		launch(args);
     }
 
 }
