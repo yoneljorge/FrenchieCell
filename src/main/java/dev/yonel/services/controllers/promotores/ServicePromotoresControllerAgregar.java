@@ -1,6 +1,7 @@
 package dev.yonel.services.controllers.promotores;
 
 import dev.yonel.controllers.PromotoresController;
+import dev.yonel.services.Gatillo;
 import dev.yonel.services.promotores.ServicePromotor;
 import dev.yonel.utils.validation.MFXTextFieldUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -11,7 +12,7 @@ import javafx.scene.control.Label;
 
 public class ServicePromotoresControllerAgregar {
 
-    private static ServicePromotoresControllerAgregar instance; 
+    private static ServicePromotoresControllerAgregar instance;
 
     private MFXTextField txtNombre;
     private MFXTextField txtApellidos;
@@ -25,31 +26,31 @@ public class ServicePromotoresControllerAgregar {
 
     private PromotoresController promotoresController = PromotoresController.getInstance();
 
-    private ServicePromotoresControllerAgregar(){
+    private ServicePromotoresControllerAgregar() {
         instance = this;
 
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             setObjects();
         });
     }
 
-    public static ServicePromotoresControllerAgregar getInstance(){
-        if(instance == null){
+    public static ServicePromotoresControllerAgregar getInstance() {
+        if (instance == null) {
             instance = new ServicePromotoresControllerAgregar();
         }
         return instance;
     }
 
     private void setObjects() {
-    this.txtNombre = promotoresController.getTxtNombre();
-    this.txtApellidos = promotoresController.getTxtApellidos();
-    this.txtCelular = promotoresController.getTxtCelular();
-    this.btnLimpiar = promotoresController.getBtnLimpiar();
-    this.btnAgregar = promotoresController.getBtnAgregar();
-    this.validacionNombre = promotoresController.getValidacionNombre();
-    this.validacionApellidos = promotoresController.getValidacionApellidos();
-    this.validacionCelular = promotoresController.getValidacionCelular();
-    this.labelEstado = promotoresController.getLabelEstado_AgregarPromotor();
+        this.txtNombre = promotoresController.getTxtNombre();
+        this.txtApellidos = promotoresController.getTxtApellidos();
+        this.txtCelular = promotoresController.getTxtCelular();
+        this.btnLimpiar = promotoresController.getBtnLimpiar();
+        this.btnAgregar = promotoresController.getBtnAgregar();
+        this.validacionNombre = promotoresController.getValidacionNombre();
+        this.validacionApellidos = promotoresController.getValidacionApellidos();
+        this.validacionCelular = promotoresController.getValidacionCelular();
+        this.labelEstado = promotoresController.getLabelEstado_AgregarPromotor();
     }
 
     /*********************************************
@@ -57,19 +58,27 @@ public class ServicePromotoresControllerAgregar {
      *********************************************/
 
     public void configure() {
-       Platform.runLater(()->{
-        MFXTextFieldUtil.validateString(txtNombre, validacionNombre);
-        MFXTextFieldUtil.validateString(txtApellidos, validacionApellidos);
-        MFXTextFieldUtil.validatePhoneNumber(txtCelular, validacionCelular);
+        Platform.runLater(() -> {
+            MFXTextFieldUtil.validateString(txtNombre, validacionNombre);
+            txtNombre.setText("");
+            validacionNombre.setText("");
 
-        btnAgregar.setOnAction(event -> {
-            agreagar();
-        });
+            MFXTextFieldUtil.validateString(txtApellidos, validacionApellidos);
+            txtApellidos.setText("");
+            validacionApellidos.setText("");
 
-        btnLimpiar.setOnAction(event -> {
-            limpiar();
+            MFXTextFieldUtil.validatePhoneNumber(txtCelular, validacionCelular);
+            txtCelular.setText("");
+            validacionCelular.setText("");
+
+            btnAgregar.setOnAction(event -> {
+                agreagar();
+            });
+
+            btnLimpiar.setOnAction(event -> {
+                limpiar();
+            });
         });
-       });
     }
 
     private void agreagar() {
@@ -84,6 +93,15 @@ public class ServicePromotoresControllerAgregar {
                 txtNombre.setText("");
                 txtApellidos.setText("");
                 txtCelular.setText("");
+                /*
+                 * Informamos que hay cambios en el apartado de promotores
+                 */
+                
+                Gatillo.newPromotor();
+                //Mandamos el mensaje de que se guardo el promotor 
+                setEstadoInformativo("Gestor guardado");
+
+                //Limpiamos los campos del formulario
             } else {
                 setEstadoInformativo("Gestor no guardado");
             }

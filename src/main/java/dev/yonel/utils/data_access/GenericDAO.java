@@ -90,6 +90,7 @@ public class GenericDAO<T, Id extends Serializable> {
      * 
      * @return
      */
+
     public static <T> List<T> getAllObject(Class<T> clazz) {
         Transaction tx = getSession().beginTransaction();
         try {
@@ -103,6 +104,65 @@ public class GenericDAO<T, Id extends Serializable> {
             tx.commit(); // Finalizar la transacción después de la operación exitosa
 
             return resultList;
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback(); // Deshacer la transacción en caso de error
+            }
+            e.printStackTrace(); // Manejar o registrar la excepción según sea necesario
+            return null; // Devolver un valor nulo en caso de error
+        }
+    }
+
+    private static int i = 0;
+    private static Class clazzGlobal;
+    /**
+     * Método que recupera todos los objetos de uno en uno de la clase genérica T en la base de datos.
+     * Debe de utilizarse en un bulce while <code>whiel(.getAllObject != null)</code> , debido a que va
+     * a ir obteniendo los objetos de uno en uno desde la base de datos y cuando llegue al final va a
+     * retornar un null.
+     *
+     * @param clazz
+     * @return
+     * @param <T>
+     */
+    public static <T> T getAllObjectOneToOne(Class<T> clazz) {
+        //Inicializamos la claseGlobal con la primera clase que utilice este método.
+        if(clazzGlobal == null){
+            clazzGlobal = clazz;
+        }
+        /**
+         * En caso de que la claseGlobal sea distinta a la clase que se pasa como argumento, entonces se iguala a la clase
+         * y el índice se iguala a 0, porque se sobreentiende que se está buscando objetos de otra clase y no queremos que
+         * comience desde otro índice.
+         */
+        if(clazzGlobal != clazz){
+            i = 0;
+            clazzGlobal = clazz;
+        }
+        Transaction tx = getSession().beginTransaction();
+        try {
+            HibernateCriteriaBuilder builder = getSession().getCriteriaBuilder();
+            CriteriaQuery<T> query = builder.createQuery(clazz);
+            Root<T> root = query.from(clazz);
+            query.select(root);
+
+            //Usamos el contador i para establecer desde que registro empezar.
+            Query<T> hibernateQuery = getSession().createQuery(query)
+                            .setFirstResult(i) //Desde el índice actual
+                            .setMaxResults(1);
+
+            List<T> resultList = hibernateQuery.getResultList();
+
+            if(!resultList.isEmpty()){
+                i ++; //Incrementar el índice para la siguiente llamada
+                tx.commit(); // Finalizar la transacción después de la operación exitosa
+                return resultList.getFirst(); //Devolver el primer y unico registro
+            }else {
+                i = 0;//Reiniciar el índice si no hay más resultados.
+                tx.commit(); // Finalizar la transacción después de la operación exitosa
+                return null;//Devolver null si no hay más registros.
+            }
+
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
                 tx.rollback(); // Deshacer la transacción en caso de error

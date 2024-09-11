@@ -9,15 +9,17 @@ import dev.yonel.models.Modelo;
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
 import dev.yonel.services.vales.ServiceVales;
+import lombok.Getter;
 import lombok.Setter;
 
-public class ServiceLista {
+public class ProxyABaseDeDatos {
     private @Setter static boolean cambioMarca = true;
     private @Setter static boolean cambioModelo = true;
-    private @Setter static boolean cambioCelular = true;
+    private @Setter @Getter static boolean cambioCelular = true;
     private @Setter static boolean cambioImei = true;
-    private @Setter static boolean cambioVale = true;
-    private @Setter static boolean cambioPromotor = true;
+    private @Setter static boolean cambioValeByPromotor = true;
+    private @Setter @Getter static boolean cambioVale = true;
+    private @Setter @Getter static boolean cambioPromotor = true;
 
     private static Long idPromotor;
 
@@ -25,8 +27,9 @@ public class ServiceLista {
     private static List<Modelo> modelos;
     private static List<Celular> celulares;
     private static List<String> imeis;
-    private static List<Vale> vales;
+    private static List<Vale> valesByPromotor;
     private static List<Promotor> promotores;
+    private static List<Vale> vales;
     
 
     public static List<Marca> getListMarcas(){
@@ -103,28 +106,42 @@ public class ServiceLista {
     }
 
     public static List<Vale> getListValesByPromotor(long i){
-        if(vales == null){
-            vales = new ArrayList<>();
+        if(valesByPromotor == null){
+            valesByPromotor = new ArrayList<>();
         }
         if(idPromotor == null){
             idPromotor = i;
-            vales.clear();
-            vales.addAll(ServiceVales.findValesByPromotor(idPromotor));
+            valesByPromotor.clear();
+            valesByPromotor.addAll(ServiceVales.findValesByPromotor(idPromotor));
             cambioVale = false;
 
         }else if(idPromotor != i){
             idPromotor = i;
-            vales.clear();
-            vales.addAll(ServiceVales.findValesByPromotor(idPromotor));
+            valesByPromotor.clear();
+            valesByPromotor.addAll(ServiceVales.findValesByPromotor(idPromotor));
             cambioVale = false;
         }
 
         if(cambioVale){
-            vales.clear();
-            vales.addAll(ServiceVales.findValesByPromotor(idPromotor));
+            valesByPromotor.clear();
+            valesByPromotor.addAll(ServiceVales.findValesByPromotor(idPromotor));
+            cambioVale = false;
+        }
+
+        return valesByPromotor;
+    }
+
+    public static List<Vale> getListVales(){
+        if(vales == null){
+            vales = new ArrayList<>();
+        }
+
+        if(cambioVale){
+            vales = Vale.getAll(Vale.class);
+
             cambioVale = false;
         }
 
         return vales;
-    }
+    }   
 }

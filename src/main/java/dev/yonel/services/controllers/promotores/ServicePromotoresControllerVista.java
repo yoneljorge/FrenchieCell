@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -19,32 +22,45 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import lombok.Setter;
 
+/**
+ * Clase que utiliza el patrón de diseño Singlenton para que solo halla una
+ * instancia de esta clase.
+ * Esta clase es la encargada del funcionamiento de listar los promotores en el
+ * apartado de los promotores o gestores.
+ * Esta clase depende de que el controlador la instancie para su funcionamiento.
+ */
 public class ServicePromotoresControllerVista {
 
+    private final PromotoresController promotoresController = PromotoresController.getInstance();
+
+    /*
+     * ##############################################
+     * ####### APARTADO DEL CONSTRUCTOR ############
+     * ##############################################
+     */
+    /*
+     * Se crea una instancia estática de esta clase.
+     */
     private static ServicePromotoresControllerVista instance;
 
-    private VBox vBoxItems;
-    private CheckBox checkEnGarantia;
-    private CheckBox checkPorPagar;
-
-    private final SessionFactory sessionFactory;
-    private FiltrarItemsPromotor filterItems;
-    private List<ItemPromotoresController> itemPromotorControllers;
-
-    private PromotoresController promotoresController = PromotoresController.getInstance();
-
+    /*
+     * Constructor privado para que solo se pueda instanciar esta clase desde
+     * dentro.
+     */
     private ServicePromotoresControllerVista() {
         instance = this;
 
-        this.sessionFactory = UtilsHibernate.getSessionFactory();
-        Platform.runLater(() -> {
-
-            this.itemPromotorControllers = new ArrayList<>();
-            setObjects();
-        });
+        this.itemPromotorControllers = new ArrayList<>();
+        Platform.runLater(this::setObjects);
     }
 
+    /**
+     * Método con el que se obtiene la única instancia de esta clase.
+     * 
+     * @return la instancia de esta clase.
+     */
     public static ServicePromotoresControllerVista getInstance() {
         if (instance == null) {
             instance = new ServicePromotoresControllerVista();
@@ -52,58 +68,98 @@ public class ServicePromotoresControllerVista {
         return instance;
     }
 
+    /*
+     * ##############################################
+     * ####### APARTADO DE LOS OBJETOS ##############
+     * ##############################################
+     */
+
+    private VBox vBoxItems;
+    private RadioButton radioButton_EnGarantia;
+    private RadioButton radioButton_PorPagar;
+    private RadioButton radioButton_Todos;
+    private ToggleGroup radioButtonsGroup;
+
+
+    /**
+     * Método con el que establecemos los objetos para la instancia actual desde el
+     * controlador.
+     */
+
     private void setObjects() {
         this.vBoxItems = promotoresController.getVboxLista_Items();
-        this.checkEnGarantia = promotoresController.getCheckEnGarantia();
-        this.checkPorPagar = promotoresController.getCheckPorPagar();
+        this.radioButton_PorPagar = promotoresController.getRadioButton_PorPagar();
+        this.radioButton_EnGarantia = promotoresController.getRadioButton_EnGarantia();
+        this.radioButton_Todos = promotoresController.getRadioButton_Todos();
+        radioButtonsGroup = new ToggleGroup();
+        radioButton_EnGarantia.setToggleGroup(radioButtonsGroup);
+        radioButton_PorPagar.setToggleGroup(radioButtonsGroup);
+        radioButton_Todos.setToggleGroup(radioButtonsGroup);
     }
 
-    public void configure() {
-        Platform.runLater(() -> {
-            cleanVBox();
-            getAllItems();
+    /*
+     * Instancia de la clase FiltrarItemsPromotor que se encarga de proporcionar los
+     * método para el filtrado de los ItemsPromotor en dependencia de los parámetros
+     * promorcionados.
+     */
+    private FiltrarItemsPromotor filterItems;
 
-            checkEnGarantia.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                filterItems = new FiltrarItemsPromotor();
-                filtrar(filterItems);
-                filterItems.getAllItems();
+    /*
+     * Variable que se encarga de proporcionar si han habido cambios en la interfaz,
+     * esta es modificada por cada objeto que este encargado de filtrar los items y
+     * desde la clase Gatillo.
+     */
+    private @Setter boolean cambiosEnItems = true;
+
+    public void configure() {
+        if (filterItems == null) {
+            filterItems = new FiltrarItemsPromotor();
+        }
+
+        Platform.runLater(() -> {
+            radioButton_PorPagar.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue){
+                    filterItems = new FiltrarItemsPromotor();
+                    filtrar(filterItems);
+                    filterItems.getAllItems();
+                }
             });
 
-            checkPorPagar.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                filterItems = new FiltrarItemsPromotor();
-                filtrar(filterItems);
-                filterItems.getAllItems();
+            radioButton_EnGarantia.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue){
+                    filterItems = new FiltrarItemsPromotor();
+                    filtrar(filterItems);
+                    filterItems.getAllItems();
+                }
+            });
+            radioButton_Todos.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue){
+                    filterItems = new FiltrarItemsPromotor();
+                    filtrar(filterItems);
+                    filterItems.getAllItems();
+                }
             });
         });
     }
 
-    private void getAllItems() {
-        Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
-        try {
-            String hql = "FROM Promotor"; // Tu entidad promotor
-            Query<Promotor> query = sessionFactory.getCurrentSession().createQuery(hql, Promotor.class);
-            query.setFirstResult(0); // Desde el primer registro
-            query.setMaxResults(1); // Solo un registro
+    /*
+     * ##############################################
+     * ####### MÉTODOS PARA AGREAGAR ITEMS ##########
+     * ##############################################
+     */
+    private final List<ItemPromotoresController> itemPromotorControllers;
+    private final SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
 
-            while (true) {
-                List<Promotor> resultList = query.list();
-                if (resultList.isEmpty()) {
-                    break; // Si no hay más resultados, salir
-                }
-                setItems(resultList.get(0));
-                System.out.println("Nombre del promotor -> " + resultList.get(0).getNombre());
+    public void getAllItems() {
+        /*Si han habido cambios es que se obtienen los items */
+        if (cambiosEnItems) {
+            removeAllItems();
 
-                // Incrementa el desplazamiento para el siguiente
-                int currentFirstResult = query.getFirstResult();
-                query.setFirstResult(currentFirstResult + 1);
+            Promotor promotor;
+            while ((promotor = Promotor.getAllOneToOne(Promotor.class))!= null){
+                setItems(promotor);
             }
-
-            tx.commit(); // Finaliza la transacción.
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();// Deshacer la transacción en caso de error.
-            }
-            e.printStackTrace();// Maneja o registra la excepción
+            cambiosEnItems = false;
         }
     }
 
@@ -128,7 +184,13 @@ public class ServicePromotoresControllerVista {
         }
     }
 
-    public void cleanVBox() {
+    /*
+     * ##############################################
+     * ####### MÉTODOS PARA QUITAR ITEMS ############
+     * ##############################################
+     */
+
+    public void removeAllItems() {
         vBoxItems.getChildren().clear();
         itemPromotorControllers.clear();
     }
@@ -141,8 +203,15 @@ public class ServicePromotoresControllerVista {
         vBoxItems.getChildren().remove(i);
     }
 
+    /*
+     * ##############################################
+     * ################# MÉTODOS ####################
+     * ##############################################
+     */
+
     private void filtrar(FiltrarItemsPromotor filter) {
-        filter.setEnGarantia(checkEnGarantia.isSelected());
-        filter.setPorPagar(checkPorPagar.isSelected());
+        filter.setEnGarantia(radioButton_EnGarantia.isSelected());
+        filter.setPorPagar(radioButton_PorPagar.isSelected());
     }
+
 }

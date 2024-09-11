@@ -8,9 +8,21 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 public class UtilsHibernate {
 
+    //private static UtilsHibernate instance;
     private static StandardServiceRegistry registry;
     private static SessionFactory sessionFactory;
 
+    //private UtilsHibernate(){
+    //    instance = this;
+    //}
+
+    //public static UtilsHibernate getInstance(){
+      //  if(instance == null){
+        //    instance = new UtilsHibernate();
+        //}
+
+        //return instance;
+    //}
     /**
      * Método que inicializa
      * @return

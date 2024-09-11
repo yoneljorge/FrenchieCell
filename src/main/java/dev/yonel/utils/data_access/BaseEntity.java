@@ -26,6 +26,10 @@ public abstract class BaseEntity<T, Id extends Serializable> {
         return GenericDAO.getAllObject(clazz);
     }
 
+    public final static <T> T getAllOneToOne(Class<T> clazz){
+        return GenericDAO.getAllObjectOneToOne(clazz);
+    }
+
     public final static boolean existe(Map<String, Object> propiedades){
         return GenericDAO.existe(propiedades);
     }

@@ -9,7 +9,8 @@ import java.util.function.Predicate;
 
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
-import dev.yonel.services.ServiceLista;
+import dev.yonel.services.Gatillo;
+import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
 import dev.yonel.utils.AlertUtil;
@@ -66,8 +67,8 @@ public class ServiceModelo {
             if (!exist()) {
                 if (this.modelo.save()) {
                     // Notificamos al ServiceList que hay cambios
-                    ServiceLista.setCambioModelo(true);
-                    serviceVista.setNewItem(true);
+                    Gatillo.newModelo();
+
                     AlertUtil.information("Éxito", "Modelo: " + modelo.getModelo() + " guardado.");
                     configureComboBox(comboBoxModelo, comboBoxMarca, btnAsociado);
                     updateListaAgregar();
@@ -134,7 +135,7 @@ public class ServiceModelo {
 
     public void updateListaAgregar() {
         this.listModelo.clear();
-        this.listModelo.addAll(ServiceLista.getListModelos());// Cargamos los datos desde la base de datos
+        this.listModelo.addAll(ProxyABaseDeDatos.getListModelos());// Cargamos los datos desde la base de datos
 
         // Lista en la que vamos a almacenar los modelos en dependencia de la marca
         // seleccionada.
@@ -163,7 +164,7 @@ public class ServiceModelo {
 
     public void updateListaVista() {
         this.listModelo.clear();
-        this.listModelo.addAll(ServiceLista.getListModelos());// Cargamos los datos desde la base de datos
+        this.listModelo.addAll(ProxyABaseDeDatos.getListModelos());// Cargamos los datos desde la base de datos
 
         // Lista en la que vamos a almacenar los modelos en dependencia de la marca
         // seleccionada.

@@ -37,18 +37,18 @@ public class Promotor extends BaseEntity<Promotor, Long> implements Serializable
     private Long telfono;
 
     @Column(name = "total_de_vales")
-    private Long totalDeVales =0l;
+    private Long totalDeVales =0L;
     @Column(name = "vales_en_garantia")
-    private Long valesEnGarantia = 0l;
+    private Long valesEnGarantia = 0L;
     @Column(name = "vales_por_pagar")
-    private Long valesPorPagar = 0l;
+    private Long valesPorPagar = 0L;
     @Column(name= "vales_pagados")
-    private Long valesPagados = 0l;
+    private Long valesPagados = 0L;
 
     @Column(name = "dinero_total")
-    private Long dineroTotal = 0l;
+    private Long dineroTotal = 0L;
     @Column(name = "dinero_total_por_pagar")
-    private Long dineroTotalPorPagar = 0l;
+    private Long dineroTotalPorPagar = 0L;
     @Column(name = "dinero_total_pagado")
-    private Long dineroTotalPagado = 0l;
+    private Long dineroTotalPagado = 0L;
 }

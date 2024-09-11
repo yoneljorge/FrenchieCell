@@ -13,7 +13,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import lombok.Getter;
 
 public class DashboardController implements Initializable {
@@ -49,7 +48,6 @@ public class DashboardController implements Initializable {
     private VBox promotores;
     private VBox vales;
 
-    private Stage stage;
     private @Getter static final ArrayList<VBox> listVBox = new ArrayList<>();
 
     // Declarar los controladores como variables de instancia
@@ -61,13 +59,14 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-
         principalController = new PrincipalController();
         stackPane.getChildren().add(principal = LoadControllers.load("viewPrincipal", principalController));
 
+        //boolean celularesBoolean = true;
         celularesController = CelularesController.getInstance();
         stackPane.getChildren().add(celulares = LoadControllers.load("viewCelulares", celularesController));
         celulares.setVisible(false);
+        
 
         promotoresController = PromotoresController.getInstance();
         stackPane.getChildren().add(promotores = LoadControllers.load("viewPromotores", promotoresController));
@@ -87,37 +86,20 @@ public class DashboardController implements Initializable {
 
         btnPromotores.setOnAction(event -> {
             SetVisible.This(listVBox, promotores);
+            PromotoresController.getInstance().goToLista();
         });
 
         btnVales.setOnAction(event -> {
             SetVisible.This(listVBox, vales);
+            ValesController.getInstance().goToLista();
         });
 
         btnSignout.setOnAction(event -> {
             AlertUtil.advertencia("Desea salir?", null, () -> Platform.exit());
         });
 
-        btnSettings.setOnAction(event ->{
-            if(stage != null){
-                System.out.println(">>>>>>>>>>stage ok");
-            }
+        btnSettings.setOnAction(event -> {
+
         });
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-
-        if (principalController != null) {
-            principalController.setStage(stage);
-        }
-        if (celularesController != null) {
-            celularesController.setStage(stage);
-        }
-        if (promotoresController != null) {
-            promotoresController.setStage(stage);
-        }
-        if (valesController != null) {
-            valesController.setStage(stage);
-        }
     }
 }

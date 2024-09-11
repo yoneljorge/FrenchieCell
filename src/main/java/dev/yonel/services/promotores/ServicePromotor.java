@@ -9,7 +9,8 @@ import java.util.function.Predicate;
 
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
-import dev.yonel.services.ServiceLista;
+import dev.yonel.services.Gatillo;
+import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.promotores.ServicePromotoresControllerAgregar;
 import dev.yonel.utils.AlertUtil;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -120,7 +121,7 @@ public class ServicePromotor {
     }
 
     /*********************************************
-     * **********MÉTODOS**************************
+     * ********** MÉTODOS PARA OBJETOS ***********
      *********************************************/
 
     /**
@@ -141,7 +142,7 @@ public class ServicePromotor {
          * evitamos cargar datos desde la base de dato in
          * cesariamente.
          */
-        list.addAll(ServiceLista.getListPromotores());
+        list.addAll(ProxyABaseDeDatos.getListPromotores());
 
         if (observableList == null) {
             observableList = FXCollections.observableArrayList();
@@ -160,12 +161,13 @@ public class ServicePromotor {
         comboBox.setFilterFunction(filterFunction);
     }
 
+
     public boolean save() {
         if (!exist()) {
             if (promotor.save()) {
                 ServicePromotoresControllerAgregar.getInstance().setEstadoInformativo("Gestor guardado.");
                 // Notificamos de que ha sido agregado un nuevo promotor.
-                ServiceLista.setCambioPromotor(true);
+                Gatillo.newPromotor();
                 return true;
             } else {
                 ServicePromotoresControllerAgregar.getInstance().setEstadoError("Error en conexióncon base de datos.");
@@ -181,7 +183,8 @@ public class ServicePromotor {
     public boolean update() {
 
         if (promotor.update()) {
-            ServiceLista.setCambioPromotor(true);
+            Gatillo.newPromotor();
+
             return true;
         } else {
 
@@ -189,6 +192,13 @@ public class ServicePromotor {
         }
     }
 
+    /**
+     * Verifica si existe en la base de datos el promotor que se quiere agregar en base a su nombre.
+     * En si esta clase utiliza el método existe de promotor que extiende de GenericDAO al cual se le
+     * pasa un Map con la clase y nombre del atributo que se quiere verificar si existe.
+     *
+     * @return true si existe, false en caso contrario.
+     */
     private boolean exist() {
 
         Map<String, Object> propiedades = new HashMap<>();
@@ -211,7 +221,7 @@ public class ServicePromotor {
 
     public void updateVales() {
         System.out.println("Actualizando vales Promotor: " + promotor.getNombre());
-        List<Vale> listVales = ServiceLista.getListValesByPromotor(promotor.getIdPromotor());
+        List<Vale> listVales = ProxyABaseDeDatos.getListValesByPromotor(promotor.getIdPromotor());
         long enGarantia = 0l;
         long liquidados = 0l;
         long porPagar = 0l;
@@ -240,7 +250,7 @@ public class ServicePromotor {
         Promotor promotor = Promotor.getById(Promotor.class, idPromotor);
 
         System.out.println("Actualizando vales Promotor: " + promotor.getNombre());
-        List<Vale> listVales = ServiceLista.getListValesByPromotor(promotor.getIdPromotor());
+        List<Vale> listVales = ProxyABaseDeDatos.getListValesByPromotor(promotor.getIdPromotor());
         long enGarantia = 0l;
         long liquidados = 0l;
         long porPagar = 0l;
@@ -266,7 +276,7 @@ public class ServicePromotor {
 
     public void updateValesAllPromotor(){
         list.clear();
-        list.addAll(ServiceLista.getListPromotores());
+        list.addAll(ProxyABaseDeDatos.getListPromotores());
         for(Promotor p : list){
             updateVales(p.getIdPromotor());
         }

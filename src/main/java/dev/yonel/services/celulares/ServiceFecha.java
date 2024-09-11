@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
-import dev.yonel.services.ServiceLista;
+import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
 import dev.yonel.utils.Fecha;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -72,7 +72,7 @@ public class ServiceFecha {
             listCelulares = new ArrayList<>();
         }
         listCelulares.clear();
-        listCelulares.addAll(ServiceLista.getListCelulares());
+        listCelulares.addAll(ProxyABaseDeDatos.getListCelulares());
 
         // Se inicializa y se limpia la listFecha
         if (listFechas == null) {

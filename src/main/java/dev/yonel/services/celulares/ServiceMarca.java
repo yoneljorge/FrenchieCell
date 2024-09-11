@@ -8,7 +8,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import dev.yonel.models.Marca;
-import dev.yonel.services.ServiceLista;
+import dev.yonel.services.Gatillo;
+import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
 import dev.yonel.utils.AlertUtil;
@@ -54,10 +55,9 @@ public class ServiceMarca {
                 if (this.marca.save()) {
                     AlertUtil.information("Exito", "Marca: " + this.marca.getMarca() + " guardada.");
                     serviceAgregar.setEstadoInformation("Marca guardada.");
-                    serviceVista.setNewItem(true);
                     System.out.println("Marca -> " + this.marca.getMarca() + " guardada.");
                     // Notificamos al ServiceList que hay cambios
-                    ServiceLista.setCambioMarca(true);
+                    Gatillo.newMarca();
                     ;
                     configureComboBox(comboBox);
 
@@ -123,7 +123,7 @@ public class ServiceMarca {
         }
 
         listMarca.clear();
-        listMarca.addAll(ServiceLista.getListMarcas());// Cargamos los datos desde la base de datos
+        listMarca.addAll(ProxyABaseDeDatos.getListMarcas());// Cargamos los datos desde la base de datos
 
         observableListMarca.clear();
         observableListMarca = FXCollections.observableArrayList(listMarca);
@@ -155,7 +155,7 @@ public class ServiceMarca {
         listMarca.clear();
         // Agregamos el elemento Todos a la lista observable.
         listMarca.add(serviceVista.getMarca());
-        listMarca.addAll(ServiceLista.getListMarcas());// Cargamos los datos desde la base de datos
+        listMarca.addAll(ProxyABaseDeDatos.getListMarcas());// Cargamos los datos desde la base de datos
 
         observableListMarca.clear();
         observableListMarca = FXCollections.observableArrayList(listMarca);

@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
+import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
 import dev.yonel.utils.ui.SetVisible;
@@ -19,13 +20,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class CelularesController implements Initializable {
@@ -95,9 +95,13 @@ public class CelularesController implements Initializable {
     @FXML
     private CheckBox checkDual;
     @FXML
-    private CheckBox checkVendido;
-    @FXML
     private Label labelCantidad;
+    @FXML
+    private RadioButton radioButton_VendidosNo;
+    @FXML 
+    private RadioButton radioButton_VendidosSi;
+    @FXML
+    private RadioButton radioButton_Todos;
 
     // **************************************************** */
     // **************************************************** */
@@ -111,9 +115,6 @@ public class CelularesController implements Initializable {
     private ServiceCelularControllerAgregar serviceAgregar;
     @Getter(AccessLevel.NONE)
     private ServiceCelularControllerVista serviceVista;
-
-    @Getter(AccessLevel.NONE)
-    private @Setter Stage stage;
 
     /**
      * Constructor privado para poder implementar el patrón de diseño Singlenton.
@@ -143,6 +144,7 @@ public class CelularesController implements Initializable {
          * este código cuando ya se halla inicalizado completamente la clase.
          */
         Platform.runLater(() -> {
+
             this.serviceAgregar = ServiceCelularControllerAgregar.getInstance();
             this.serviceVista = ServiceCelularControllerVista.getInstance();
 
@@ -151,20 +153,30 @@ public class CelularesController implements Initializable {
             listPane.add(pnlVista);
             SetVisible.This(listPane, pnlVista);
 
-            serviceAgregar.configure();
+            pnlAgregar.visibleProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    System.out.println(">>>>>>>>>>>Panel Agregar Celular");
+                    serviceAgregar.configure();
+                }
+
+            });
+
             serviceVista.configure();
+            //Cada vez que se abra la vista si hay cambios entonces se actualiza
+            pnlVista.visibleProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    if(ProxyABaseDeDatos.isCambioCelular()){
+                        serviceVista.configure();
+                    }
+                }
+            });
+
+            
 
             btnVista.setOnAction(event -> {
                 SetVisible.This(listPane, pnlVista);
                 btnAgregar.setDisable(false);
                 btnVista.setDisable(true);
-
-                // Si se agrega una marca, modelo o celular entonces se actualiza la vista
-                // completa.
-                if (serviceVista.getNewItem()) {
-                    serviceVista.recargar();
-                    serviceVista.setNewItem(false);
-                }
             });
 
             btnAgregar.setOnAction(evetnt -> {

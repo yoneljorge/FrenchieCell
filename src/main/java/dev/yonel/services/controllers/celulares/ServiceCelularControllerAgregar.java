@@ -53,7 +53,6 @@ public class ServiceCelularControllerAgregar {
     private Label validationLabel_Precio;
     private Label validationLabel_Fecha;
 
-    private ServiceCelularControllerVista serviceVista;
     private CelularesController celularesController;
 
     private ServiceCelularControllerAgregar() {
@@ -64,7 +63,6 @@ public class ServiceCelularControllerAgregar {
             this.banderaModeloExiste = false;
             this.serviceMarca = new ServiceMarca();
             this.serviceModelo = new ServiceModelo();
-            this.serviceVista = ServiceCelularControllerVista.getInstance();
             this.celularesController = CelularesController.getInstance();
 
             setObjects();
@@ -110,9 +108,18 @@ public class ServiceCelularControllerAgregar {
             serviceModelo.configureComboBox(modeloCombo, marcaCombo, btnAgregarModelo);
 
             MFXTextFieldUtil.validateIMEI(txtImeiUno, validationLabel_ImeiUno);
+            txtImeiUno.setText("");
+            validationLabel_ImeiUno.setText("");
+
             MFXTextFieldUtil.validateIMEI(txtImeiDos, validationLabel_ImeiDos);
+            txtImeiDos.setText("");
+            validationLabel_ImeiDos.setText("");
 
             MFXTextFieldUtil.validatePrecio(txtPrecio, validationLabel_Precio);
+            txtPrecio.setText("");
+            validationLabel_Precio.setText("");
+            fecha.setValue(null);
+            txtObservaciones.setText("");
 
             btnAgregarMarca.setOnAction(event -> {
                 guardarMarca();
@@ -155,6 +162,8 @@ public class ServiceCelularControllerAgregar {
                     }
                 }
             });
+
+
         });
     }
 
@@ -216,9 +225,7 @@ public class ServiceCelularControllerAgregar {
                     }
                 }
                 marcaCombo.selectItem(serviceMarca.getMarca());
-
-                setEstadoInformation("Marca " + serviceMarca.getMarca().getMarca() + " agregada.");
-
+                setEstadoInformation("Marca " + serviceMarca.getMarca().getMarca() + " agregada.");   
             } else if (banderaMarcaExiste) {
                 guardarMarca();
                 banderaMarcaExiste = false;
@@ -289,7 +296,6 @@ public class ServiceCelularControllerAgregar {
                 validationLabel_Precio.setVisible(false);
                 // Establecemos que se ha agregado un nuevo celular para que al pasar a la vista
                 // este recargue los celulares
-                serviceVista.setNewItem(true);
             }
         }
     }

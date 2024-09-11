@@ -16,13 +16,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.AccessLevel;
+import lombok.Getter;
 
 @Getter
 public class PromotoresController implements Initializable {
@@ -59,9 +58,11 @@ public class PromotoresController implements Initializable {
     @FXML
     private VBox vboxLista_Items;
     @FXML
-    private CheckBox checkEnGarantia;
+    private RadioButton radioButton_EnGarantia;
     @FXML
-    private CheckBox checkPorPagar;
+    private RadioButton radioButton_PorPagar;
+    @FXML
+    private RadioButton radioButton_Todos;
 
     // Panel Promotor
     @FXML
@@ -111,9 +112,6 @@ public class PromotoresController implements Initializable {
     @Getter(AccessLevel.NONE)
     private ServicePromotoresControllerPromotor servicePromotor;
 
-    @Getter(AccessLevel.NONE)
-    private @Setter Stage stage;
-
     private PromotoresController() {
         instance = this;
     }
@@ -133,20 +131,35 @@ public class PromotoresController implements Initializable {
             this.serviceVista = ServicePromotoresControllerVista.getInstance();
             this.servicePromotor = ServicePromotoresControllerPromotor.getInstance();
 
-            // cargamos la configuración de la vista agregar
-            serviceAgregar.configure();
-            // cargamos la configuración de la vista vista
-            serviceVista.configure();
-            // Agregamos Objetos al Map listPanePromotor
-            servicePromotor.configure();
-
             // Agregamos los VBox al ArrayList
             listVBox.add(vboxAgregar);
             listVBox.add(vboxLista);
             listVBox.add(vboxPromotor);
 
-            // Ponemos visible el VBox donde aparece la lista de promotores
-            goToLista();
+            vboxAgregar.setVisible(false);
+            vboxLista.setVisible(false);
+            vboxPromotor.setVisible(false);
+
+            // cargamos la configuración de la vista agregar
+            vboxAgregar.visibleProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    serviceAgregar.configure();
+                }
+            });
+
+            vboxLista.visibleProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    serviceVista.configure();
+                    serviceVista.getAllItems();
+                }
+            });
+
+            // Agregamos Objetos al Map listPanePromotor
+            vboxPromotor.visibleProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    servicePromotor.configure();
+                }
+            });
 
             btnPromotores.setOnAction(event -> {
                 goToLista();
@@ -174,6 +187,6 @@ public class PromotoresController implements Initializable {
     private void changeView(VBox vboxToShow, boolean promotoresDisable, boolean agregarPromotorDisable) {
         SetVisible.This(listVBox, vboxToShow);
         btnPromotores.setDisable(promotoresDisable);
-        btnAgregar.setDisable(agregarPromotorDisable);
+        btnAgregarPromotor.setDisable(agregarPromotorDisable);
     }
 }

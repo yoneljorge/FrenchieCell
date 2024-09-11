@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.Getter;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ public class App extends Application {
     private Scene mainScene;
 	private Parent root;
 	private DashboardController dashboardController;
+	private static @Getter Stage stage;
 
 
 	@Override 
@@ -37,9 +39,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
-		dashboardController.setStage(primaryStage);
-
+		stage = primaryStage;
 		primaryStage.setScene(mainScene);
 		//set stage borderless
 		primaryStage.initStyle(StageStyle.UNDECORATED);
@@ -56,6 +56,7 @@ public class App extends Application {
 		});
 		
 		primaryStage.show();
+
     }
 
 

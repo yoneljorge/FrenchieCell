@@ -9,7 +9,7 @@ import org.hibernate.query.Query;
 import dev.yonel.models.Celular;
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
-import dev.yonel.services.ServiceLista;
+import dev.yonel.services.Gatillo;
 import dev.yonel.services.celulares.ServiceCelular;
 import dev.yonel.services.promotores.ServicePromotor;
 import dev.yonel.utils.data_access.UtilsHibernate;
@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ServiceVales {
 
-    private static ServiceVales instance;
     private Vale vale;
 
     public ServiceVales(Vale vale) {
@@ -26,7 +25,7 @@ public class ServiceVales {
         if(this.vale.getFechaGarantia() == null){
             this.vale.setFechaGarantia(this.vale.getFechaVenta().plusWeeks(1));
         }
-        instance = this;
+
     }
 
     public boolean save(Celular celular, Promotor promotor){
@@ -38,7 +37,9 @@ public class ServiceVales {
         
             if(serviceCelular.update()){
                 if(this.vale.save()){
-                    ServiceLista.setCambioVale(true);
+                    Gatillo.newVale();
+                    Gatillo.newCelular();
+                    Gatillo.newPromotor();
                     
                     servicePromotor.updateVales();
                     servicePromotor.update();
@@ -57,9 +58,6 @@ public class ServiceVales {
      * **********MÉTODOS ESTÁTICOS****************
      *********************************************/
 
-    private static ServiceVales getInstance(){
-        return instance;
-    }
 
     /*
      * Variable de tipo SessionFactory que nos permite interactuar con la base de

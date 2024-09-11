@@ -7,6 +7,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
@@ -29,22 +30,35 @@
       </HBox>
       <StackPane prefHeight="519.0" prefWidth="793.0">
          <children>
-            <Pane fx:id="pnlVista" prefHeight="293.0" prefWidth="793.0" visible="false" StackPane.alignment="CENTER">
+            <Pane fx:id="pnlVista" prefHeight="293.0" prefWidth="793.0" StackPane.alignment="CENTER">
                <children>
                   <VBox>
                      <children>
                         <HBox alignment="BOTTOM_CENTER" prefHeight="47.0" prefWidth="793.0" spacing="10.0">
                            <children>
-                              <VBox alignment="CENTER" prefHeight="47.0" prefWidth="56.0" spacing="5.0">
+                              <VBox alignment="CENTER" prefHeight="47.0" prefWidth="37.0" spacing="5.0">
                                  <children>
                                     <Label text="DUAL" />
                                     <CheckBox fx:id="checkDual" mnemonicParsing="false" />
                                  </children>
                               </VBox>
-                              <VBox alignment="CENTER" prefHeight="47.0" prefWidth="59.0" spacing="5.0">
+                              <VBox alignment="CENTER" prefHeight="47.0" prefWidth="113.0" spacing="5.0">
                                  <children>
                                     <Label text="Vendido" />
-                                    <CheckBox fx:id="checkVendido" mnemonicParsing="false" />
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                       <children>
+                                          <RadioButton fx:id="radioButton_VendidosNo" mnemonicParsing="false" />
+                                          <RadioButton fx:id="radioButton_VendidosSi" mnemonicParsing="false" />
+                                          <RadioButton fx:id="radioButton_Todos" mnemonicParsing="false" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                       <children>
+                                          <Label text="NO" />
+                                          <Label text="SI" />
+                                          <Label text="ALL" />
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
                               <MFXFilterComboBox fx:id="cmbMarcaVista" floatMode="ABOVE" floatingText="Marca" />
@@ -124,7 +138,7 @@
                   </VBox>
                </children>
             </Pane>
-            <Pane id="custDatePicker" fx:id="pnlAgregar" disable="true" prefHeight="512.0" prefWidth="793.0">
+            <Pane id="custDatePicker" fx:id="pnlAgregar" disable="true" prefHeight="512.0" prefWidth="793.0" visible="false">
                <children>
                   <VBox layoutX="111.0" layoutY="14.0" prefHeight="465.0" prefWidth="539.0">
                      <children>

@@ -10,7 +10,7 @@ import dev.yonel.controllers.PromotoresController;
 import dev.yonel.controllers.items.ItemValeController;
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
-import dev.yonel.services.ServiceLista;
+import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.promotores.ServicePromotor;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.application.Platform;
@@ -21,8 +21,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import lombok.Setter;
 
 public class ServicePromotoresControllerPromotor {
 
@@ -39,7 +37,6 @@ public class ServicePromotoresControllerPromotor {
     private Label valesTotal;
     private Label labelPromotor;
     private Label dineroPagado;
-    private @Setter Stage stage;
 
     private List<Vale> listVales;
     private List<Vale> listValesLiquidar;
@@ -117,7 +114,7 @@ public class ServicePromotoresControllerPromotor {
          * del promotor.
          */
         listVales.clear();
-        listVales.addAll(ServiceLista.getListValesByPromotor(i));
+        listVales.addAll(ProxyABaseDeDatos.getListValesByPromotor(i));
         if (!listVales.isEmpty()) {
             for (Vale v : listVales) {
                 setItems(v);
@@ -152,7 +149,7 @@ public class ServicePromotoresControllerPromotor {
                 ItemValeController controller = new ItemValeController();
                 // ----> Todo lo que se le va a agregar al controlador
                 controller.setVale(vale);
-                controller.setStage(stage);
+                controller.setStage(App.getStage());
                 loader.setController(controller);
                 vbox = loader.load();
                 // vBoxItems.getChildren().add(hbox);
@@ -198,9 +195,7 @@ public class ServicePromotoresControllerPromotor {
      */
     public void addValeLiquidar(Vale vale) {
         listValesLiquidar.add(vale);
-        if (listValesLiquidar.size() > 0) {
-            btnLiquidar.setDisable(false);
-        }
+        btnLiquidar.setDisable(false);
     }
 
     /**

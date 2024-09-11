@@ -30,12 +30,12 @@
                <children>
                   <ScrollPane prefHeight="512.0" prefWidth="793.0">
                      <content>
-                        <FlowPane alignment="TOP_CENTER" hgap="30.0" prefHeight="499.0" prefWidth="782.0" vgap="30.0" />
+                        <FlowPane fx:id="flowPane_ListaDeItems" alignment="TOP_CENTER" hgap="30.0" prefHeight="499.0" prefWidth="782.0" vgap="30.0" />
                      </content>
                   </ScrollPane>
                </children>
             </VBox>
-            <VBox fx:id="vboxPanelAgregar" prefHeight="200.0" prefWidth="100.0">
+            <VBox fx:id="vboxPanelAgregar" prefHeight="200.0" prefWidth="100.0" visible="false">
                <children>
                   <HBox alignment="CENTER" prefHeight="298.0" prefWidth="793.0" spacing="5.0">
                      <children>
@@ -206,7 +206,7 @@
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" prefHeight="24.0" prefWidth="793.0" stylesheets="@../css/Label.css">
                      <children>
-                        <Label fx:id="labelEstado" text="Label" visible="false">
+                        <Label fx:id="labelEstado">
                            <HBox.margin>
                               <Insets right="200.0" />
                            </HBox.margin>

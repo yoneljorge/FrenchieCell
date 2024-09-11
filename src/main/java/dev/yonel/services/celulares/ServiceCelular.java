@@ -11,7 +11,8 @@ import java.util.function.Predicate;
 import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
-import dev.yonel.services.ServiceLista;
+import dev.yonel.services.Gatillo;
+import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.utils.Fecha;
 import dev.yonel.utils.validation.Validator;
@@ -219,7 +220,8 @@ public class ServiceCelular {
                 if (celular.save()) {
                     serviceAgregar.setEstadoInformation("Celular guardado.");
                     // Notificamos al ServiceList que hay cambios
-                    ServiceLista.setCambioCelular(true);
+                    Gatillo.newCelular();
+
                     return true;
                 } else {
                     serviceAgregar.setEstadoError("Error en conexión con base de datos.");
@@ -238,7 +240,7 @@ public class ServiceCelular {
 
     public boolean update() {
         if (celular.update()) {
-            ServiceLista.setCambioCelular(true);
+            Gatillo.newCelular();
             return true;
         } else {
             return false;
@@ -272,7 +274,7 @@ public class ServiceCelular {
         }
 
         listImei.clear();
-        listImei.addAll(ServiceLista.getListCelulares());
+        listImei.addAll(ProxyABaseDeDatos.getListCelulares());
 
         observableListImei.clear();
         observableListImei = FXCollections.observableArrayList(listImei);
@@ -300,7 +302,7 @@ public class ServiceCelular {
          * En caso de que el celular no esté vendido entonces es que se agrega a la
          * lista de celulares.
          */
-        for (Celular c : ServiceLista.getListCelulares()) {
+        for (Celular c : ProxyABaseDeDatos.getListCelulares()) {
             if (!c.getVendido()) {
                 listImei.add(c);
             }

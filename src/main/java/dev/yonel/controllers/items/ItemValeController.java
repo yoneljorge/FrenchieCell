@@ -16,7 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -25,6 +24,8 @@ import lombok.Setter;
 
 public class ItemValeController implements Initializable {
 
+    @FXML
+    private Label lblGestor;
     @FXML
     private VBox vboxVale;
     @FXML
@@ -42,11 +43,13 @@ public class ItemValeController implements Initializable {
     @FXML
     private CheckBox checkBoxLiquidar;
 
-    private String cliente, telefonoCliente, marca, modelo,
+    private String gestor, cliente, telefonoCliente, marca, modelo,
             fechaVenta, comision;
     private Popup popup;
     private @Setter Stage stage;
     private Vale vale;
+
+    private double x, y;
 
     public ItemValeController() {
 
@@ -54,6 +57,7 @@ public class ItemValeController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resource) {
+        this.lblGestor.setText(gestor);
         this.lblCliente.setText(cliente);
         this.lblTelefonoCliente.setText(telefonoCliente);
         this.lblMarca.setText(marca);
@@ -81,6 +85,20 @@ public class ItemValeController implements Initializable {
 
             VBox vBox = loader.load();
 
+            /*
+             * Bloque de cóidigo para que cuando se presione el popup x tome la distancia
+             * que ha sido arrastrado y luego se lo reste a la escena.
+             * Esto hace que se pueda arrastrar el popup.
+             */
+            vBox.setOnMousePressed(event -> {
+                x = event.getSceneX();
+                y = event.getSceneY();
+            });
+
+            vBox.setOnMouseDragged(event -> {
+                popup.setX(event.getScreenX() - x);
+                popup.setY(event.getScreenY() - y);
+            });
             popup.getContent().add(vBox);
 
         } catch (IOException e) {
@@ -102,15 +120,6 @@ public class ItemValeController implements Initializable {
             timeline.play();
         });
 
-        /*
-         * Al mover el mouse se mueve el popup junto con el puntero.
-         */
-        vboxVale.addEventFilter(MouseEvent.MOUSE_MOVED, moved -> {
-            if (popup.isShowing()) {
-                popup.setX(moved.getSceneX());
-                popup.setY(moved.getSceneY());
-            }
-        });
 
         /*
          * Verificamos que se halla cumplido la garantia.
@@ -142,6 +151,7 @@ public class ItemValeController implements Initializable {
 
         this.vale = vale;
 
+        this.gestor = vale.getPromotor().getNombre();
         this.cliente = vale.getCliente();
         this.telefonoCliente = String.valueOf(vale.getClienteTelefono());
         this.marca = vale.getMarca().getMarca();

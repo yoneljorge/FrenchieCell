@@ -50,7 +50,7 @@ public class ItemCelularController implements Initializable {
         this.labelPrecio.setText(precio);
         this.labelImei.setText(imei);
         this.labelFecha.setText(fecha);
-        if (this.vendido == false) {
+        if (!this.vendido) {
             this.labelVendido.setText("NO");
         } else {
             this.labelVendido.setText("SI");

@@ -3,10 +3,10 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
@@ -18,17 +18,17 @@
    <children>
       <HBox alignment="CENTER" prefHeight="50.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css">
          <children>
-            <MFXButton id="custom" fx:id="btnPromotores" disable="true" text="Promotores" />
-            <MFXButton id="custom" fx:id="btnAgregarPromotor" text="Agregar Promotor" />
+            <MFXButton id="custom" fx:id="btnPromotores" disable="true" text="Gestores" />
+            <MFXButton id="custom" fx:id="btnAgregarPromotor" text="Agregar Gestor" />
          </children>
       </HBox>
       <StackPane fx:id="stackPane" prefHeight="525.0" prefWidth="793.0">
          <children>
-            <VBox fx:id="vboxPromotor" prefHeight="537.0" prefWidth="793.0">
+            <VBox fx:id="vboxPromotor" prefHeight="537.0" prefWidth="793.0" visible="false">
                <children>
                   <HBox alignment="CENTER" prefHeight="38.0" prefWidth="793.0" spacing="5.0">
                      <children>
-                        <Label text="Promotor:">
+                        <Label text="Gestor:">
                            <font>
                               <Font name="System Bold" size="19.0" />
                            </font>
@@ -128,7 +128,7 @@
                   </HBox>
                   <ScrollPane prefHeight="418.0" prefWidth="793.0">
                      <content>
-                        <FlowPane fx:id="flowPanePromotorVales" alignment="TOP_CENTER" hgap="30.0" prefHeight="405.0" prefWidth="770.0" styleClass="splitmenubutton" stylesheets="@../css/styleItem.css" vgap="30.0" />
+                        <FlowPane fx:id="flowPanePromotorVales" alignment="TOP_CENTER" hgap="10.0" prefHeight="405.0" prefWidth="770.0" styleClass="splitmenubutton" stylesheets="@../css/styleItem.css" vgap="10.0" />
                      </content>
                   </ScrollPane>
                   <HBox alignment="CENTER" prefHeight="41.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Buttons.css">
@@ -139,12 +139,13 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox fx:id="vboxLista" prefHeight="554.0" prefWidth="793.0" visible="false">
+            <VBox fx:id="vboxLista" prefHeight="554.0" prefWidth="793.0">
                <children>
                   <HBox alignment="CENTER" prefHeight="54.0" prefWidth="793.0" spacing="25.0">
                      <children>
-                        <CheckBox fx:id="checkPorPagar" mnemonicParsing="false" text="Por Pagar" />
-                        <CheckBox fx:id="checkEnGarantia" mnemonicParsing="false" text="En Garantia" />
+                        <RadioButton fx:id="radioButton_Todos" mnemonicParsing="false" text="Todos" />
+                        <RadioButton fx:id="radioButton_EnGarantia" mnemonicParsing="false" text="En Garantia" />
+                        <RadioButton fx:id="radioButton_PorPagar" mnemonicParsing="false" text="Por Pagar" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="793.0" spacing="40.0" stylesheets="@../css/Label.css">
@@ -201,12 +202,12 @@
                   </HBox>
                   <ScrollPane prefHeight="492.0" prefWidth="793.0">
                      <content>
-                        <VBox fx:id="vboxLista_Items" prefHeight="458.0" prefWidth="787.0" />
+                        <VBox fx:id="vboxLista_Items" prefHeight="458.0" prefWidth="787.0" spacing="10.0" />
                      </content>
                   </ScrollPane>
                </children>
             </VBox>
-            <VBox fx:id="vboxAgregar" prefHeight="554.0" prefWidth="793.0">
+            <VBox fx:id="vboxAgregar" prefHeight="554.0" prefWidth="793.0" visible="false">
                <children>
                   <HBox alignment="CENTER" prefHeight="142.0" prefWidth="793.0" spacing="5.0">
                      <children>
@@ -262,7 +263,7 @@
                   </HBox>
                   <HBox alignment="BOTTOM_RIGHT" prefHeight="99.0" prefWidth="739.0" stylesheets="@../css/Label.css">
                      <children>
-                        <Label fx:id="labelEstado_AgregarPromotor" text="Estado" visible="false">
+                        <Label fx:id="labelEstado_AgregarPromotor">
                            <HBox.margin>
                               <Insets right="200.0" />
                            </HBox.margin>

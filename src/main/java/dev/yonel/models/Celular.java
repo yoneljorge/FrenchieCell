@@ -39,10 +39,10 @@ public class Celular extends BaseEntity<Celular, Long> implements Serializable{
     private Modelo modelo;
 
     @Column(name = "imei_uno")
-    private Long imeiUno = 0l;
+    private Long imeiUno = 0L;
 
     @Column(name = "imei_dos")
-    private Long imeiDos = 0l;
+    private Long imeiDos = 0L;
 
     @Column(name = "fecha_inventario")
     private LocalDate fechaInventario;

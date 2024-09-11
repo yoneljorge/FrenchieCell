@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import dev.yonel.models.Celular;
 import dev.yonel.models.Promotor;
 import dev.yonel.services.controllers.vales.ServiceValesControllerAgregar;
+import dev.yonel.services.controllers.vales.ServiceValesControllerVista;
 import dev.yonel.utils.ui.SetVisible;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -19,17 +20,14 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 public class ValesController implements Initializable {
-
-    @Getter(AccessLevel.NONE)
-    private static ValesController instance;
 
     // General
     @FXML
@@ -83,20 +81,28 @@ public class ValesController implements Initializable {
     @FXML
     private Label labelEstado;
 
+    // Panel Vista
+    @Getter
+    @Setter
+    @FXML
+    private FlowPane flowPane_ListaDeItems;
+
+    @Getter(AccessLevel.NONE)
+    private static ValesController instance;
+
     /*
      * Cargamos cada servicio de cada vista.
      */
     @Getter(AccessLevel.NONE)
     private ServiceValesControllerAgregar serviceAgregar;
+    @Getter(AccessLevel.NONE)
+    private ServiceValesControllerVista serviceVista;
 
     /*
      * Lista para agregar los VBox de las vistas para una mejor gestión.
      */
     @Getter(AccessLevel.NONE)
     private List<VBox> listVBoxs;
-
-    @Getter(AccessLevel.NONE)
-    private @Setter Stage stage;
 
     private ValesController() {
         instance = this;
@@ -115,27 +121,49 @@ public class ValesController implements Initializable {
          * VBox de la lista de promotores lo ponemos visible y el de agregar no.
          * Boton lista lo deshabilitamos.
          */
-        
+
         Platform.runLater(() -> {
             this.listVBoxs = new ArrayList<>();
             this.serviceAgregar = ServiceValesControllerAgregar.getInstance();
+            this.serviceVista = ServiceValesControllerVista.getInstance();
             listVBoxs.add(vboxPanelAgregar);
             listVBoxs.add(vboxPanelLista);
-            SetVisible.This(listVBoxs, vboxPanelLista);
+            vboxPanelAgregar.setVisible(false);
+            vboxPanelLista.setVisible(false);
             btnLista.setDisable(true);
 
-            this.serviceAgregar.configure();
+            vboxPanelAgregar.visibleProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    this.serviceAgregar.configure();
+                }
+            });
+
+            vboxPanelLista.visibleProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    this.serviceVista.configure();
+                    this.serviceVista.getAllItems();
+                }
+            });
 
             btnAgregar.setOnAction(event -> {
-                SetVisible.This(listVBoxs, vboxPanelAgregar);
-                btnAgregar.setDisable(true);
-                btnLista.setDisable(false);
+                goToAgregar();
             });
+
             btnLista.setOnAction(event -> {
-                SetVisible.This(listVBoxs, vboxPanelLista);
-                btnAgregar.setDisable(false);
-                btnLista.setDisable(true);
+                goToLista();
             });
         });
+    }
+
+    public void goToAgregar() {
+        SetVisible.This(listVBoxs, vboxPanelAgregar);
+        btnAgregar.setDisable(true);
+        btnLista.setDisable(false);
+    }
+
+    public void goToLista() {
+        SetVisible.This(listVBoxs, vboxPanelLista);
+        btnAgregar.setDisable(false);
+        btnLista.setDisable(true);
     }
 }

@@ -23,11 +23,13 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
 
 public class ServiceValesControllerAgregar {
 
     private static ServiceValesControllerAgregar instance;
 
+    private VBox panel;
     private MFXButton btnGuardar;
     private MFXButton btnLimpiar;
     private MFXFilterComboBox<Promotor> filterComboBoxPromotor;
@@ -76,6 +78,7 @@ public class ServiceValesControllerAgregar {
     }
 
     private void setObjects() {
+        this.panel = valesController.getVboxPanelAgregar();
         this.btnGuardar = valesController.getBtnGuardar();
         this.btnLimpiar = valesController.getBtnLimpiar();
         this.filterComboBoxPromotor = valesController.getFilterComboBoxPromotor();
@@ -102,19 +105,30 @@ public class ServiceValesControllerAgregar {
         Platform.runLater(() -> {
 
             servicePromotor.configureFilterComboBox(filterComboBoxPromotor);
-            MFXTextFieldUtil.validateString(txtCliente, labelValidacionCliente);
-            MFXTextFieldUtil.validatePhoneNumber(txtTelefonoCliente, labelValidacionTelefonoCliente);
             serviceCelular.configureFilterComboBoxImeiForAgregarVales(filterComboBoxImei);
+            MFXTextFieldUtil.validateString(txtCliente, labelValidacionCliente);
+            txtCliente.setText("");
+            MFXTextFieldUtil.validatePhoneNumber(txtTelefonoCliente, labelValidacionTelefonoCliente);
+            txtTelefonoCliente.setText("");
             filterComboBoxImei.selectedItemProperty().addListener(new ChangeListener<Celular>() {
                 @Override
-                public void changed(ObservableValue<? extends Celular> observable, Celular oldValue, Celular newValue) {
+                public void changed(ObservableValue<? extends Celular> observable, Celular oldValue,
+                        Celular newValue) {
                     if (newValue != null) {
                         getDatosCelular(filterComboBoxImei.getValue());
                     }
                 }
             });
+            txtMarca.setText("");
+            txtModelo.setText("");
             MFXTextFieldUtil.validatePrecio(txtPrecio, labelValidacionPrecio);
+            txtPrecio.setText("");
+            datePickerFechaVenta.setEditable(false);
+            datePickerFechaVenta.setValue(null);
             MFXTextFieldUtil.validatePrecio(txtComision, labelValidacionComision);
+            txtComision.setText("");
+            txtDireccion.setText("");
+            txtCostoMensajeria.setText("");
             checkBoxServicioMensajeria.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if (checkBoxServicioMensajeria.isSelected()) {
                     txtDireccion.setDisable(false);
@@ -152,7 +166,23 @@ public class ServiceValesControllerAgregar {
             updateVale();
 
             if (serviceVales.save(filterComboBoxImei.getValue(), filterComboBoxPromotor.getValue())) {
+                // TODO: Método Save Vale
                 setEstadoInformativo("Vale guardado.");
+
+                // Limpiamos los campos
+                filterComboBoxPromotor.getSelectionModel().clearSelection();
+                txtCliente.setText("");
+                txtTelefonoCliente.setText("");
+                filterComboBoxImei.getSelectionModel().clearSelection();
+                txtMarca.setText("");
+                txtModelo.setText("");
+                txtPrecio.setText("");
+                datePickerFechaVenta.setValue(null);
+                txtComision.setText("");
+                checkBoxServicioMensajeria.selectedProperty().set(false);
+
+                configure();
+
             }
 
         }
@@ -243,7 +273,7 @@ public class ServiceValesControllerAgregar {
      * 
      * @param estado el mensaje que se desea mostrar.
      */
-    public void setEstadoInformativo(String estado) {
+    private void setEstadoInformativo(String estado) {
         labelEstado.setText(estado);
         labelEstado.getStyleClass().add("label");
 
@@ -260,7 +290,7 @@ public class ServiceValesControllerAgregar {
      * 
      * @param estado el mensaje que se desea mostrar.
      */
-    public void setEstadoError(String estado) {
+    private void setEstadoError(String estado) {
         labelEstado.setText(estado);
         labelEstado.getStyleClass().add("label-error");
 

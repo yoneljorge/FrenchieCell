@@ -33,6 +33,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -41,7 +43,6 @@ public class ServiceCelularControllerVista {
     private static ServiceCelularControllerVista instance;
 
     private final SessionFactory sessionFactory;
-    private boolean newItem;
     private Marca todas;
     private Modelo todos;
     private boolean cambioEnMarca;
@@ -59,8 +60,11 @@ public class ServiceCelularControllerVista {
     private MFXTextField txtFiltrarImei;
     private Label validarFiltrarImei;
     private CheckBox checkDual;
-    private CheckBox checkVendido;
     private Label cantidad;
+    private RadioButton radioButtonTodos;
+    private RadioButton radioButtonSi;
+    private RadioButton radioButtonNo;
+    private ToggleGroup radioButtonsGrupo;
 
     // Lista para almacenar las instancias de ItemCelularController
     private List<ItemCelularController> itemCelularControllers;
@@ -73,7 +77,6 @@ public class ServiceCelularControllerVista {
         // Se inicializa aqui porque no afecta el funcionamiento de la aplicación.
         this.sessionFactory = UtilsHibernate.getSessionFactory();
         Platform.runLater(() -> {
-            this.newItem = false;
             this.todas = new Marca("TODAS");
             this.todos = new Modelo("TODOS", todas);
             this.cambioEnMarca = true;
@@ -104,8 +107,14 @@ public class ServiceCelularControllerVista {
         this.txtFiltrarImei = celularesController.getTxtFiltrarImei();
         this.validarFiltrarImei = celularesController.getValidationLabel_FilterImei();
         this.checkDual = celularesController.getCheckDual();
-        this.checkVendido = celularesController.getCheckVendido();
         this.cantidad = celularesController.getLabelCantidad();
+        this.radioButtonTodos = celularesController.getRadioButton_Todos();
+        this.radioButtonNo = celularesController.getRadioButton_VendidosNo();
+        this.radioButtonSi = celularesController.getRadioButton_VendidosSi();
+        radioButtonsGrupo = new ToggleGroup();
+        radioButtonNo.setToggleGroup(radioButtonsGrupo);
+        radioButtonSi.setToggleGroup(radioButtonsGrupo);
+        radioButtonTodos.setToggleGroup(radioButtonsGrupo);
     }
 
     public void configure() {
@@ -124,12 +133,6 @@ public class ServiceCelularControllerVista {
             });
 
             checkDual.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                filterItems = new FilterItemsCelular();
-                filtrar(filterItems);
-                filterItems.getAllItems();
-            });
-
-            checkVendido.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 filterItems = new FilterItemsCelular();
                 filtrar(filterItems);
                 filterItems.getAllItems();
@@ -196,6 +199,28 @@ public class ServiceCelularControllerVista {
                     }
                 }
             });
+
+            radioButtonNo.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    filterItems = new FilterItemsCelular();
+                    filtrar(filterItems);
+                    filterItems.getAllItems();
+                }
+            });
+            radioButtonSi.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    filterItems = new FilterItemsCelular();
+                    filtrar(filterItems);
+                    filterItems.getAllItems();
+                }
+            });
+            radioButtonTodos.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    filterItems = new FilterItemsCelular();
+                    filtrar(filterItems);
+                    filterItems.getAllItems();
+                }
+            });
         });
     }
 
@@ -216,31 +241,10 @@ public class ServiceCelularControllerVista {
     }
 
     private void getAllItems() {
-        Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
-        try {
-            String hql = "FROM Celular"; // Tu entidad celular
-            Query<Celular> query = sessionFactory.getCurrentSession().createQuery(hql, Celular.class);
-            query.setFirstResult(0); // Desde el primer registro
-            query.setMaxResults(1); // Solo un registro
+        Celular celular;
 
-            while (true) {
-                List<Celular> resultList = query.list();
-                if (resultList.isEmpty()) {
-                    break; // Si no hay más resultados, salir
-                }
-                setItems(resultList.get(0));
-
-                // Incrementa el desplazamiento para el siguiente
-                int currentFirstResult = query.getFirstResult();
-                query.setFirstResult(currentFirstResult + 1);
-            }
-
-            tx.commit(); // Finaliza la transacción.
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();// Deshacer la transacción en caso de error.
-            }
-            e.printStackTrace();// Maneja o registra la excepción
+        while ((celular = Celular.getAllOneToOne(Celular.class))!=null){
+            setItems(celular);
         }
     }
 
@@ -286,14 +290,6 @@ public class ServiceCelularControllerVista {
         cantidad.setText("Cantidad: " + vBoxItems.getChildren().size());
     }
 
-    public boolean getNewItem() {
-        return newItem;
-    }
-
-    public void setNewItem(boolean estado) {
-        newItem = estado;
-    }
-
     public Marca getMarca() {
         return todas;
     }
@@ -333,7 +329,8 @@ public class ServiceCelularControllerVista {
 
         filter.setDual(checkDual.isSelected());
 
-        filter.setVendido(checkVendido.isSelected());
+        filter.setNoVendido(radioButtonNo.isSelected());
+        filter.setVendido(radioButtonSi.isSelected());
     }
 
     public void recargar() {
@@ -343,11 +340,11 @@ public class ServiceCelularControllerVista {
         comboMarca.getSelectionModel().selectIndex(0);
         txtFiltrarImei.setText("");
         checkDual.setSelected(false);
-        checkVendido.setSelected(false);
 
         serviceMarca.configureComboBox(comboMarca, ServiceCelularControllerVista.class);
         serviceModelo.configureComboBox(comboModelo, comboMarca);
         serviceFecha.configureComboBox(comboFecha, comboMarca, comboModelo);
 
+        radioButtonTodos.selectedProperty().set(true);
     }
 }

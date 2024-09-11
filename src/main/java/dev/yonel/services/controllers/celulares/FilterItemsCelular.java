@@ -12,7 +12,9 @@ import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
 import dev.yonel.utils.data_access.UtilsHibernate;
 import javafx.application.Platform;
+import lombok.Setter;
 
+@Setter
 public class FilterItemsCelular {
 
     private static final SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
@@ -23,35 +25,13 @@ public class FilterItemsCelular {
     private String imei;
     private boolean dual = false;
     private boolean vendido = false;
+    private boolean noVendido = false;
 
     private ServiceCelularControllerVista serviceVista = ServiceCelularControllerVista.getInstance();
     public FilterItemsCelular() {
         serviceVista.cleanVBox();
     }
 
-    public void setMarca(Marca marca) {
-        this.marca = marca;
-    }
-
-    public void setModelo(Modelo modelo) {
-        this.modelo = modelo;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
-    public void setImei(String imei) {
-        this.imei = imei;
-    }
-
-    public void setDual(boolean dual) {
-        this.dual = dual;
-    }
-
-    public void setVendido(boolean vendido) {
-        this.vendido = vendido;
-    }
 
     /**
      * Método con el cual se obtienen todos los celulares desde la Base de Datos.
@@ -62,34 +42,10 @@ public class FilterItemsCelular {
         Platform.runLater(() -> {
             // Quitamos todos los items del VBox para que no se repitan
             serviceVista.cleanVBox();
-            
-            Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
-            try {
-                String hql = "FROM Celular"; // Tu entidad celular
-                Query<Celular> query = sessionFactory.getCurrentSession().createQuery(hql, Celular.class);
-                query.setFirstResult(0); // Desde el primer registro
-                query.setMaxResults(1); // Solo un registro
 
-                while (true) {
-                    List<Celular> resultList = query.list();
-                    if (resultList.isEmpty()) {
-                        break; // Si no hay más resultados, salir
-                    }
-
-                    // setItems(resultList.get(0));
-                    serviceVista.setItems(filtrar(resultList.get(0)));
-
-                    // Incrementa el desplazamiento para el siguiente
-                    int currentFirstResult = query.getFirstResult();
-                    query.setFirstResult(currentFirstResult + 1);
-                }
-
-                tx.commit(); // Finaliza la transacción.
-            } catch (Exception e) {
-                if (tx != null) {
-                    tx.rollback();// Deshacer la transacción en caso de error.
-                }
-                e.printStackTrace();// Maneja o registra la excepción
+            Celular celular;
+            while ((celular = Celular.getAllOneToOne(Celular.class)) != null){
+                serviceVista.setItems(filtrar(celular));
             }
 
             // Invertimos el orden de los celulares
@@ -107,8 +63,14 @@ public class FilterItemsCelular {
                         return verificarCelular(celular);
                     }
                 }
-            } else {
+            } else if(noVendido){
                 if (celular.getImeiDos() != 0) {
+                    if(!celular.getVendido()){
+                        return verificarCelular(celular);
+                    }  
+                }
+            }else{
+                if(celular.getImeiDos() != 0){
                     return verificarCelular(celular);
                 }
             }
@@ -116,7 +78,12 @@ public class FilterItemsCelular {
             if (celular.getVendido()) {
                 return verificarCelular(celular);
             }
-        } else {
+        } else if(noVendido){
+            if(!celular.getVendido()){
+                return verificarCelular(celular);
+            }
+            
+        }else{
             return verificarCelular(celular);
         }
 
