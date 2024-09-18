@@ -11,11 +11,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
-public class ItemPromotoresController  implements Initializable{
+public class ItemPromotoresController implements Initializable {
 
     @FXML
     private HBox itemPromotor;
-    @FXML 
+    @FXML
     private Label labelNombre;
     @FXML
     private Label labelNumeroCelular;
@@ -33,11 +33,11 @@ public class ItemPromotoresController  implements Initializable{
     private String nombre, celular, ventas, enGarantia, porPagar, total;
     private Long idPromotor;
 
-    public ItemPromotoresController(){
+    public ItemPromotoresController() {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resource){
+    public void initialize(URL location, ResourceBundle resource) {
         this.labelNombre.setText(nombre);
         this.labelNumeroCelular.setText(celular);
         this.labelVentas.setText(ventas);
@@ -55,13 +55,13 @@ public class ItemPromotoresController  implements Initializable{
         });
     }
 
-    public void setPromotor(ServicePromotor servicePromotor){
+    public void setPromotor(ServicePromotor servicePromotor) {
         this.idPromotor = servicePromotor.getIdPromotor();
         this.nombre = servicePromotor.getNombre() + " " + servicePromotor.getApellidos();
         this.celular = String.valueOf(servicePromotor.getTelefono());
         this.ventas = String.valueOf(servicePromotor.getValesTotal());
         this.enGarantia = String.valueOf(servicePromotor.getValesEnGarantia());
         this.porPagar = String.valueOf(servicePromotor.getValesPorPagar());
-        this.total = String.valueOf(servicePromotor.getDineroTotalPagado()); 
+        this.total = String.valueOf(servicePromotor.getDineroTotalPorPagar());
     }
 }

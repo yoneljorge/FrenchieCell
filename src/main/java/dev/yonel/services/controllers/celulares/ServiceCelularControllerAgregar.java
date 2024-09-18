@@ -6,6 +6,7 @@ import java.util.Optional;
 import dev.yonel.controllers.CelularesController;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
+import dev.yonel.services.Mensajes;
 import dev.yonel.services.celulares.ServiceCelular;
 import dev.yonel.services.celulares.ServiceMarca;
 import dev.yonel.services.celulares.ServiceModelo;
@@ -31,7 +32,8 @@ public class ServiceCelularControllerAgregar {
     private static ServiceCelularControllerAgregar instance;
 
     private @Setter boolean banderaMarcaExiste;
-    private @Setter @Getter boolean banderaModeloExiste;
+    private @Setter
+    @Getter boolean banderaModeloExiste;
 
     private ServiceMarca serviceMarca;
     private ServiceModelo serviceModelo;
@@ -155,7 +157,7 @@ public class ServiceCelularControllerAgregar {
             fecha.valueProperty().addListener(new ChangeListener<LocalDate>() {
                 @Override
                 public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
-                        LocalDate newValue) {
+                                    LocalDate newValue) {
                     if (newValue != null) {
                         validationLabel_Fecha.setVisible(false);
                         validationLabel_Fecha.setText("");
@@ -174,7 +176,7 @@ public class ServiceCelularControllerAgregar {
     /**
      * Método con el cual vamos a pasar mensajes de información al Label de
      * estado.
-     * 
+     *
      * @param estado el mensaje que se desea mostrar.
      */
     public void setEstadoInformation(String estado) {
@@ -191,7 +193,7 @@ public class ServiceCelularControllerAgregar {
     /**
      * Método con el que vamos a pasar mensajes de error al Label de
      * estado.
-     * 
+     *
      * @param estado el mensaje que se desea mostrar.
      */
     public void setEstadoError(String estado) {
@@ -225,7 +227,7 @@ public class ServiceCelularControllerAgregar {
                     }
                 }
                 marcaCombo.selectItem(serviceMarca.getMarca());
-                setEstadoInformation("Marca " + serviceMarca.getMarca().getMarca() + " agregada.");   
+                setEstadoInformation("Marca " + serviceMarca.getMarca().getMarca() + " agregada.");
             } else if (banderaMarcaExiste) {
                 guardarMarca();
                 banderaMarcaExiste = false;
@@ -274,6 +276,7 @@ public class ServiceCelularControllerAgregar {
         } else if (modeloCombo.getValue() == null) {
             setEstadoError("Seleccione un MODELO");
         } else if (isValid()) {
+
 
             // Parte de guardado
             setEstadoInformation("Guardando...");

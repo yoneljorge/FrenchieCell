@@ -10,8 +10,8 @@ import dev.yonel.controllers.PromotoresController;
 import dev.yonel.controllers.items.ItemValeController;
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
-import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.promotores.ServicePromotor;
+import dev.yonel.services.vales.ServiceVales;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -24,8 +24,40 @@ import javafx.scene.layout.VBox;
 
 public class ServicePromotoresControllerPromotor {
 
+    //Variable que almacena la instancia de la clase
     private static ServicePromotoresControllerPromotor instance;
 
+    /**
+     * Constructor privado para que solo se pueda cerar la instancia desde dentro de la clase.
+     * Con esto logramos de que solo halla una sola instancia de esta clase.
+     */
+    private ServicePromotoresControllerPromotor() {
+        instance = this;
+
+        /*
+        Con Platform.runLater() logramos de que ejecute el código que está dentro de
+        el luego de que la halla iniciado la aplicación.
+         */
+        Platform.runLater(() -> {
+            //Cargamos los objetos o componentes.
+            setObjects();
+        });
+    }
+
+    /**
+     * Método con el que obtenemos la única instancia de la clase.
+     *
+     * @return la instancia de clase.
+     */
+    public static ServicePromotoresControllerPromotor getInstance() {
+        if (instance == null) {
+            instance = new ServicePromotoresControllerPromotor();
+        }
+        return instance;
+    }
+
+
+    //Controles que tiene la vista.
     private FlowPane promotorVales;
     private MFXButton btnRegresar;
     private MFXButton btnLiquidar;
@@ -37,34 +69,17 @@ public class ServicePromotoresControllerPromotor {
     private Label valesTotal;
     private Label labelPromotor;
     private Label dineroPagado;
-
     private List<Vale> listVales;
     private List<Vale> listValesLiquidar;
-
     private List<ItemValeController> itemValePromotorControllers;
-
+    //Instancia del constructor
     private PromotoresController promotoresController = PromotoresController.getInstance();
 
-    private ServicePromotoresControllerPromotor() {
-        instance = this;
-
-        Platform.runLater(() -> {
-            this.listVales = new ArrayList<>();
-            this.listValesLiquidar = new ArrayList<>();
-            this.itemValePromotorControllers = new ArrayList<>();
-
-            setObjects();
-        });
-    }
-
-    public static ServicePromotoresControllerPromotor getInstance() {
-        if (instance == null) {
-            instance = new ServicePromotoresControllerPromotor();
-        }
-        return instance;
-    }
 
     private void setObjects() {
+        this.listVales = new ArrayList<>();
+        this.listValesLiquidar = new ArrayList<>();
+        this.itemValePromotorControllers = new ArrayList<>();
         this.promotorVales = promotoresController.getFlowPanePromotorVales();
         this.btnRegresar = promotoresController.getBtnRegresar();
         this.btnLiquidar = promotoresController.getBtnLiquidar();
@@ -78,6 +93,9 @@ public class ServicePromotoresControllerPromotor {
         this.dineroPagado = promotoresController.getLblDineroPagado();
     }
 
+    /**
+     * Méotodo con el que vamos a configurar los botones y objetos de la vista.
+     */
     public void configure() {
         Platform.runLater(() -> {
             btnRegresar.setOnAction(event -> {
@@ -90,11 +108,16 @@ public class ServicePromotoresControllerPromotor {
         });
     }
 
-    public void loadPromotor(Long i) {
+    /**
+     * Méotodo con el que vamos a cargargar la información a la vista.
+     *
+     * @param id el id del promtor que se desea cargar los datos.
+     */
+    public void loadPromotor(Long id) {
 
         promotoresController.goToPromotor();
 
-        ServicePromotor promotor = new ServicePromotor(Promotor.getById(Promotor.class, i));
+        ServicePromotor promotor = new ServicePromotor(Promotor.getById(Promotor.class, id));
 
         /*
          * Introducimos la información del promotor en el Panel.
@@ -114,11 +137,10 @@ public class ServicePromotoresControllerPromotor {
          * del promotor.
          */
         listVales.clear();
-        listVales.addAll(ProxyABaseDeDatos.getListValesByPromotor(i));
-        if (!listVales.isEmpty()) {
-            for (Vale v : listVales) {
-                setItems(v);
-            }
+
+        Vale v;
+        while ((v = ServiceVales.findValesByPromotorOneToOne(id)) != null) {
+            setItems(v);
         }
 
         /*
@@ -180,7 +202,7 @@ public class ServicePromotoresControllerPromotor {
         Collections.reverse(invertedList);
         promotorVales.getChildren().setAll(invertedList);
 
-        // Invertimos el orden de los nodos en la lista
+        // Invertimos el orden de los controles
         List<ItemValeController> invertedItemsValePromotor = new ArrayList<>(itemValePromotorControllers);
         Collections.reverse(invertedItemsValePromotor);
         itemValePromotorControllers = invertedItemsValePromotor;
@@ -190,7 +212,7 @@ public class ServicePromotoresControllerPromotor {
      * Método con el cual vamos a agregar desde el controlador del itemValePromotor
      * los vales que se pueden liquidar.
      * En caso de que la lista sea mayor a 0, se activa el boton liquidar.
-     * 
+     *
      * @param vale el vale que se va a liquidar.
      */
     public void addValeLiquidar(Vale vale) {
@@ -202,7 +224,7 @@ public class ServicePromotoresControllerPromotor {
      * Método con el cual vamos a remover desde el controlador itemValePromotor los
      * vales que se iban a liquidar.
      * En caso de que la lista sea igual a cero, de desactiva el boton liquidar.
-     * 
+     *
      * @param vale
      */
     public void removeValeLiquidar(Vale vale) {

@@ -6,7 +6,7 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox fx:id="itemCelular" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="772.0" styleClass="hbox" stylesheets="@../../css/styleItem.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="itemCelular" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="865.0" styleClass="hbox" stylesheets="@../../css/styleItem.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
     <children>
       <HBox alignment="CENTER" prefHeight="39.0" prefWidth="48.0">
          <children>
@@ -59,9 +59,14 @@
             <Label id="custom" fx:id="labelImei" text="123456789123456" />
          </children>
       </HBox>
-      <HBox alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="107.0">
+      <HBox alignment="CENTER_RIGHT" prefHeight="39.0" prefWidth="76.0">
          <children>
-            <MFXButton fx:id="btnQuitar" styleClass="outline-button" stylesheets="@../../css/Buttons.css" text="Quitar" />
+            <MFXButton fx:id="btnEditar" styleClass="outline-button" stylesheets="@../../css/Buttons.css" text="Editar" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="39.0" prefWidth="98.0">
+         <children>
+            <MFXButton fx:id="btnQuitar" styleClass="outline-button" stylesheets="@../../css/Buttons.css" text="Eliminar" />
          </children>
       </HBox>
     </children>

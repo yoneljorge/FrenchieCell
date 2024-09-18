@@ -5,21 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import dev.yonel.App;
 import dev.yonel.controllers.PromotoresController;
 import dev.yonel.controllers.items.ItemPromotoresController;
 import dev.yonel.models.Promotor;
 import dev.yonel.services.promotores.ServicePromotor;
-import dev.yonel.utils.data_access.UtilsHibernate;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.Setter;
@@ -33,8 +27,6 @@ import lombok.Setter;
  */
 public class ServicePromotoresControllerVista {
 
-    private final PromotoresController promotoresController = PromotoresController.getInstance();
-
     /*
      * ##############################################
      * ####### APARTADO DEL CONSTRUCTOR ############
@@ -45,20 +37,18 @@ public class ServicePromotoresControllerVista {
      */
     private static ServicePromotoresControllerVista instance;
 
+
     /*
      * Constructor privado para que solo se pueda instanciar esta clase desde
      * dentro.
      */
     private ServicePromotoresControllerVista() {
         instance = this;
-
-        this.itemPromotorControllers = new ArrayList<>();
-        Platform.runLater(this::setObjects);
     }
 
     /**
      * Método con el que se obtiene la única instancia de esta clase.
-     * 
+     *
      * @return la instancia de esta clase.
      */
     public static ServicePromotoresControllerVista getInstance() {
@@ -78,7 +68,7 @@ public class ServicePromotoresControllerVista {
     private RadioButton radioButton_EnGarantia;
     private RadioButton radioButton_PorPagar;
     private RadioButton radioButton_Todos;
-    private ToggleGroup radioButtonsGroup;
+    private final ToggleGroup radioButtonsGroup = new ToggleGroup();
 
 
     /**
@@ -87,14 +77,10 @@ public class ServicePromotoresControllerVista {
      */
 
     private void setObjects() {
-        this.vBoxItems = promotoresController.getVboxLista_Items();
-        this.radioButton_PorPagar = promotoresController.getRadioButton_PorPagar();
-        this.radioButton_EnGarantia = promotoresController.getRadioButton_EnGarantia();
-        this.radioButton_Todos = promotoresController.getRadioButton_Todos();
-        radioButtonsGroup = new ToggleGroup();
-        radioButton_EnGarantia.setToggleGroup(radioButtonsGroup);
-        radioButton_PorPagar.setToggleGroup(radioButtonsGroup);
-        radioButton_Todos.setToggleGroup(radioButtonsGroup);
+        this.vBoxItems = PromotoresController.getInstance().getVboxLista_Items();
+        this.radioButton_PorPagar = PromotoresController.getInstance().getRadioButton_PorPagar();
+        this.radioButton_EnGarantia = PromotoresController.getInstance().getRadioButton_EnGarantia();
+        this.radioButton_Todos = PromotoresController.getInstance().getRadioButton_Todos();
     }
 
     /*
@@ -110,36 +96,66 @@ public class ServicePromotoresControllerVista {
      * desde la clase Gatillo.
      */
     private @Setter boolean cambiosEnItems = true;
+    private boolean configurado = false;
 
     public void configure() {
-        if (filterItems == null) {
-            filterItems = new FiltrarItemsPromotor();
+        if (!configurado) {
+
+            this.itemPromotorControllers = new ArrayList<>();
+
+            if (filterItems == null) {
+                filterItems = new FiltrarItemsPromotor();
+            }
+
+            if (vBoxItems == null) {
+                setObjects();
+            }
+
+            Platform.runLater(() -> {
+
+                this.radioButton_EnGarantia.setToggleGroup(radioButtonsGroup);
+                this.radioButton_PorPagar.setToggleGroup(radioButtonsGroup);
+                this.radioButton_Todos.setToggleGroup(radioButtonsGroup);
+
+                radioButton_PorPagar.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue) {
+                        filterItems = new FiltrarItemsPromotor();
+                        filtrar(filterItems);
+                        filterItems.getAllItems();
+                    }
+                });
+
+                radioButton_EnGarantia.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue) {
+                        filterItems = new FiltrarItemsPromotor();
+                        filtrar(filterItems);
+                        filterItems.getAllItems();
+                    }
+                });
+                radioButton_Todos.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue) {
+                        filterItems = new FiltrarItemsPromotor();
+                        filtrar(filterItems);
+                        filterItems.getAllItems();
+                    }
+                });
+            });
+            //Con esto le decimos que no hay necesidad de volver a repetir todo el proceso si ya se ha configurado.
+            configurado = true;
         }
+    }
 
-        Platform.runLater(() -> {
-            radioButton_PorPagar.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue){
-                    filterItems = new FiltrarItemsPromotor();
-                    filtrar(filterItems);
-                    filterItems.getAllItems();
-                }
-            });
-
-            radioButton_EnGarantia.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue){
-                    filterItems = new FiltrarItemsPromotor();
-                    filtrar(filterItems);
-                    filterItems.getAllItems();
-                }
-            });
-            radioButton_Todos.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue){
-                    filterItems = new FiltrarItemsPromotor();
-                    filtrar(filterItems);
-                    filterItems.getAllItems();
-                }
-            });
-        });
+    /**
+     * Método que comprueba si el vBox es null, para evitar el
+     * error de NullPointerException.
+     *
+     * @return false en caso de que sea null. true en caso contrario.
+     */
+    public boolean isNotNull() {
+        if (vBoxItems == null) {
+            return false;
+        }
+        return true;
     }
 
     /*
@@ -147,20 +163,21 @@ public class ServicePromotoresControllerVista {
      * ####### MÉTODOS PARA AGREAGAR ITEMS ##########
      * ##############################################
      */
-    private final List<ItemPromotoresController> itemPromotorControllers;
-    private final SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
+    private List<ItemPromotoresController> itemPromotorControllers;
 
     public void getAllItems() {
         /*Si han habido cambios es que se obtienen los items */
-        if (cambiosEnItems) {
-            removeAllItems();
+        Platform.runLater(() -> {
+            if (cambiosEnItems) {
+                removeAllItems();
 
-            Promotor promotor;
-            while ((promotor = Promotor.getAllOneToOne(Promotor.class))!= null){
-                setItems(promotor);
+                Promotor promotor;
+                while ((promotor = Promotor.getAllOneToOne(Promotor.class)) != null) {
+                    setItems(promotor);
+                }
+                cambiosEnItems = false;
             }
-            cambiosEnItems = false;
-        }
+        });
     }
 
     public void setItems(Promotor promotor) {

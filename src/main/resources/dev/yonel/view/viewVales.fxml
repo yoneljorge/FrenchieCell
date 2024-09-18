@@ -10,29 +10,62 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="554.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" prefHeight="554.0" prefWidth="793.0" stylesheets="@../css/ScrollPane.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css">
+      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css" VBox.vgrow="ALWAYS">
          <children>
             <MFXButton id="custom" fx:id="btnLista" text="Lista" />
             <MFXButton id="custom" fx:id="btnAgregar" text="Agregar" />
          </children>
       </HBox>
-      <StackPane prefHeight="500.0" prefWidth="793.0">
+      <StackPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox fx:id="vboxPanelLista" prefHeight="200.0" prefWidth="100.0" visible="false">
+            <VBox fx:id="vboxPanelLista" prefHeight="200.0" prefWidth="100.0" StackPane.alignment="CENTER">
                <children>
-                  <ScrollPane prefHeight="512.0" prefWidth="793.0">
+                  <ScrollPane fx:id="scrollPane" prefHeight="512.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
                      <content>
                         <FlowPane fx:id="flowPane_ListaDeItems" alignment="TOP_CENTER" hgap="30.0" prefHeight="499.0" prefWidth="782.0" vgap="30.0" />
                      </content>
                   </ScrollPane>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="24.0" prefWidth="785.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <HBox fx:id="hBoxLoadingInVista" alignment="CENTER" prefHeight="24.0" prefWidth="169.0" spacing="10.0" visible="false">
+                           <children>
+                              <Label text="CARGANDO" />
+                              <ImageView fitHeight="12.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/typing.gif" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="49.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="24.0" prefWidth="570.0" spacing="10.0">
+                           <children>
+                              <Label text="LEYENDA:" />
+                              <Label text="CON GARANTÍA" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#75ff33" height="17.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+                              <Label text="SIN GARANTÍA">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff5733" height="17.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
                </children>
             </VBox>
             <VBox fx:id="vboxPanelAgregar" prefHeight="200.0" prefWidth="100.0" visible="false">

@@ -1,7 +1,5 @@
 package dev.yonel.utils.validation;
 
-import static io.github.palexdev.materialfx.utils.StringUtils.containsAny;
-
 import java.util.List;
 
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -11,6 +9,8 @@ import javafx.beans.binding.Bindings;
 import javafx.css.PseudoClass;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+
+import static io.github.palexdev.mfxcore.utils.StringUtils.containsAny;
 
 public class MFXTextFieldUtil {
 
@@ -25,7 +25,7 @@ public class MFXTextFieldUtil {
 
     /**
      * La cantidad de caracteres tiene que ser igual a 15.
-     * 
+     *
      * @param textField
      * @return
      */
@@ -39,7 +39,7 @@ public class MFXTextFieldUtil {
 
     /**
      * La cantidad de caracteres tiene que ser menor que 16.
-     * 
+     *
      * @param textField
      * @return
      */
@@ -53,7 +53,7 @@ public class MFXTextFieldUtil {
 
     /**
      * No puede contener letras minúsculas ni mayúsculas.
-     * 
+     *
      * @param textField
      * @return
      */
@@ -70,7 +70,7 @@ public class MFXTextFieldUtil {
 
     /**
      * No puede contener espacios en blanco.
-     * 
+     *
      * @param textField
      * @return
      */
@@ -86,7 +86,7 @@ public class MFXTextFieldUtil {
 
     /**
      * No puede contener caracteres especiales.
-     * 
+     *
      * @param textField
      * @return
      */
@@ -102,7 +102,7 @@ public class MFXTextFieldUtil {
 
     /**
      * No puede contener caracteres especiales excepto el punto.
-     * 
+     *
      * @param textField
      * @return
      */
@@ -118,7 +118,7 @@ public class MFXTextFieldUtil {
 
     /**
      * Solo puede contener números.
-     * 
+     *
      * @param textFiel
      * @return
      */
@@ -135,6 +135,7 @@ public class MFXTextFieldUtil {
 
     /**
      * No puede contener números.
+     *
      * @param textFiel
      * @return
      */
@@ -148,12 +149,12 @@ public class MFXTextFieldUtil {
                 .get();
     }
 
-    private static Constraint getTelefonoCubano(MFXTextField textField){
+    private static Constraint getTelefonoCubano(MFXTextField textField) {
         return Constraint.Builder.build()
-            .setSeverity(Severity.ERROR)
-            .setMessage("Número de teléfono no válido")
-            .setCondition(Validator.isPhoneNumber(textField))
-            .get();
+                .setSeverity(Severity.ERROR)
+                .setMessage("Número de teléfono no válido")
+                .setCondition(Validator.isPhoneNumber(textField))
+                .get();
     }
 
     public static void validateIMEI(MFXTextField textField, Label validationLabel) {
@@ -299,7 +300,7 @@ public class MFXTextFieldUtil {
         });
     }
 
-    public static void validatePhoneNumber(MFXTextField textField, Label validationLabel){
+    public static void validatePhoneNumber(MFXTextField textField, Label validationLabel) {
         textField.getValidator()
                 .constraint(getTelefonoCubano(textField));
 

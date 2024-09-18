@@ -2,6 +2,7 @@ package dev.yonel.controllers;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import dev.yonel.services.LoadControllers;
@@ -32,9 +33,6 @@ public class DashboardController implements Initializable {
     private Button btnVales;
 
     @FXML
-    private Button btnPackages;
-
-    @FXML
     private Button btnSettings;
 
     @FXML
@@ -48,7 +46,9 @@ public class DashboardController implements Initializable {
     private VBox promotores;
     private VBox vales;
 
-    private @Getter static final ArrayList<VBox> listVBox = new ArrayList<>();
+    private @Getter
+    static final ArrayList<VBox> listVBox = new ArrayList<>();
+    private List<Button> listaBotones = new ArrayList<>();
 
     // Declarar los controladores como variables de instancia
     private PrincipalController principalController;
@@ -66,7 +66,7 @@ public class DashboardController implements Initializable {
         celularesController = CelularesController.getInstance();
         stackPane.getChildren().add(celulares = LoadControllers.load("viewCelulares", celularesController));
         celulares.setVisible(false);
-        
+
 
         promotoresController = PromotoresController.getInstance();
         stackPane.getChildren().add(promotores = LoadControllers.load("viewPromotores", promotoresController));
@@ -76,22 +76,38 @@ public class DashboardController implements Initializable {
         stackPane.getChildren().add(vales = LoadControllers.load("viewVales", valesController));
         vales.setVisible(false);
 
+        //Agregamos todos los botones a la lista para una mejor gestión.
+        listaBotones.add(btnGeneral);
+        listaBotones.add(btnCelulares);
+        listaBotones.add(btnPromotores);
+        listaBotones.add(btnSettings);
+        listaBotones.add(btnSignout);
+        listaBotones.add(btnVales);
+
+        //Como la primera ventana que aparece es la principal entonces ponemos
+        // el boton general como seleccionado.
+        setStyleToBotton(btnGeneral);
+        
         btnGeneral.setOnAction(event -> {
             SetVisible.This(listVBox, principal);
+            setStyleToBotton(btnGeneral);
         });
 
         btnCelulares.setOnAction(event -> {
             SetVisible.This(listVBox, celulares);
+            setStyleToBotton(btnCelulares);
         });
 
         btnPromotores.setOnAction(event -> {
             SetVisible.This(listVBox, promotores);
             PromotoresController.getInstance().goToLista();
+            setStyleToBotton(btnPromotores);
         });
 
         btnVales.setOnAction(event -> {
             SetVisible.This(listVBox, vales);
             ValesController.getInstance().goToLista();
+            setStyleToBotton(btnVales);
         });
 
         btnSignout.setOnAction(event -> {
@@ -99,7 +115,20 @@ public class DashboardController implements Initializable {
         });
 
         btnSettings.setOnAction(event -> {
-
+            setStyleToBotton(btnSettings);
         });
+    }
+
+    private void setStyleToBotton(Button boton) {
+        for (Button b :
+                listaBotones) {
+            if (b.equals(boton)) {
+                b.getStyleClass().clear();
+                b.getStyleClass().add("button-seleccionado");
+            } else {
+                b.getStyleClass().clear();
+                b.getStyleClass().add("button");
+            }
+        }
     }
 }

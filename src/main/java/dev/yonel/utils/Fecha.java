@@ -12,9 +12,8 @@ public class Fecha {
 
     /**
      * Método para comprobar que una fecha de una cadena de texto es válida.
-     * 
+     *
      * @param fechaString la cadena de texto a evaluar.
-     * 
      * @return true en caso de que este correcta, false caso contrario.
      */
     public static boolean esFechaValida(String fechaString) {
@@ -32,9 +31,8 @@ public class Fecha {
     /**
      * Método que convierte una cadena de texto con el formato dd-MM-yyyy a un
      * LocalDateTime con el formato dd-MM-yyyy.
-     * 
+     *
      * @param dateString cadena de texto que representa la fehca.
-     * 
      * @return la fecha en formato LocalDateTime.
      */
     public static LocalDate getLocalDate(String dateString) {
@@ -48,9 +46,8 @@ public class Fecha {
     /**
      * Método que convierte una fecha con el formato dd-MM-yyyy a una cadena de
      * texto con el mismo formato.
-     * 
+     *
      * @param date fecha con el formato LocalDateTime.
-     * 
      * @return la fecha en una cadena de texto.
      */
     public static String getStringOfLocalDate(LocalDate date) {
@@ -60,16 +57,17 @@ public class Fecha {
     /**
      * Método que obtiene la cantidad de días entre dos fechas una inicial y otra
      * final.
-     * 
+     *
      * @param fechaInicio fecha desde la que se quiere empezar a contar.
      * @param fechaFin    fecha hasta la que se quiere contar.
      * @return un Long que representa la cantidad de días que hay entre las dos
-     *         fechas.
+     * fechas.
      */
-    public static Long getDiasEntre(LocalDate fechaInicio, LocalDate fechaFin) {
-        if(fechaInicio == null || fechaFin == null){
+    public static Integer getDiasEntre(LocalDate fechaInicio, LocalDate fechaFin) {
+        if (fechaInicio == null || fechaFin == null) {
             throw new IllegalArgumentException("El argumento no puede ser null");
         }
-        return ChronoUnit.DAYS.between(fechaInicio, fechaFin);
+        String dias = String.valueOf(ChronoUnit.DAYS.between(fechaInicio, fechaFin));
+        return Integer.parseInt(dias);
     }
 }

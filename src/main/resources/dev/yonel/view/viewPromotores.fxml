@@ -14,19 +14,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vboxPromotores" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="793.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" stylesheets="@../css/ScrollPane.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css">
+      <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="50.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css" VBox.vgrow="ALWAYS">
          <children>
-            <MFXButton id="custom" fx:id="btnPromotores" disable="true" text="Gestores" />
+            <MFXButton id="custom" fx:id="btnPromotores" disable="true" text="Lista" />
             <MFXButton id="custom" fx:id="btnAgregarPromotor" text="Agregar Gestor" />
          </children>
       </HBox>
-      <StackPane fx:id="stackPane" prefHeight="525.0" prefWidth="793.0">
+      <StackPane fx:id="stackPane" prefHeight="525.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox fx:id="vboxPromotor" prefHeight="537.0" prefWidth="793.0" visible="false">
+            <VBox fx:id="vboxPromotor" alignment="CENTER" prefHeight="537.0" prefWidth="793.0" visible="false" StackPane.alignment="CENTER">
                <children>
-                  <HBox alignment="CENTER" prefHeight="38.0" prefWidth="793.0" spacing="5.0">
+                  <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="38.0" prefWidth="793.0" spacing="5.0" VBox.vgrow="ALWAYS">
                      <children>
                         <Label text="Gestor:">
                            <font>
@@ -46,7 +46,7 @@
                         <Insets left="14.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="53.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Label.css">
+                  <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="53.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Label.css" VBox.vgrow="ALWAYS">
                      <children>
                         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
                            <children>
@@ -92,7 +92,7 @@
                         </VBox>
                         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <Label text="\$ por Pagar">
+                              <Label text="Por Pagar">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -106,7 +106,7 @@
                         </VBox>
                         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
                            <children>
-                              <Label text="\$ Pagado">
+                              <Label text="Pagado">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -126,12 +126,12 @@
                         </MenuButton>
                      </children>
                   </HBox>
-                  <ScrollPane prefHeight="418.0" prefWidth="793.0">
+                  <ScrollPane fx:id="scrollPane2" prefHeight="418.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
                      <content>
                         <FlowPane fx:id="flowPanePromotorVales" alignment="TOP_CENTER" hgap="10.0" prefHeight="405.0" prefWidth="770.0" styleClass="splitmenubutton" stylesheets="@../css/styleItem.css" vgap="10.0" />
                      </content>
                   </ScrollPane>
-                  <HBox alignment="CENTER" prefHeight="41.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Buttons.css">
+                  <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="41.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Buttons.css" VBox.vgrow="ALWAYS">
                      <children>
                         <MFXButton fx:id="btnRegresar" styleClass="outline-button" text="Regresar" />
                         <MFXButton fx:id="btnLiquidar" disable="true" styleClass="outline-button" text="Liquidar" />
@@ -139,20 +139,20 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox fx:id="vboxLista" prefHeight="554.0" prefWidth="793.0">
+            <VBox fx:id="vboxLista" alignment="TOP_CENTER">
                <children>
-                  <HBox alignment="CENTER" prefHeight="54.0" prefWidth="793.0" spacing="25.0">
+                  <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="54.0" prefWidth="793.0" spacing="25.0" VBox.vgrow="ALWAYS">
                      <children>
                         <RadioButton fx:id="radioButton_Todos" mnemonicParsing="false" text="Todos" />
                         <RadioButton fx:id="radioButton_EnGarantia" mnemonicParsing="false" text="En Garantia" />
                         <RadioButton fx:id="radioButton_PorPagar" mnemonicParsing="false" text="Por Pagar" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="793.0" spacing="40.0" stylesheets="@../css/Label.css">
+                  <HBox alignment="CENTER" prefHeight="29.0" prefWidth="793.0" spacing="40.0" stylesheets="@../css/Label.css" VBox.vgrow="ALWAYS">
                      <children>
                         <Label text="Nombre y Apellidos">
                            <HBox.margin>
-                              <Insets left="42.0" />
+                              <Insets left="-40.0" />
                            </HBox.margin>
                            <font>
                               <Font name="System Bold" size="15.0" />
@@ -200,9 +200,9 @@
                         </Label>
                      </children>
                   </HBox>
-                  <ScrollPane prefHeight="492.0" prefWidth="793.0">
+                  <ScrollPane fx:id="scrollPane" minHeight="-Infinity" prefHeight="492.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
                      <content>
-                        <VBox fx:id="vboxLista_Items" prefHeight="458.0" prefWidth="787.0" spacing="10.0" />
+                        <VBox fx:id="vboxLista_Items" alignment="TOP_CENTER" prefHeight="458.0" prefWidth="787.0" spacing="10.0" />
                      </content>
                   </ScrollPane>
                </children>

@@ -15,10 +15,10 @@
         <!-- Para que hibernate no busque clases relacionadas con javax.naming-->
         <property name="hibernate.jndi.class">none</property>
         <property name="hibernate.jndi.url">none</property>
-        
+
         <!-- Para que muestre el sql mientras lo ejecuta-->
         <property name="hibernate.show_sql">false</property>
-        
+
         <!-- Actualiza o crea la base de datos si es necesario-->
         <property name="hibernate.hbm2ddl.auto">update</property>
 

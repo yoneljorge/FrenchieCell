@@ -12,10 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 @Getter
@@ -25,7 +22,7 @@ import lombok.experimental.Accessors;
 @Entity
 @Accessors(fluent = false, chain = true) //Esto es para el encadenamiento de métodos
 @Table(name = "vales")
-public class Vale extends BaseEntity<Vale, Long> implements Serializable{
+public class Vale extends BaseEntity<Vale, Long> implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +38,7 @@ public class Vale extends BaseEntity<Vale, Long> implements Serializable{
 
 
     @Column(name = "imei")
-    private Long imei =0l;
+    private Long imei = 0l;
     @ManyToOne
     @JoinColumn(name = "marca", referencedColumnName = "marca")
     private Marca marca;
@@ -62,12 +59,10 @@ public class Vale extends BaseEntity<Vale, Long> implements Serializable{
     private LocalDate fechaVenta;
     @Column(name = "fecha_garantia")
     private LocalDate fechaGarantia;
-    @Column(name =  "garantia")
+    @Column(name = "garantia")
     private Boolean garantia = true;
-
-    
-
-    
+    @Column(name = "dias_garantia")
+    private Integer diasGarantia;
 
     @Column(name = "cliente")
     private String cliente = "";
@@ -75,4 +70,26 @@ public class Vale extends BaseEntity<Vale, Long> implements Serializable{
     private Long clienteTelefono = 0l;
     @Column(name = "liquidado")
     private Boolean liquidado = false;
+
+    @Override
+    public String toString() {
+        return "Vale{" +
+                "\nidVales=" + idVales +
+                "\npromotor=" + promotor +
+                "\ncomision=" + comision +
+                "\nimei=" + imei +
+                "\nmarca=" + marca +
+                "\nmodelo=" + modelo +
+                "\nprecio=" + precio +
+                "\nmensajeria=" + mensajeria +
+                "\ndireccion='" + direccion + '\'' +
+                "\ncostoMensajeria=" + costoMensajeria +
+                "\nfechaVenta=" + fechaVenta +
+                "\nfechaGarantia=" + fechaGarantia +
+                "\ngarantia=" + garantia +
+                "\ncliente='" + cliente + '\'' +
+                "\nclienteTelefono=" + clienteTelefono +
+                "\nliquidado=" + liquidado +
+                '}';
+    }
 }

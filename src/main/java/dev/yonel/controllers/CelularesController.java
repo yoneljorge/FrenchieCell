@@ -17,15 +17,13 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class CelularesController implements Initializable {
@@ -39,9 +37,9 @@ public class CelularesController implements Initializable {
     @FXML
     private MFXButton btnAgregar;
     @FXML
-    private Pane pnlAgregar;
+    private VBox pnlAgregar;
     @FXML
-    private Pane pnlVista;
+    private VBox pnlVista;
 
     // Controles Vista Agregar
     @FXML
@@ -98,10 +96,14 @@ public class CelularesController implements Initializable {
     private Label labelCantidad;
     @FXML
     private RadioButton radioButton_VendidosNo;
-    @FXML 
+    @FXML
     private RadioButton radioButton_VendidosSi;
     @FXML
     private RadioButton radioButton_Todos;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private HBox hBoxLoadingInVista;
 
     // **************************************************** */
     // **************************************************** */
@@ -126,7 +128,7 @@ public class CelularesController implements Initializable {
 
     /**
      * Método mediante el cual vamos a obtener la única instancia de esta clase.
-     * 
+     *
      * @return la instancia de esta clase.
      */
     public static CelularesController getInstance() {
@@ -165,13 +167,12 @@ public class CelularesController implements Initializable {
             //Cada vez que se abra la vista si hay cambios entonces se actualiza
             pnlVista.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    if(ProxyABaseDeDatos.isCambioCelular()){
+                    if (ProxyABaseDeDatos.isCambioCelular()) {
                         serviceVista.configure();
                     }
                 }
             });
 
-            
 
             btnVista.setOnAction(event -> {
                 SetVisible.This(listPane, pnlVista);
@@ -184,7 +185,27 @@ public class CelularesController implements Initializable {
                 btnAgregar.setDisable(true);
                 btnVista.setDisable(false);
             });
+
+            //this.scrollPane.setContent(vboxItemVista);
+            this.scrollPane.setFitToWidth(true);
+            this.scrollPane.setFitToHeight(true);
         });
 
     }
+
+    /**
+     * Méotodo con el que hacemos visible el HBox que contiene el gif de cargando.
+     *
+     * @param valor <code>true</code> en caso de que se quiera mostrar <br></br>
+     *              <code>false</code> en caso contrario.
+     */
+    public void loading(boolean valor) {
+        Thread thread = new Thread(() -> {
+            hBoxLoadingInVista.setVisible(valor);
+        });
+        thread.start();
+    }
+
+    private @Setter
+    @Getter boolean popupOpen = false;
 }

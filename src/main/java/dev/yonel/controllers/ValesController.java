@@ -16,11 +16,9 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -82,10 +80,14 @@ public class ValesController implements Initializable {
     private Label labelEstado;
 
     // Panel Vista
-    @Getter
     @Setter
     @FXML
     private FlowPane flowPane_ListaDeItems;
+    @FXML
+    private ScrollPane scrollPane;
+    @Getter(AccessLevel.NONE)
+    @FXML
+    private HBox hBoxLoadingInVista;
 
     @Getter(AccessLevel.NONE)
     private static ValesController instance;
@@ -126,8 +128,10 @@ public class ValesController implements Initializable {
             this.listVBoxs = new ArrayList<>();
             this.serviceAgregar = ServiceValesControllerAgregar.getInstance();
             this.serviceVista = ServiceValesControllerVista.getInstance();
+
             listVBoxs.add(vboxPanelAgregar);
             listVBoxs.add(vboxPanelLista);
+
             vboxPanelAgregar.setVisible(false);
             vboxPanelLista.setVisible(false);
             btnLista.setDisable(true);
@@ -152,6 +156,9 @@ public class ValesController implements Initializable {
             btnLista.setOnAction(event -> {
                 goToLista();
             });
+
+            scrollPane.setFitToWidth(true);
+            scrollPane.setFitToHeight(true);
         });
     }
 
@@ -165,5 +172,12 @@ public class ValesController implements Initializable {
         SetVisible.This(listVBoxs, vboxPanelLista);
         btnAgregar.setDisable(false);
         btnLista.setDisable(true);
+    }
+
+    public void loading(boolean valor){
+        Thread thread = new Thread(() -> {
+            hBoxLoadingInVista.setVisible(valor);
+        });
+        thread.start();
     }
 }

@@ -5,29 +5,31 @@ import dev.yonel.services.controllers.vales.ServiceValesControllerVista;
 
 public class Gatillo {
 
-    public static void newMarca(){
+    public static void newMarca() {
         ProxyABaseDeDatos.setCambioMarca(true);
     }
 
-    public static void newModelo(){
+    public static void newModelo() {
         ProxyABaseDeDatos.setCambioModelo(true);
     }
 
-    public static void newCelular(){
+    public static void newCelular() {
         ProxyABaseDeDatos.setCambioCelular(true);
         ProxyABaseDeDatos.setCambioImei(true);
     }
 
-    public static void newImei(){
+    public static void newImei() {
         ProxyABaseDeDatos.setCambioImei(true);
     }
 
-    public static void newPromotor(){
+    public static void newPromotor() {
         ProxyABaseDeDatos.setCambioPromotor(true);
-        ServicePromotoresControllerVista.getInstance().setCambiosEnItems(true);
+        if (ServicePromotoresControllerVista.getInstance().isNotNull()) {
+            ServicePromotoresControllerVista.getInstance().setCambiosEnItems(true);
+        }
     }
 
-    public static void newVale(){
+    public static void newVale() {
         ProxyABaseDeDatos.setCambioValeByPromotor(true);
         ProxyABaseDeDatos.setCambioVale(true);
         ServiceValesControllerVista.getInstance().setCambioEnInterfaz(true);

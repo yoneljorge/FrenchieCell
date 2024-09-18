@@ -24,11 +24,40 @@
 {
 -fx-background-color: #eeebeb;
 }
+
 .hbox:hover{
     -fx-background-color: #e0e0e0;
     -fx-border-color: #7a0ed9;
     -fx-border-radius: 10px;
 }
+/*Estilo para los HBox de los vales*/
+
+.hbox-enGarantia{
+-fx-background-color: rgba(51,255,87,1) ;
+}
+.hbox-enGarantia:hover{
+-fx-background-color: rgba(51,255,87,0.5) ;
+-fx-border-color: #7a0ed9;
+-fx-border-radius: 10px;
+}
+
+.hbox-sinGarantia{
+-fx-background-color: rgba(255,87,51,1) ;
+}
+.hbox-sinGarantia:hover{
+-fx-background-color: rgba(255,87,51,0.5) ;
+-fx-border-color: #7a0ed9;
+-fx-border-radius: 10px;
+}
+
+/*Estilo para los vales con detalles*/
+.vale-enGarantia{
+-fx-background-color: rgba(179,255,192,1) ;
+}
+.vale-sinGarantia{
+-fx-background-color: rgba(255,192,179,1) ;
+}
+
 
 .menu-button
 {

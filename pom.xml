@@ -15,31 +15,8 @@
         <lombok.version>1.18.34</lombok.version>
         <delombok-maven-plugin.version>1.18.34</delombok-maven-plugin.version>
     </properties>
+
     <dependencies>
-
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>21</version>
-        </dependency>
-
-
-
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-            <version>21</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>21</version>
-        </dependency>
-
-
-
-
 
         <!-- Connector SQLite-->
         <dependency>
@@ -75,12 +52,34 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- MATERIALFX DEPENDENCIAS -->
+        <!--
+         <dependency>
+             <groupId>org.glavo.materialfx</groupId>
+             <artifactId>materialfx</artifactId>
+             <version>11.13.5</version>
+         </dependency>
 
+         <dependency>
+             <groupId>io.github.palexdev</groupId>
+             <artifactId>mfxresources</artifactId>
+             <version>11.9.1</version>
+         </dependency>
+
+         <dependency>
+             <groupId>io.github.palexdev</groupId>
+             <artifactId>mfxcore</artifactId>
+             <version>11.8.0</version>
+         </dependency>
+        -->
         <dependency>
             <groupId>io.github.palexdev</groupId>
             <artifactId>materialfx</artifactId>
             <version>11.17.0</version>
         </dependency>
+
+
+        <!-- MATERIALFX DEPENDENCIAS -->
 
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
@@ -154,5 +153,42 @@
 
     </build>
 
+    <!--
+    <dependencyManagement>
+
+
+            <dependencies>
+
+                <dependency>
+                    <groupId>io.github.palexdev</groupId>
+                    <artifactId>mfxresources</artifactId>
+                    <version>11.7.0</version>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>io.github.palexdev</groupId>
+                    <artifactId>mfxeffects</artifactId>
+                    <version>11.2.1</version>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>io.github.palexdev</groupId>
+                    <artifactId>mfxcore</artifactId>
+                    <version>11.6.2</version>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>jakarta.activation</groupId>
+                    <artifactId>jakarta.activation-api</artifactId>
+                    <version>2.1.1</version>
+                </dependency>
+
+            </dependencies>
+
+        </dependencyManagement>
+    -->
 
 </project>

@@ -1,23 +1,15 @@
 package dev.yonel.services.controllers.celulares;
 
 import java.time.LocalDate;
-import java.util.List;
-
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
-import dev.yonel.utils.data_access.UtilsHibernate;
 import javafx.application.Platform;
 import lombok.Setter;
 
 @Setter
 public class FilterItemsCelular {
-
-    private static final SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
 
     private Marca marca;
     private Modelo modelo;

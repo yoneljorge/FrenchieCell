@@ -13,10 +13,7 @@ import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -63,6 +60,8 @@ public class PromotoresController implements Initializable {
     private RadioButton radioButton_PorPagar;
     @FXML
     private RadioButton radioButton_Todos;
+    @FXML
+    private ScrollPane scrollPane;
 
     // Panel Promotor
     @FXML
@@ -90,6 +89,8 @@ public class PromotoresController implements Initializable {
     private Label lblPromotor;
     @FXML
     private Label lblDineroPagado;
+    @FXML
+    private ScrollPane scrollPane2;
 
     // General
     @Getter(AccessLevel.NONE)
@@ -124,7 +125,6 @@ public class PromotoresController implements Initializable {
     }
 
     public void initialize(URL location, ResourceBundle resources) {
-        instance = this; // Asigna la instancia del controlador a la referencia estática
 
         Platform.runLater(() -> {
             this.serviceAgregar = ServicePromotoresControllerAgregar.getInstance();
@@ -140,7 +140,11 @@ public class PromotoresController implements Initializable {
             vboxLista.setVisible(false);
             vboxPromotor.setVisible(false);
 
-            // cargamos la configuración de la vista agregar
+            /*
+            Implementaciones siguientes:
+            En cada panel hay un listener esperando a que se ponga visible o se oculte el panel.
+            Si el panel se pone visible entonces ejecuta la acción que se encuentra dentro del if().
+             */
             vboxAgregar.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     serviceAgregar.configure();
@@ -149,12 +153,12 @@ public class PromotoresController implements Initializable {
 
             vboxLista.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    serviceVista.configure();
-                    serviceVista.getAllItems();
+                    if (serviceVista.isNotNull()) {
+                        serviceVista.getAllItems();
+                    }
                 }
             });
 
-            // Agregamos Objetos al Map listPanePromotor
             vboxPromotor.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     servicePromotor.configure();
@@ -168,11 +172,19 @@ public class PromotoresController implements Initializable {
             btnAgregarPromotor.setOnAction(event -> {
                 goToAgregar();
             });
+
+            this.scrollPane.setFitToWidth(true);
+            this.scrollPane.setFitToHeight(true);
+
+            this.scrollPane2.setFitToWidth(true);
+            this.scrollPane2.setFitToHeight(true);
+
         });
 
     }
 
     public void goToLista() {
+        serviceVista.configure();
         changeView(getInstance().vboxLista, true, false);
     }
 

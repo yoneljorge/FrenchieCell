@@ -12,6 +12,7 @@ import dev.yonel.models.Vale;
 import dev.yonel.services.Gatillo;
 import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.promotores.ServicePromotoresControllerAgregar;
+import dev.yonel.services.vales.ServiceVales;
 import dev.yonel.utils.AlertUtil;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.utils.StringUtils;
@@ -24,6 +25,8 @@ public class ServicePromotor {
 
     private Promotor promotor;
 
+    private static ServicePromotor instance;
+
     // Listas para los promotores
     private List<Promotor> list;
     private ObservableList<Promotor> observableList;
@@ -34,6 +37,14 @@ public class ServicePromotor {
 
     public ServicePromotor(Promotor promotor) {
         this.promotor = promotor;
+    }
+
+    public static ServicePromotor getInstance() {
+        if (instance == null) {
+            instance = new ServicePromotor();
+        }
+
+        return instance;
     }
 
     /*********************************************
@@ -127,7 +138,7 @@ public class ServicePromotor {
     /**
      * Método para configurar un MFXFilterComboBox<Promotor>.
      * Con este método se le asigna el filtro al combo y la lista de promotores.
-     * 
+     *
      * @param comboBox el comboBox que se desea configurar.
      */
     public void configureFilterComboBox(MFXFilterComboBox<Promotor> comboBox) {
@@ -161,7 +172,15 @@ public class ServicePromotor {
         comboBox.setFilterFunction(filterFunction);
     }
 
+    /*********************************************
+     * ********** MÉTODOS CRUD  ******************
+     *********************************************/
 
+    /**
+     * Método que guarda un promotor en la base de datos.
+     *
+     * @return true en caso de que se guarde correctamente, false en caso contrario.
+     */
     public boolean save() {
         if (!exist()) {
             if (promotor.save()) {
@@ -180,7 +199,53 @@ public class ServicePromotor {
         }
     }
 
-    public boolean update() {
+    /**
+     * Método que actualiza un promotor en base a su id.
+     *
+     * @param idPromotor el id del promotor.
+     * @return true en caso de que se actualice, false en caso contrario.
+     */
+    public boolean updatePromotor(Long idPromotor) {
+
+        long enGarantia = 0L;
+        long pagados = 0L;
+        long porPagar = 0L;
+        long totalVales = 0L;
+
+        long dineroTotal = 0L;
+        long dineroPorPagar = 0L;
+        long dineroPagado = 0L;
+
+        Vale vale;
+        Promotor promotor = Promotor.getById(Promotor.class, idPromotor);
+
+        while ((vale = ServiceVales.findValesByPromotorOneToOne(promotor.getIdPromotor())) != null) {
+            //Iteramos la variable totalVales de uno en uno cada vez que aparezca
+            // un vale asociado a ese promotor
+            totalVales++;
+
+            if (vale.getLiquidado() != null && vale.getLiquidado()) {
+                pagados++;
+                dineroPagado = dineroPagado + vale.getComision();
+            } else {
+                if (vale.getGarantia() != null && vale.getGarantia()) {
+                    enGarantia++;
+                } else {
+                    porPagar++;
+                    dineroPorPagar = dineroPorPagar + vale.getComision();
+                }
+            }
+        }
+
+
+        promotor.setValesPagados(pagados);
+        promotor.setValesEnGarantia(enGarantia);
+        promotor.setValesPorPagar(porPagar);
+        promotor.setTotalDeVales(totalVales);
+
+        promotor.setDineroTotal(dineroPagado + dineroPorPagar);
+        promotor.setDineroTotalPorPagar(dineroPorPagar);
+        promotor.setDineroTotalPagado(dineroPagado);
 
         if (promotor.update()) {
             Gatillo.newPromotor();
@@ -192,6 +257,25 @@ public class ServicePromotor {
         }
     }
 
+    public boolean updatePromotor() {
+        return updatePromotor(promotor.getIdPromotor());
+    }
+
+    /**
+     * Método que actualiza todos los promotores de la base de datos.
+     * Este método realiza las transacciones de una en una para evitar sobrecargar la memoria.
+     */
+    public static void updateAllPromotor() {
+        Promotor promotor;
+
+        while ((promotor = Promotor.getAllOneToOne(Promotor.class)) != null) {
+            getInstance().updatePromotor(promotor.getIdPromotor());
+        }
+    }
+
+    /*********************************************
+     * **************** MÉTODOS  *****************
+     *********************************************/
     /**
      * Verifica si existe en la base de datos el promotor que se quiere agregar en base a su nombre.
      * En si esta clase utiliza el método existe de promotor que extiende de GenericDAO al cual se le
@@ -219,66 +303,4 @@ public class ServicePromotor {
     }
 
 
-    public void updateVales() {
-        System.out.println("Actualizando vales Promotor: " + promotor.getNombre());
-        List<Vale> listVales = ProxyABaseDeDatos.getListValesByPromotor(promotor.getIdPromotor());
-        long enGarantia = 0l;
-        long liquidados = 0l;
-        long porPagar = 0l;
-
-        for (Vale v : listVales) {
-            if (v.getLiquidado() != null || v.getLiquidado()) {
-                liquidados++;
-            } else {
-                if (v.getGarantia() == null || v.getGarantia()) {
-                    enGarantia++;
-                } else {
-                    porPagar++;
-                }
-            }
-        }
-        promotor.setValesEnGarantia(enGarantia);
-        promotor.setValesPagados(liquidados);
-        promotor.setValesPorPagar(porPagar);
-
-        promotor.setTotalDeVales(
-                promotor.getValesEnGarantia() + promotor.getValesPagados() + promotor.getValesPorPagar());
-    }
-
-    private void updateVales(long idPromotor) {
-        
-        Promotor promotor = Promotor.getById(Promotor.class, idPromotor);
-
-        System.out.println("Actualizando vales Promotor: " + promotor.getNombre());
-        List<Vale> listVales = ProxyABaseDeDatos.getListValesByPromotor(promotor.getIdPromotor());
-        long enGarantia = 0l;
-        long liquidados = 0l;
-        long porPagar = 0l;
-
-        for (Vale v : listVales) {
-            if (v.getLiquidado()) {
-                liquidados++;
-            } else {
-                if (v.getGarantia()) {
-                    enGarantia++;
-                } else {
-                    porPagar++;
-                }
-            }
-        }
-        promotor.setValesEnGarantia(enGarantia);
-        promotor.setValesPagados(liquidados);
-        promotor.setValesPorPagar(porPagar);
-
-        promotor.setTotalDeVales(
-                promotor.getValesEnGarantia() + promotor.getValesPagados() + promotor.getValesPorPagar());
-    }
-
-    public void updateValesAllPromotor(){
-        list.clear();
-        list.addAll(ProxyABaseDeDatos.getListPromotores());
-        for(Promotor p : list){
-            updateVales(p.getIdPromotor());
-        }
-    }
 }

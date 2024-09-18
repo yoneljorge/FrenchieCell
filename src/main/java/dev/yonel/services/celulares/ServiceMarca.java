@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 
 import dev.yonel.models.Marca;
 import dev.yonel.services.Gatillo;
+import dev.yonel.services.Mensajes;
 import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
@@ -34,6 +35,8 @@ public class ServiceMarca {
     private ServiceCelularControllerVista serviceVista = ServiceCelularControllerVista.getInstance();
     private ServiceCelularControllerAgregar serviceAgregar = ServiceCelularControllerAgregar.getInstance();
 
+    private Mensajes mensajes = new Mensajes(ServiceMarca.class);
+
     public void setMarca(Marca marca) {
         this.marca = marca;
         this.marca.setMarca(this.marca.getMarca().toUpperCase());
@@ -45,8 +48,7 @@ public class ServiceMarca {
 
     /**
      * Método con el que guardamos un objeto marca.
-     * 
-     * @param marca el objeto que se desea guardar.
+     *
      * @return true en caso de que se guarde, false en caso contrario.
      */
     public boolean save() {
@@ -55,7 +57,7 @@ public class ServiceMarca {
                 if (this.marca.save()) {
                     AlertUtil.information("Exito", "Marca: " + this.marca.getMarca() + " guardada.");
                     serviceAgregar.setEstadoInformation("Marca guardada.");
-                    System.out.println("Marca -> " + this.marca.getMarca() + " guardada.");
+                    mensajes.info("Marca -> " + this.marca.getMarca() + " guardada.");
                     // Notificamos al ServiceList que hay cambios
                     Gatillo.newMarca();
                     ;
@@ -66,15 +68,15 @@ public class ServiceMarca {
                     AlertUtil.error("Error en guardado.",
                             "Error interno. Si el problema persiste \ncontacte con el desarrollador.");
                     serviceAgregar.setEstadoError("Error en conexión con base de datos.");
-                    System.out.println("No se pudo guardar la marca ->" + marca.getMarca());
-
+                    mensajes.err("No se pudo guardar la marca ->" + marca.getMarca());
                     return false;
                 }
             } else {
                 AlertUtil.error("Error en guardado.", "La marca que desea guardar \nya existe.");
                 serviceAgregar.setEstadoError("Marca no guardada. Ya existe.");
-                System.out.println("Marca -> " + marca.getMarca() + " ya existe.");
-                serviceAgregar.setBanderaMarcaExiste(true);;
+                mensajes.err("Marca -> " + marca.getMarca() + " ya existe.");
+                serviceAgregar.setBanderaMarcaExiste(true);
+                ;
                 return false;
             }
         } else {
@@ -86,7 +88,7 @@ public class ServiceMarca {
 
     /**
      * Método con el que comprobamos que el objeto marca no esté vacío o sea nulo.
-     * 
+     *
      * @return true en caso de que esté completo, false en caso contrario.
      */
     private boolean isFull() {
@@ -100,7 +102,7 @@ public class ServiceMarca {
 
     /**
      * Método que verifica si existe el objeto en la base de datos.
-     * 
+     *
      * @return true si existe, false caso contrario.
      */
     private boolean exist() {
@@ -113,7 +115,7 @@ public class ServiceMarca {
 
     /**
      * Método para configurar un MFXFilterComboBox de tipo Marca.
-     * 
+     *
      * @param comboBox el objeto.
      */
     public void configureComboBox(MFXFilterComboBox<Marca> comboBox) {
@@ -142,7 +144,7 @@ public class ServiceMarca {
      * Método para configurar el ComboBox<Marca>.
      * Si se especifica la clase, se agregar el elemento Todos. Este método es
      * específico para la clase ServiceCelularControllerVista.
-     * 
+     *
      * @param comboBox que se desea configurar.
      * @param clazz    para comparar la clase.
      */
@@ -170,10 +172,7 @@ public class ServiceMarca {
             comboBox.setConverter(converter);
             comboBox.setFilterFunction(filterFunction);
             // Seleccionamos Todas
-            System.out.println("Seleccionado TOdas en ComboMarca -> ServicioMarca");
             comboBox.selectItem(serviceVista.getMarca());
         }
-
     }
-
 }

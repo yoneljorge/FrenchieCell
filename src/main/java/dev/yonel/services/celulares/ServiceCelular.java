@@ -12,7 +12,9 @@ import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
 import dev.yonel.services.Gatillo;
+import dev.yonel.services.Mensajes;
 import dev.yonel.services.ProxyABaseDeDatos;
+import dev.yonel.services.TipoMensaje;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.utils.Fecha;
 import dev.yonel.utils.validation.Validator;
@@ -39,6 +41,9 @@ public class ServiceCelular {
     private Celular celular;
     private List<Celular> listImei;
     private ObservableList<Celular> observableListImei;
+
+    //Objeto en el cual vamos a almacenar los mensajes
+    Mensajes mensajes = new Mensajes(ServiceCelular.class);
 
     private ServiceCelularControllerAgregar serviceAgregar = ServiceCelularControllerAgregar.getInstance();
 
@@ -70,6 +75,10 @@ public class ServiceCelular {
     /*****************************************
      * ********SETTERS AND GUETTERS***********
      *****************************************/
+
+    public Celular getCelular() {
+        return this.celular;
+    }
 
     public Long getIdCelular() {
         return this.idCelular;
@@ -175,7 +184,7 @@ public class ServiceCelular {
     /**
      * Método para comprobar que todos los campos importantes están llenos para que
      * no se produzca un error.
-     * 
+     *
      * @return
      */
     private boolean isFull() {
@@ -208,13 +217,14 @@ public class ServiceCelular {
      * Método para guardar los datos del celular.
      * Antes de guardar se verifica que tenga todos los campos y que no exista el
      * imei en la base de datos.
-     * 
+     *
      * @return true si se guardan los datos del celular, false en caso de que
-     *         presente error, de que el imei exista o que falten datos.
+     * presente error, de que el imei exista o que falten datos.
      */
     public boolean saveCelular() {
         if (isFull()) {
             updateCelular();
+            mensajes.info("Actualizando");
             serviceAgregar.setEstadoInformation("Actualizando");
             if (!existImei()) {
                 if (celular.save()) {
@@ -239,10 +249,19 @@ public class ServiceCelular {
     }
 
     public boolean update() {
-        if (celular.update()) {
-            Gatillo.newCelular();
-            return true;
+        if (isFull()) {
+            updateCelular();
+            if (celular.update()) {
+                // Notificamos al ServiceList que hay cambios
+                Gatillo.newCelular();
+                mensajes.info("Celular actualizado");
+                return true;
+            } else {
+                mensajes.err("Celular no actualizado, errorn en conexión con base de datos.");
+                return false;
+            }
         } else {
+            mensajes.err("Celular no actualizado, faltan datos.");
             return false;
         }
     }
@@ -250,7 +269,7 @@ public class ServiceCelular {
     /**
      * Método con el que se comprueba si existe en la base de datos el IMEI
      * introducido.
-     * 
+     *
      * @return true en caso de que exista, false en caso contrario.
      */
     private boolean existImei() {

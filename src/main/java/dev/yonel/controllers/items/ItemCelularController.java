@@ -1,16 +1,22 @@
 package dev.yonel.controllers.items;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import dev.yonel.controllers.CelularesController;
+import dev.yonel.controllers.popup.PopupCelularController;
+import dev.yonel.services.Mensajes;
 import dev.yonel.services.celulares.ServiceCelular;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
 import dev.yonel.utils.AlertUtil;
+import dev.yonel.utils.ui.popup.PopupUtil;
+import dev.yonel.utils.ui.popup.PopupUtilImp;
 import io.github.palexdev.materialfx.controls.MFXButton;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class ItemCelularController implements Initializable {
 
@@ -32,12 +38,16 @@ public class ItemCelularController implements Initializable {
     private Label labelVendido;
     @FXML
     private MFXButton btnQuitar;
+    @FXML
+    private MFXButton btnEditar;
 
     private String marca, modelo, dual, precio, fecha, imei;
     private boolean vendido;
 
     private ServiceCelular serviceCelular;
     private ServiceCelularControllerVista serviceVista = ServiceCelularControllerVista.getInstance();
+
+    private Mensajes mensajes = new Mensajes(ItemCelularController.class);
 
     public ItemCelularController() {
     }
@@ -68,8 +78,8 @@ public class ItemCelularController implements Initializable {
             });
         });
 
-        itemCelular.setOnMouseClicked(event -> {
-            System.out.println("me esta haciendo clic");
+        btnEditar.setOnAction(event -> {
+            mostrarPopup();
         });
     }
 
@@ -86,5 +96,34 @@ public class ItemCelularController implements Initializable {
 
     private String getInfoCelular() {
         return this.marca + " " + this.modelo + "\n" + "IMEI: " + this.imei;
+    }
+
+    private void mostrarPopup() {
+        PopupUtil popupUtil = new PopupUtilImp();
+        PopupCelularController controller = new PopupCelularController(serviceCelular.getCelular());
+        controller.onCloseAction(popupUtil.close());
+        popupUtil.setController(controller);
+        popupUtil.setFxml("popup/popupCelular");
+
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                popupUtil.load(() -> CelularesController.getInstance().loading(true));
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                popupUtil.show(() -> CelularesController.getInstance().loading(false));
+            }
+
+            @Override
+            protected void failed() {
+                CelularesController.getInstance().loading(false);
+                mensajes.err("Error cargando popup.");
+            }
+        };
+        //Ejecutar la tarea en un hilo separado
+        new Thread(task).start();
     }
 }

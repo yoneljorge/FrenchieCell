@@ -114,7 +114,7 @@ public class GenericDAO<T, Id extends Serializable> {
     }
 
     private static int i = 0;
-    private static Class clazzGlobal;
+    private static Object clazzGlobal;
     /**
      * Método que recupera todos los objetos de uno en uno de la clase genérica T en la base de datos.
      * Debe de utilizarse en un bulce while <code>whiel(.getAllObject != null)</code> , debido a que va

@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
 import dev.yonel.App;
 import dev.yonel.controllers.CelularesController;
 import dev.yonel.controllers.items.ItemCelularController;
@@ -20,7 +16,6 @@ import dev.yonel.services.celulares.ServiceCelular;
 import dev.yonel.services.celulares.ServiceFecha;
 import dev.yonel.services.celulares.ServiceMarca;
 import dev.yonel.services.celulares.ServiceModelo;
-import dev.yonel.utils.data_access.UtilsHibernate;
 import dev.yonel.utils.validation.MFXTextFieldUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -42,7 +37,6 @@ public class ServiceCelularControllerVista {
 
     private static ServiceCelularControllerVista instance;
 
-    private final SessionFactory sessionFactory;
     private Marca todas;
     private Modelo todos;
     private boolean cambioEnMarca;
@@ -74,8 +68,6 @@ public class ServiceCelularControllerVista {
     private ServiceCelularControllerVista() {
         instance = this;
 
-        // Se inicializa aqui porque no afecta el funcionamiento de la aplicación.
-        this.sessionFactory = UtilsHibernate.getSessionFactory();
         Platform.runLater(() -> {
             this.todas = new Marca("TODAS");
             this.todos = new Modelo("TODOS", todas);
@@ -115,6 +107,19 @@ public class ServiceCelularControllerVista {
         radioButtonNo.setToggleGroup(radioButtonsGrupo);
         radioButtonSi.setToggleGroup(radioButtonsGrupo);
         radioButtonTodos.setToggleGroup(radioButtonsGrupo);
+    }
+
+    /**
+     * Método que comprueba si el vBox es null, para evitar el
+     * error de NullPointerException.
+     *
+     * @return false en caso de que sea null. true en caso contrario.
+     */
+    public boolean isNotNull() {
+        if (vBoxItems == null) {
+            return false;
+        }
+        return true;
     }
 
     public void configure() {
@@ -173,7 +178,7 @@ public class ServiceCelularControllerVista {
             comboFecha.selectedItemProperty().addListener(new ChangeListener<LocalDate>() {
                 @Override
                 public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
-                        LocalDate newValue) {
+                                    LocalDate newValue) {
                     if (newValue != null) {
                         filterItems = new FilterItemsCelular();
                         filtrar(filterItems);
@@ -243,7 +248,7 @@ public class ServiceCelularControllerVista {
     private void getAllItems() {
         Celular celular;
 
-        while ((celular = Celular.getAllOneToOne(Celular.class))!=null){
+        while ((celular = Celular.getAllOneToOne(Celular.class)) != null) {
             setItems(celular);
         }
     }

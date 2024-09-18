@@ -1,22 +1,20 @@
 package dev.yonel.services.controllers.vales;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
 import dev.yonel.App;
 import dev.yonel.controllers.ValesController;
 import dev.yonel.controllers.items.ItemValeController;
 import dev.yonel.models.Vale;
-import dev.yonel.utils.data_access.UtilsHibernate;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -25,7 +23,7 @@ import lombok.Setter;
  * Esta clase es la encargada del funcionamiento de
  * la vista del apartado de vales.
  * Esta clase depende de que el controlador la instancie para su funcionamiento.
- * 
+ *
  * @author Yonel J. Sánchez
  */
 public class ServiceValesControllerVista {
@@ -43,7 +41,7 @@ public class ServiceValesControllerVista {
      */
     private static ServiceValesControllerVista instance;
 
-    private final List<ItemValeController> listaItemsValesController;
+    private List<ItemValeController> listaItemsValesController;
 
     private ServiceValesControllerVista() {
         instance = this;
@@ -83,40 +81,85 @@ public class ServiceValesControllerVista {
      * ###################################################
      */
 
-    private final SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
+    /*
+     * Variable con la cual vamos a monitoriar los cambios de la interfaz
+     */
     private @Setter boolean cambioEnInterfaz = true;
 
+    /**
+     * Método con el que vamos a insertar en la interfaz item de tipo vale.
+     * Este método crea un objeto de tipo FXMLLoader mediante el fxml "itemVale".
+     * Crea una instancia del controlador de ese fxml y lo establece en el loader,
+     * además de establecer las propiedades del controlador.
+     * Agregar las respectivas listas el VBox del fxml y el controlador.
+     *
+     * @param vale
+     */
     private void setItems(Vale vale) {
+
         if (vale != null) {
+            System.out.println("Agregando un nuevo itemVale");
+            ItemValeController controller = new ItemValeController();
+            controller.setVale(vale);
+            controller.hideCheckBox();
+            controller.setStage(App.getStage());
+            VBox vBox;
             try {
-                VBox vBox;
                 FXMLLoader loader = App.fxmlLoader("items/itemVale");
-                ItemValeController controller = new ItemValeController();
-                controller.setVale(vale);
-                controller.setStage(App.getStage());
+                // Quitamos el checkBox para liquidar o pagar debido a que se va a liquidar
+                // desde la interfaz del promotor o gestor.
+
                 loader.setController(controller);
                 vBox = loader.load();
                 flowPane_ListaDeItems.getChildren().add(vBox);
 
                 listaItemsValesController.add(controller);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+            System.out.println("Terminando de agregar un nuevo itemVale.");
         }
     }
 
     public void getAllItems() {
-            if (cambioEnInterfaz) {
-                 //Limpia la interfaz antes de comenzar a agreagar items.
-                removeAllItems();
+        if (cambioEnInterfaz) {
 
+            // Limpia la interfaz antes de comenzar a agreagar items.
+            removeAllItems();
+
+            /*
+             Vale vale;
+            while ((vale = Vale.getAllOneToOne(Vale.class)) != null) {
+                setItems(vale);
+            }
+
+            // Invertimos el orden de los vales para que aparezcan primero los últimos
+            invertirOrden();
+            cambioEnInterfaz = false;
+
+             */
+
+            // Crea un hilo separado para obtener y procesar los items
+            new Thread(() -> {
                 Vale vale;
-                while ((vale = Vale.getAllOneToOne(Vale.class))!= null){
-                    setItems(vale);
+
+                // Itera sobre todos los vales
+                while ((vale = Vale.getAllOneToOne(Vale.class)) != null) {
+                    final Vale currentVale = vale;
+
+                    // Ejecuta el método setItems() en el hilo de la UI
+                    Platform.runLater(() -> {
+                        setItems(currentVale);
+                    });
                 }
 
-                cambioEnInterfaz = false;
-            }
+                // Una vez que todos los items se hayan agregado, invierte el orden en el hilo de la UI
+                Platform.runLater(() -> {
+                    invertirOrden();
+                    cambioEnInterfaz = false;
+                });
+            }).start(); // Inicia el hilo separad
+        }
     }
     /*
      * ###################################################
@@ -132,9 +175,10 @@ public class ServiceValesControllerVista {
     /**
      * Método con el que vamos a obtener la posición en la lista de
      * ItemsValeController del controlador que se pase como argumento.
-     * 
+     *
      * @param controller el controlador que se le desea buscar la posicón.
-     * @return -1 en caso de que no encuentre la posicón, del 0 en adelante la posición en que se encuentra el controlador.
+     * @return -1 en caso de que no encuentre la posicón, del 0 en adelante la
+     * posición en que se encuentra el controlador.
      */
     public int getIndexItem(ItemValeController controller) {
         return listaItemsValesController.indexOf(controller);
@@ -143,11 +187,37 @@ public class ServiceValesControllerVista {
     /**
      * Método que quita del FlowPane el item que se encuentre en la posición que se
      * pase como parámetro.
-     * 
+     *
      * @param i la posición del item que se desea quitar.
      */
     public void removeItem(int i) {
         flowPane_ListaDeItems.getChildren().remove(i);
     }
 
+    /*
+     * ###################################################
+     * ################## OTHERS METODS ##################
+     * ###################################################
+     */
+
+    private void invertirOrden() {
+        // Invertimos el orden de los nodos en el FlowPane
+        ObservableList<Node> children = flowPane_ListaDeItems.getChildren();
+        List<Node> invertedList = new ArrayList<>(children);
+        Collections.reverse(invertedList);
+        flowPane_ListaDeItems.getChildren().setAll(invertedList);
+
+        // Invertimos el orden de los controles en la lista de controles
+        List<ItemValeController> invertedItemVale = new ArrayList<>(listaItemsValesController);
+        Collections.reverse(invertedList);
+        listaItemsValesController.clear();
+        listaItemsValesController.addAll(invertedItemVale);
+    }
+
+    /*
+     * Agregamos una varibale booleana la cual va a ser true si ya hay un popup de
+     * un valeDetalles abierto.
+     * La misma va a estar a la espera de que se establezca en true o false en
+     * dependencia de si se abre o se cierra.
+     */
 }

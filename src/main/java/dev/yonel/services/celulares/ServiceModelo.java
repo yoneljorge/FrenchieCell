@@ -56,10 +56,10 @@ public class ServiceModelo {
 
     /**
      * Méotodo para guardar un objeto de tipo Modelo en la base de datos.
-     * 
+     *
      * @param modelo el objeto.
      * @return true en caso de que se guarde, false en caso de que exista, no se
-     *         guarde o le falten datos.
+     * guarde o le falten datos.
      */
     public boolean save() {
         if (isFull()) {
@@ -99,9 +99,9 @@ public class ServiceModelo {
 
     /**
      * Método que verifica si el objeto modelo no es nulo o si no está vacío.
-     * 
+     *
      * @return true en caso de que este lleno, false
-     *         en caso contrario.
+     * en caso contrario.
      */
     private boolean isFull() {
         if (this.modelo.getModelo() == null) {
@@ -122,7 +122,7 @@ public class ServiceModelo {
 
     /**
      * Método que verifica si existe un objeto de tipo modelo en la base de datos.
-     * 
+     *
      * @return true en caso de que exista, false en caso contrario.
      */
     public boolean exist() {
@@ -193,16 +193,61 @@ public class ServiceModelo {
         this.comboBoxModelo.selectItem(serviceVista.getModelo());
     }
 
+    public void updateListaEdicion(String marca, String modeloString) {
+        this.listModelo.clear();
+        this.listModelo.addAll(ProxyABaseDeDatos.getListModelos());// Cargamos los datos desde la base de datos
+        Modelo seleccionarModelo = new Modelo();
+
+        // Lista en la que vamos a almacenar los modelos en dependencia de la marca
+        // seleccionada.
+        this.listModeloNew.clear();
+
+        if (!marca.equals("")) {
+            for (Modelo m : listModelo) {
+                if (m.getMarca().getMarca().equals(marca)) {
+                    this.listModeloNew.add(m);
+                    if (m.getModelo().equals(modeloString)) {
+                        seleccionarModelo = m;
+                    }
+                }
+            }
+        }
+
+        if (this.comboBoxMarca.getValue() != null) {
+            for (Modelo m : listModelo) {
+                if (m.getMarca().getMarca().equals(this.comboBoxMarca.getValue().getMarca())) {
+                    this.listModeloNew.add(m);
+                }
+            }
+        }
+
+        this.observableListModelo.clear();
+        this.observableListModelo = FXCollections.observableArrayList(this.listModeloNew);
+
+        StringConverter<Modelo> converter = FunctionalStringConverter
+                .to(modelo -> (modelo == null) ? "" : modelo.getModelo());
+        Function<String, Predicate<Modelo>> filterFunction = s -> modelo -> StringUtils
+                .containsIgnoreCase(converter.toString(modelo), s);
+        this.comboBoxModelo.setItems(observableListModelo);
+        this.comboBoxModelo.setConverter(converter);
+        this.comboBoxModelo.setFilterFunction(filterFunction);
+        this.comboBoxModelo.getSelectionModel().clearSelection();
+        if (seleccionarModelo != null) {
+            this.comboBoxModelo.getSelectionModel().selectItem(seleccionarModelo);
+            seleccionarModelo = null;
+        }
+    }
+
     /**
      * Método para configurar un MFXFilterComboBox de tipo Modelo.
      * Este método crea una lista de Modelos a partir de la Marca seleccionada.
-     * 
+     *
      * @param comboBoxModelo
      * @param comboBoxMarca
      * @param btnAsociado    boton para agregar Modelos.
      */
     public void configureComboBox(MFXFilterComboBox<Modelo> comboBoxModelo,
-            MFXFilterComboBox<Marca> comboBoxMarca, MFXButton btnAsociado) {
+                                  MFXFilterComboBox<Marca> comboBoxMarca, MFXButton btnAsociado) {
 
         if (this.comboBoxMarca == null) {
             this.comboBoxMarca = comboBoxMarca;
@@ -238,7 +283,7 @@ public class ServiceModelo {
     }
 
     public void configureComboBox(MFXFilterComboBox<Modelo> comboBoxModelo,
-            MFXFilterComboBox<Marca> comboBoxMarca) {
+                                  MFXFilterComboBox<Marca> comboBoxMarca) {
 
         if (this.comboBoxMarca == null) {
             this.comboBoxMarca = comboBoxMarca;
@@ -272,4 +317,37 @@ public class ServiceModelo {
 
     }
 
+    public void configureComboBoxEdicion(MFXFilterComboBox<Modelo> comboBoxModelo,
+                                         MFXFilterComboBox<Marca> comboBoxMarca, String marca, String modelo) {
+        if (this.comboBoxMarca == null) {
+            this.comboBoxMarca = comboBoxMarca;
+        }
+        if (this.comboBoxModelo == null) {
+            this.comboBoxModelo = comboBoxModelo;
+        }
+
+        //Debido a que no se selecciona ningún item en el comboBox a la primera
+        //entonces se llena la lista como quiera la primera vez y se selecciona
+        //un modelo.
+        updateListaEdicion(marca, modelo);
+        marca = "";
+        modelo = "";
+
+        // Cuando cambie el item seleccionado en el comboBoxMarca entonces se activa el
+        // comboBoxModelo junto con el botonAsociado y se crea la lista que se va a
+        // mostrar en el comboBoxModelo.
+        comboBoxMarca.selectedItemProperty().addListener(new ChangeListener<Marca>() {
+            @Override
+            public void changed(ObservableValue<? extends Marca> observable, Marca oldValue, Marca newValue) {
+                // listModeloNew.clear();
+                if (newValue != null) {
+                    updateListaAgregar();
+                    comboBoxModelo.setDisable(false);
+                    comboBoxModelo.getSelectionModel().clearSelection();
+                } else {
+                    comboBoxModelo.setDisable(true);
+                }
+            }
+        });
+    }
 }

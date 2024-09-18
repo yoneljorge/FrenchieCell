@@ -1,19 +1,10 @@
 package dev.yonel.services.controllers.promotores;
 
-import java.util.List;
-
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-
 import dev.yonel.models.Promotor;
-import dev.yonel.utils.data_access.UtilsHibernate;
 import javafx.application.Platform;
 import lombok.Setter;
 
 public class FiltrarItemsPromotor {
-
-    private static final SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
 
     private @Setter boolean porPagar = false;
     private @Setter boolean enGarantia = false;
