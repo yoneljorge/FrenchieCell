@@ -1,9 +1,5 @@
 package dev.yonel.services.controllers.vales;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import dev.yonel.controllers.ValesController;
 import dev.yonel.models.Celular;
 import dev.yonel.models.Promotor;
@@ -24,6 +20,10 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ServiceValesControllerAgregar {
 
@@ -113,7 +113,7 @@ public class ServiceValesControllerAgregar {
             filterComboBoxImei.selectedItemProperty().addListener(new ChangeListener<Celular>() {
                 @Override
                 public void changed(ObservableValue<? extends Celular> observable, Celular oldValue,
-                        Celular newValue) {
+                                    Celular newValue) {
                     if (newValue != null) {
                         getDatosCelular(filterComboBoxImei.getValue());
                     }
@@ -123,6 +123,7 @@ public class ServiceValesControllerAgregar {
             txtModelo.setText("");
             MFXTextFieldUtil.validatePrecio(txtPrecio, labelValidacionPrecio);
             txtPrecio.setText("");
+
             datePickerFechaVenta.setEditable(false);
             datePickerFechaVenta.setValue(null);
             MFXTextFieldUtil.validatePrecio(txtComision, labelValidacionComision);
@@ -268,9 +269,8 @@ public class ServiceValesControllerAgregar {
     }
 
     /**
-     * Método estático con el cual vamos a pasar mensajes de información al Label de
-     * estado.
-     * 
+     * Método estático con el cual vamos a pasar mensajes de información al Label de estado.
+     *
      * @param estado el mensaje que se desea mostrar.
      */
     private void setEstadoInformativo(String estado) {
@@ -285,9 +285,8 @@ public class ServiceValesControllerAgregar {
     }
 
     /**
-     * Método estático con el que vamos a pasar mensajes de error al Label de
-     * estado.
-     * 
+     * Método estático con el que vamos a pasar mensajes de error al Label de estado.
+     *
      * @param estado el mensaje que se desea mostrar.
      */
     private void setEstadoError(String estado) {

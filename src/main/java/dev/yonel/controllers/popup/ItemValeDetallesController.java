@@ -1,28 +1,32 @@
 package dev.yonel.controllers.popup;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import dev.yonel.models.Celular;
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
+import dev.yonel.services.controllers.itemValeDetalles.ServiceItemValeDetallesEdicion;
+import dev.yonel.services.controllers.itemValeDetalles.ServiceItemValeDetallesVista;
 import dev.yonel.utils.ui.popup.PopupController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import lombok.Getter;
-import lombok.Setter;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class ItemValeDetallesController implements Initializable, PopupController {
 
     // General
+    @FXML
+    private @Getter StackPane root;
     @FXML
     private VBox vBoxVista;
     @FXML
@@ -58,11 +62,10 @@ public class ItemValeDetallesController implements Initializable, PopupControlle
     @FXML
     private MFXButton btnEditar;
     @FXML
-    private MFXButton btnEliminar;
+    private @Getter MFXButton btnEliminar;
     @FXML
     private MFXButton btnCerrar;
 
-    // Panel Edición
     @FXML
     private @Getter MFXButton btnCancelar;
     @FXML
@@ -72,7 +75,11 @@ public class ItemValeDetallesController implements Initializable, PopupControlle
     @FXML
     private @Getter MFXTextField txtCliente;
     @FXML
+    private @Getter Label labelValidacionCliente;
+    @FXML
     private @Getter MFXTextField txtTelefonoCliente;
+    @FXML
+    private @Getter Label labelValidacionTelefonoCliente;
     @FXML
     private @Getter MFXFilterComboBox<Celular> filterComboBoxImei;
     @FXML
@@ -82,19 +89,27 @@ public class ItemValeDetallesController implements Initializable, PopupControlle
     @FXML
     private @Getter MFXTextField txtPrecio;
     @FXML
+    private @Getter Label labelValidacionPrecio;
+    @FXML
     private @Getter DatePicker datePickerFechaVenta;
     @FXML
     private @Getter MFXTextField txtComision;
+    @FXML
+    private @Getter Label labelValidacionComision;
+    @FXML
+    private @Getter CheckBox checkBoxServicioMensajeria;
     @FXML
     private @Getter TextArea txtDireccion;
     @FXML
     private @Getter MFXTextField txtCostoMensajeria;
     @FXML
-    private @Getter Label labelEstado;
+    private @Getter Label labelValidacionCostoMensajeria;
+    @FXML
+    private @Getter Label lblEstado;
 
     private @Getter Vale vale;
 
-    private Runnable onCloseAction;
+    private @Getter Runnable onCloseAction;
 
     public ItemValeDetallesController(Vale vale) {
         this.vale = vale;
@@ -147,12 +162,14 @@ public class ItemValeDetallesController implements Initializable, PopupControlle
         btnCancelar.setOnAction(event -> {
             goToVista();
         });
+
+        ServiceItemValeDetallesVista serviceItemValeDetallesVista = new ServiceItemValeDetallesVista(this);
     }
 
+
     /**
-     * Método con el cual vamos a crear la interfaz Runnable para cuando se
-     * haga clic en el boton se ejecute el métod hidePopup desde donde se llamó
-     * el popup.
+     * Método con el cual vamos a crear la interfaz Runnable para cuando se haga clic en el boton se ejecute el métod
+     * hidePopup desde donde se llamó el popup.
      *
      * @param onCloseAction variable de instancia.
      */
@@ -161,8 +178,7 @@ public class ItemValeDetallesController implements Initializable, PopupControlle
     }
 
     /**
-     * Método con el que vamos a poner visible el vbox de la vista y oculto el de
-     * editar.
+     * Método con el que vamos a poner visible el vbox de la vista y oculto el de editar.
      */
     public void goToVista() {
         vBoxVista.setDisable(false);
@@ -173,10 +189,17 @@ public class ItemValeDetallesController implements Initializable, PopupControlle
     }
 
     /**
-     * Método con el que vamos a poner visible el vbox de edicion y oculto el de la
-     * vista.
+     * Instancia del servicio de edición.
+     */
+    ServiceItemValeDetallesEdicion servicioEdicion;
+
+    /**
+     * Método con el que vamos a poner visible el vbox de edicion y oculto el de la vista.
      */
     public void goToEdicion() {
+        //Se le pasa esta instancia para que recupere los controles y los pueda configurar.
+        servicioEdicion = new ServiceItemValeDetallesEdicion(this);
+
         vBoxVista.setDisable(true);
         vBoxVista.setVisible(false);
 

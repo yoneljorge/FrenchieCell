@@ -7,13 +7,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
 import dev.yonel.services.Gatillo;
+import dev.yonel.services.Mensajes;
 import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
 import dev.yonel.utils.AlertUtil;
+import dev.yonel.utils.data_access.UtilsHibernate;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.utils.StringUtils;
@@ -23,7 +26,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 @NoArgsConstructor
 public class ServiceModelo {
@@ -39,6 +49,11 @@ public class ServiceModelo {
 
     private ServiceCelularControllerVista serviceVista = ServiceCelularControllerVista.getInstance();
     private ServiceCelularControllerAgregar serviceAgregar = ServiceCelularControllerAgregar.getInstance();
+
+    private @Getter @Setter static boolean banderaModeloExiste = false;
+    // Instancia de mensajes mediante el cual vamos a ir mostrando los mensajes en
+    // consola
+    private Mensajes mensajes = new Mensajes(ServiceModelo.class);
 
     public ServiceModelo(Modelo modelo) {
         this.modelo = modelo;
@@ -59,7 +74,7 @@ public class ServiceModelo {
      *
      * @param modelo el objeto.
      * @return true en caso de que se guarde, false en caso de que exista, no se
-     * guarde o le falten datos.
+     *         guarde o le falten datos.
      */
     public boolean save() {
         if (isFull()) {
@@ -86,7 +101,7 @@ public class ServiceModelo {
                 AlertUtil.error("Error en guardado.", "El modelo que desea guardar \nya existe.");
                 serviceAgregar.setEstadoError("Modelo no guardado. Ya existe.");
                 System.err.println("Modelo no guardado -> ya existe.");
-                serviceAgregar.setBanderaModeloExiste(true);
+                banderaModeloExiste = true;
                 return false;
             }
         } else {
@@ -97,11 +112,81 @@ public class ServiceModelo {
         }
     }
 
+    public boolean saveV2() {
+        if (isFull()) {
+
+            if (!exist()) {
+                if (this.modelo.save()) {
+                    // Notificamos al ServiceList que hay cambios
+                    Gatillo.newModelo();
+
+                    AlertUtil.information("Éxito", "Modelo: " + modelo.getModelo() + " guardado.");
+                    return true;
+                } else {
+                    AlertUtil.error("Error en guardado.",
+                            "Error interno. Si el problema persiste \ncontacte con el desarrollador.");
+                    return false;
+                }
+
+            } else {
+                AlertUtil.error("Error en guardado.", "El modelo que desea guardar \nya existe.");
+                System.err.println("Modelo no guardado -> ya existe.");
+                banderaModeloExiste = true;
+                return false;
+            }
+        } else {
+            AlertUtil.error("Error en guardado.", "Faltan datos.");
+            System.err.println("Modelo no guardado -> faltan datos.");
+            return false;
+        }
+    }
+
+    /**
+     * <p>
+     * Método con el que vamos a eliminar el modelo actual de la base de datos
+     * </p>
+     * <p>
+     * Este método elimina todos los celulares que pertenencen a este modelo.
+     * </p>
+     * 
+     * @return
+     *         <ul>
+     *         <li>{@code true} en caso de que se elimine el modelo sin errores</li>
+     *         <li>{@code false} en caso de que no se elimine el modelo o presente
+     *         errores</li>
+     *         </ul>
+     */
+    public boolean delete() {
+        // Borramos todos los celulares que tienen que ver con este modelo
+        if (modelo.delete()) {
+            mensajes.info("Borrando todos los celulares que pertenecen a este modelo (" + modelo + ")");
+            Celular celular;
+            ServiceCelular serviceCelular;
+
+            /*
+             * Para que no hallan errores en la base de datos se borran los celulares que
+             * dependan de dicho modelo.
+             */
+            while ((celular = getCelularForModelo()) != null) {
+                serviceCelular = new ServiceCelular(celular);
+                serviceCelular.delete();
+            }
+
+            //Informamos que hay cambios en los modelos
+            Gatillo.newModelo();
+            return true;
+        } else {
+            mensajes.info("Error eliminando modelo " + modelo);
+            return false;
+        }
+
+    }
+
     /**
      * Método que verifica si el objeto modelo no es nulo o si no está vacío.
      *
      * @return true en caso de que este lleno, false
-     * en caso contrario.
+     *         en caso contrario.
      */
     private boolean isFull() {
         if (this.modelo.getModelo() == null) {
@@ -134,20 +219,11 @@ public class ServiceModelo {
     }
 
     public void updateListaAgregar() {
-        this.listModelo.clear();
-        this.listModelo.addAll(ProxyABaseDeDatos.getListModelos());// Cargamos los datos desde la base de datos
 
-        // Lista en la que vamos a almacenar los modelos en dependencia de la marca
-        // seleccionada.
         this.listModeloNew.clear();
-
-        if (this.comboBoxMarca.getValue() != null) {
-            for (Modelo m : listModelo) {
-                if (m.getMarca().getMarca().equals(this.comboBoxMarca.getValue().getMarca())) {
-                    this.listModeloNew.add(m);
-                }
-            }
-        }
+        ServiceMarca serviceMarca = new ServiceMarca();
+        listModeloNew.addAll(serviceMarca.getModelosForMarca(this.comboBoxMarca.getValue()));
+        
 
         this.observableListModelo.clear();
         this.observableListModelo = FXCollections.observableArrayList(this.listModeloNew);
@@ -163,22 +239,15 @@ public class ServiceModelo {
     }
 
     public void updateListaVista() {
-        this.listModelo.clear();
-        this.listModelo.addAll(ProxyABaseDeDatos.getListModelos());// Cargamos los datos desde la base de datos
-
         // Lista en la que vamos a almacenar los modelos en dependencia de la marca
         // seleccionada.
         this.listModeloNew.clear();
 
         this.listModeloNew.add(serviceVista.getModelo());
-        if (this.comboBoxMarca.getValue() != null) {
-            for (Modelo m : listModelo) {
-                if (m.getMarca().getMarca().equals(this.comboBoxMarca.getValue().getMarca())) {
-                    this.listModeloNew.add(m);
-                }
-            }
-        }
 
+        ServiceMarca serviceMarca = new ServiceMarca();
+
+        this.listModeloNew.addAll(serviceMarca.getModelosForMarca(this.comboBoxMarca.getValue()));
         this.observableListModelo.clear();
         this.observableListModelo = FXCollections.observableArrayList(listModeloNew);
 
@@ -247,7 +316,7 @@ public class ServiceModelo {
      * @param btnAsociado    boton para agregar Modelos.
      */
     public void configureComboBox(MFXFilterComboBox<Modelo> comboBoxModelo,
-                                  MFXFilterComboBox<Marca> comboBoxMarca, MFXButton btnAsociado) {
+            MFXFilterComboBox<Marca> comboBoxMarca, MFXButton btnAsociado) {
 
         if (this.comboBoxMarca == null) {
             this.comboBoxMarca = comboBoxMarca;
@@ -283,7 +352,7 @@ public class ServiceModelo {
     }
 
     public void configureComboBox(MFXFilterComboBox<Modelo> comboBoxModelo,
-                                  MFXFilterComboBox<Marca> comboBoxMarca) {
+            MFXFilterComboBox<Marca> comboBoxMarca) {
 
         if (this.comboBoxMarca == null) {
             this.comboBoxMarca = comboBoxMarca;
@@ -318,7 +387,7 @@ public class ServiceModelo {
     }
 
     public void configureComboBoxEdicion(MFXFilterComboBox<Modelo> comboBoxModelo,
-                                         MFXFilterComboBox<Marca> comboBoxMarca, String marca, String modelo) {
+            MFXFilterComboBox<Marca> comboBoxMarca, String marca, String modelo) {
         if (this.comboBoxMarca == null) {
             this.comboBoxMarca = comboBoxMarca;
         }
@@ -326,9 +395,9 @@ public class ServiceModelo {
             this.comboBoxModelo = comboBoxModelo;
         }
 
-        //Debido a que no se selecciona ningún item en el comboBox a la primera
-        //entonces se llena la lista como quiera la primera vez y se selecciona
-        //un modelo.
+        // Debido a que no se selecciona ningún item en el comboBox a la primera
+        // entonces se llena la lista como quiera la primera vez y se selecciona
+        // un modelo.
         updateListaEdicion(marca, modelo);
         marca = "";
         modelo = "";
@@ -349,5 +418,61 @@ public class ServiceModelo {
                 }
             }
         });
+    }
+
+    // Variable que va a hacer función de índice.
+    private int i;
+    // Variable donde vamos a almacenar el modelo actual que estamos buscando.
+    private Modelo modeloBuscar;
+
+    /**
+     * Méotodo con el que vamos a buscar los celulares que pertenecen al modelo
+     * actual.<br>
+     * </br>
+     * Devuelve los celulares de uno en uno.<br>
+     * </br>
+     * Si se cambia de modelo en el proceso de obtener los celulares se reinicia el
+     * índice.
+     * Este método debe ser ejecutado dentro de un bloque while.<br>
+     * </br>
+     * Ejemplo:
+     * <code>while((celular = serviceModelo.getCelularForModelo) != null){}</code>
+     */
+    public Celular getCelularForModelo() {
+        SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
+        List<Celular> listaCelulares = null;
+
+        mensajes.info("Buscando celulares para el modelo: " + modelo);
+        Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
+        try {
+            String hql = "FROM Celular c WHERE c.modelo = :modelo";
+            Query<Celular> query = sessionFactory.getCurrentSession().createQuery(hql, Celular.class);
+            query.setParameter("modelo", modelo);
+            // Usamos el contador i para establecer desde que registro empezar.
+            query.setFirstResult(i);
+            query.setMaxResults(1);
+
+            listaCelulares = query.getResultList();
+
+            if (!listaCelulares.isEmpty()) {
+                i++;
+                tx.commit();
+                return listaCelulares.getFirst();
+            } else {
+                i = 0;// Reinicia el índice si no hay más resultados.
+                tx.commit();// Finaliza la transacción después de la opetación exitosa.
+                return null;// Devuelve null si no hat más registros.
+            }
+
+        } catch (Exception e) {
+            mensajes.err("Error buscando celulares\n");
+
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+
+            e.printStackTrace();
+            return null;
+        }
     }
 }

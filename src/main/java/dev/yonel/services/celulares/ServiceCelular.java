@@ -1,5 +1,25 @@
 package dev.yonel.services.celulares;
 
+import dev.yonel.models.Celular;
+import dev.yonel.models.Marca;
+import dev.yonel.models.Modelo;
+import dev.yonel.models.Vale;
+import dev.yonel.services.Gatillo;
+import dev.yonel.services.Mensajes;
+import dev.yonel.services.ProxyABaseDeDatos;
+import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
+import dev.yonel.services.vales.ServiceVales;
+import dev.yonel.utils.Fecha;
+import dev.yonel.utils.data_access.UtilsHibernate;
+import dev.yonel.utils.validation.Validator;
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
+import io.github.palexdev.materialfx.utils.StringUtils;
+import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.util.StringConverter;
+import lombok.val;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,22 +28,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import dev.yonel.models.Celular;
-import dev.yonel.models.Marca;
-import dev.yonel.models.Modelo;
-import dev.yonel.services.Gatillo;
-import dev.yonel.services.Mensajes;
-import dev.yonel.services.ProxyABaseDeDatos;
-import dev.yonel.services.TipoMensaje;
-import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
-import dev.yonel.utils.Fecha;
-import dev.yonel.utils.validation.Validator;
-import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
-import io.github.palexdev.materialfx.utils.StringUtils;
-import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.util.StringConverter;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 public class ServiceCelular {
 
@@ -42,7 +48,7 @@ public class ServiceCelular {
     private List<Celular> listImei;
     private ObservableList<Celular> observableListImei;
 
-    //Objeto en el cual vamos a almacenar los mensajes
+    // Objeto en el cual vamos a almacenar los mensajes
     Mensajes mensajes = new Mensajes(ServiceCelular.class);
 
     private ServiceCelularControllerAgregar serviceAgregar = ServiceCelularControllerAgregar.getInstance();
@@ -214,12 +220,13 @@ public class ServiceCelular {
     }
 
     /**
-     * Método para guardar los datos del celular.
-     * Antes de guardar se verifica que tenga todos los campos y que no exista el
-     * imei en la base de datos.
+     * Método para guardar los datos del celular. Antes de guardar se verifica que
+     * tenga todos los campos y que no
+     * exista el imei en la base de datos.
      *
      * @return true si se guardan los datos del celular, false en caso de que
-     * presente error, de que el imei exista o que falten datos.
+     *         presente error, de que el imei exista o
+     *         que falten datos.
      */
     public boolean saveCelular() {
         if (isFull()) {
@@ -267,6 +274,36 @@ public class ServiceCelular {
     }
 
     /**
+     * <p>
+     * Méotodo con le cual camos a eliminar un celular de la base de datos.
+     * </p>
+     * 
+     * @return
+     *         <p>
+     *         <code>true</code> si se elimina el celular sin errores.
+     *         </p>
+     *         <p>
+     *         <code>false</code> si presenta errores al eliminar el celular.
+     *         </p>
+     */
+    public boolean delete() {
+
+        if (celular.delete()) {
+            // Eliminamos el vale correspondiente
+            Vale vale = getValeForCelular();
+            ServiceVales serviceVales = new ServiceVales(vale);
+            serviceVales.eliminar();
+            mensajes.info("Celular " + celular.getImeiUno() + " eliminado.");
+            //Informamos de que hay cambios en los celulares
+            Gatillo.newCelular();
+            return true;
+        } else {
+            mensajes.err("Error al eliminar el celular.");
+            return false;
+        }
+    }
+
+    /**
      * Método con el que se comprueba si existe en la base de datos el IMEI
      * introducido.
      *
@@ -278,10 +315,6 @@ public class ServiceCelular {
         propiedades.put("imeiUno", imei_Uno);
 
         return Celular.existe(propiedades);
-    }
-
-    public boolean delete() {
-        return celular.delete();
     }
 
     public void configureFilterComboBoxImei(MFXFilterComboBox<Celular> comboBox) {
@@ -338,5 +371,84 @@ public class ServiceCelular {
         comboBox.setItems(observableListImei);
         comboBox.setConverter(converter);
         comboBox.setFilterFunction(filteFunction);
+    }
+
+    /**
+     * Método que configura un MFXFilterComboBox de tipo Celular. Selecciona el
+     * celular que es pasado como parámetro.
+     *
+     * @param comboBox    que se desea configurar.
+     * @param imeiCelular el imei del celular que se desea seleccionar.
+     */
+    public void configureFilterComboBoxImeiForEditarVales(MFXFilterComboBox<Celular> comboBox, Long imeiCelular) {
+        if (listImei == null) {
+            listImei = new ArrayList<>();
+        }
+        if (observableListImei == null) {
+            observableListImei = FXCollections.observableArrayList();
+        }
+
+        listImei.clear();
+        /*
+         * En caso de que el celular no esté vendido entonces es que se agrega a la
+         * lista de celulares.
+         */
+        for (Celular c : ProxyABaseDeDatos.getListCelulares()) {
+            if (!c.getVendido()) {
+                listImei.add(c);
+            }
+            if (c.getImeiUno().equals(imeiCelular)) {
+                listImei.add(c);
+            }
+        }
+
+        observableListImei.clear();
+        observableListImei = FXCollections.observableArrayList(listImei);
+
+        StringConverter<Celular> converter = FunctionalStringConverter
+                .to(celular -> (celular == null) ? "" : String.valueOf(celular.getImeiUno()));
+        Function<String, Predicate<Celular>> filteFunction = s -> celular -> StringUtils
+                .containsIgnoreCase(converter.toString(celular), s);
+
+        comboBox.setItems(observableListImei);
+        comboBox.setConverter(converter);
+        comboBox.setFilterFunction(filteFunction);
+
+        // Si se encuentra el celular entonces se selecciona.
+        if (observableListImei != null) {
+            for (Celular c : observableListImei) {
+                if (c.getImeiUno().equals(imeiCelular)) {
+                    comboBox.getSelectionModel().selectItem(c);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * <p>
+     * Método con el cual vamos a obtener el vale correspondiente al celular actual.
+     * </p>
+     * 
+     * @return
+     *         <p>
+     *         <code>vale</code> si hay un vale asociado a este celular.
+     *         </p>
+     *         <p>
+     *         <code>null</code> en caso de que no halla un vale asociado este
+     *         celular.
+     *         </p>
+     */
+    public Vale getValeForCelular() {
+        mensajes.info("Buscando el vale de este celular");
+        Vale vale;
+        while ((vale = Vale.getAllOneToOne(Vale.class)) != null) {
+            if (vale.getImei().equals(celular.getImeiUno())) {
+                mensajes.info("Vale encontrado");
+                return vale;
+            }
+        }
+        mensajes.info("No hay vales asociados a este celular.");
+        return null;
     }
 }

@@ -45,6 +45,7 @@ public class DashboardController implements Initializable {
     private VBox celulares;
     private VBox promotores;
     private VBox vales;
+    private VBox settings;
 
     private @Getter
     static final ArrayList<VBox> listVBox = new ArrayList<>();
@@ -55,6 +56,7 @@ public class DashboardController implements Initializable {
     private CelularesController celularesController;
     private PromotoresController promotoresController;
     private ValesController valesController;
+    private SettingsController settingsController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,6 +77,11 @@ public class DashboardController implements Initializable {
         valesController = ValesController.getInstance();
         stackPane.getChildren().add(vales = LoadControllers.load("viewVales", valesController));
         vales.setVisible(false);
+
+        settingsController = SettingsController.getInstance();
+        stackPane.getChildren().add(settings = LoadControllers.load("viewSettings", settingsController));
+        settings.setVisible(false);
+
 
         //Agregamos todos los botones a la lista para una mejor gestión.
         listaBotones.add(btnGeneral);
@@ -115,6 +122,7 @@ public class DashboardController implements Initializable {
         });
 
         btnSettings.setOnAction(event -> {
+            SetVisible.This(listVBox, settings);
             setStyleToBotton(btnSettings);
         });
     }

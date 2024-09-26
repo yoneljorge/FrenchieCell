@@ -31,9 +31,6 @@ public class ServiceCelularControllerAgregar {
 
     private static ServiceCelularControllerAgregar instance;
 
-    private @Setter boolean banderaMarcaExiste;
-    private @Setter
-    @Getter boolean banderaModeloExiste;
 
     private ServiceMarca serviceMarca;
     private ServiceModelo serviceModelo;
@@ -61,8 +58,6 @@ public class ServiceCelularControllerAgregar {
         instance = this;
 
         Platform.runLater(() -> {
-            this.banderaMarcaExiste = false;
-            this.banderaModeloExiste = false;
             this.serviceMarca = new ServiceMarca();
             this.serviceModelo = new ServiceModelo();
             this.celularesController = CelularesController.getInstance();
@@ -228,18 +223,18 @@ public class ServiceCelularControllerAgregar {
                 }
                 marcaCombo.selectItem(serviceMarca.getMarca());
                 setEstadoInformation("Marca " + serviceMarca.getMarca().getMarca() + " agregada.");
-            } else if (banderaMarcaExiste) {
+            } else if (ServiceMarca.isBanderaMarcaExiste()) {
                 guardarMarca();
-                banderaMarcaExiste = false;
+                ServiceMarca.setBanderaMarcaExiste(false);
             }
         });
     }
 
     private void guardarModelo() {
         TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Vista Agregar Celular");
-        dialog.setHeaderText("Introduzca el modelo que desea agregar.");
-        dialog.setContentText("El modelo se agregará a la marca " + marcaCombo.getValue().getMarca());
+        dialog.setTitle("Agregar Modelo");
+        dialog.setHeaderText("El modelo se agregará a la marca " + marcaCombo.getValue().getMarca());
+        dialog.setContentText("Introduzca el modelo que desea agregar.");
 
         Optional<String> result = dialog.showAndWait();
 
@@ -262,9 +257,9 @@ public class ServiceCelularControllerAgregar {
                 }
                 modeloCombo.selectItem(modelo);
                 setEstadoInformation("Modelo " + modelo.getModelo() + " agregado.");
-            } else if (banderaModeloExiste) {
+            } else if (ServiceModelo.isBanderaModeloExiste()) {
                 guardarModelo();
-                banderaModeloExiste = false;
+                ServiceModelo.setBanderaModeloExiste(false);
             }
         });
     }

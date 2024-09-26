@@ -14,6 +14,13 @@ import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 
+/**
+ * Clase genérica para operaciones CRUD (Create, Read, Update, Delete)
+ * utilizando Hibernate.
+ * 
+ * @param <T>  el tipo de entidad que se manipulará
+ * @param <Id> el tipo de identificador de la entidad
+ */
 public class GenericDAO<T, Id extends Serializable> {
 
     private final static SessionFactory sessionFactory = UtilsHibernate.getSessionFactory();
@@ -23,16 +30,21 @@ public class GenericDAO<T, Id extends Serializable> {
     }
 
     /**
-     * Método que busca y devuelve un objeto de tipo T en función del identificador
-     * <id> proporcionado como parámetro. Este método es útil cuando necesitamos
-     * buscar y recuperar un objeto específico basado en su identificador único en
-     * la base de datos. Al proporcionar el identificador, puedes obtener
-     * directamente el objeto correspondiente de la base de datos sin tener que
-     * recuperar una lista completa y filtrar los resultados.
+     * Busca y devuelve un objeto de tipo T en función del identificador
+     * proporcionado.
      * 
-     * @param clazz - la entidad de la cual se quiere obtener el objeto.
-     * @param id    - del objeto que queremos recuperar.
-     * @return
+     * <p>
+     * Este método es útil para recuperar un objeto específico de la base de datos
+     * basado en su identificador único. Al proporcionar el identificador, se
+     * obtiene
+     * directamente el objeto deseado, sin necesidad de recuperar una lista completa
+     * y aplicar filtros adicionales.
+     * </p>
+     * 
+     * @param clazz la clase de la entidad que se quiere obtener
+     * @param id    el identificador único del objeto que se desea recuperar
+     * @return el objeto de tipo T correspondiente al identificador proporcionado,
+     *         o {@code null} si no se encuentra
      */
     public static <T, Id extends Serializable> T getObject(Class<T> clazz, Id id) {
         Transaction tx = getSession().beginTransaction();
@@ -50,47 +62,57 @@ public class GenericDAO<T, Id extends Serializable> {
     }
 
     /**
-     * Método que recupera todos los objetos de la clase genérica T en la
-     * base de datos.
+     * Recupera todos los objetos de la clase genérica T en la base de datos.
      * 
-     * Explicacion:
-     * 1- Se crea un objeto CriteriaBuilder utilizando el método
-     * getCriteriaBuilder() de la sesión actual. El CriteriaBuilder se utiliza para
-     * construir consultas.
-     * 2- Se crea un objeto CriteriaQuery de tipo T(genérico) utilizando el método
-     * createQuery(persistentClass) del CriteriaBuilder. Esto se utiliza para
-     * construir la consulta y especificar los criterios de búsqueda.
-     * 3- Se crea un objeto Root de tipo T(genérico), que representa una entidad
-     * raíz en la consutla. Se utiliza para especificar qué entidad se está
-     * consultando.
-     * 4- Se especifica que la consulta selecciona todos los campos de la entidad
-     * raíz.
-     * 5- Se crea una consulta utilizando el objeto query y se ejecuta utilizando
-     * getResultList() para obtener una lista de resultados. La sesión actual se
-     * utiliza para crear la consulta.
+     * <p>
+     * <strong>Explicación del proceso:</strong>
+     * </p>
      * 
-     * Este método a la hora de utlizarlo hay que implementarlo dentro de un
-     * try-catch de la siguiente forma
+     * <ol>
+     * <li>Se crea un objeto {@code CriteriaBuilder} utilizando el método
+     * {@code getCriteriaBuilder()} de la sesión actual. Este
+     * {@code CriteriaBuilder}
+     * se utiliza para construir consultas.</li>
      * 
-     * <// Obtener la lista de usuarios
+     * <li>Se crea un objeto {@code CriteriaQuery} de tipo T (genérico) usando el
+     * método
+     * {@code createQuery(persistentClass)} del {@code CriteriaBuilder}. Este objeto
+     * se utiliza para construir la consulta y especificar los criterios de
+     * búsqueda.</li>
+     * 
+     * <li>Se crea un objeto {@code Root<T>} que representa una entidad raíz en la
+     * consulta.
+     * Se usa para definir la entidad que se está consultando.</li>
+     * 
+     * <li>Se especifica que la consulta selecciona todos los campos de la entidad
+     * raíz
+     * utilizando {@code query.select(root)}.</li>
+     * 
+     * <li>La consulta se ejecuta con el método {@code getResultList()} para obtener
+     * una lista
+     * de resultados. La sesión actual se utiliza para ejecutar la consulta.</li>
+     * </ol>
+     * 
+     * <p>
+     * <strong>Uso recomendado:</strong>
+     * </p>
+     * <p>
+     * Este método debe ser implementado dentro de un bloque <i>try-catch</i> de la
+     * siguiente manera:
+     * </p>
+     * 
+     * <pre>{@code
      * List<Usuarios> listUsuarios = null;
+     * listUsuarios = Usuarios.getAllObject(Usuarios.class)
+     * }</pre>
      * 
-     * Transaction tx = null;
-     * try {
-     * Session session = dao.getSession();
-     * tx = session.beginTransaction();
-     * listUsuarios = dao.getAllObject();
-     * tx.commit();
-     * } catch (Exception e) {
-     * if (tx != null) {
-     * tx.rollback();
-     * }
-     * e.printStackTrace();
-     * }/>
-     * 
-     * @return
+     * @param <T>   el tipo genérico de la entidad
+     * @param clazz la clase de la entidad que se consulta
+     * @return una lista de objetos de la clase genérica T obtenidos de la base de
+     *         datos
+     * @deprecated Este método está obsoleto y puede ser reemplazado por otros
+     *             métodos más modernos.
      */
-
     public static <T> List<T> getAllObject(Class<T> clazz) {
         Transaction tx = getSession().beginTransaction();
         try {
@@ -115,27 +137,45 @@ public class GenericDAO<T, Id extends Serializable> {
 
     private static int i = 0;
     private static Object clazzGlobal;
+
     /**
-     * Método que recupera todos los objetos de uno en uno de la clase genérica T en la base de datos.
-     * Debe de utilizarse en un bulce while <code>whiel(.getAllObject != null)</code> , debido a que va
-     * a ir obteniendo los objetos de uno en uno desde la base de datos y cuando llegue al final va a
+     * Método que recupera todos los objetos de uno en uno de la clase genérica T en
+     * la base de datos.
+     * <p>
+     * Debe de utilizarse en un bulce while debido a que va a ir obteniendo los objetos de uno en uno desde la base de
+     * datos y cuando
+     * llegue al final va a
      * retornar un null.
+     * </p>
+     * <p>
+     * <strong>Ejemplo:</strong>
+     * </p>
+     * 
+     * <pre>{@code
+     * Usuario usuario;
+     * while ((usuario = Usuario.getAllObjectOneToOne) != null) {
+     *     // lo que se quiera hacer con el objeto.
+     * }
+     * }</pre>
+     * 
      *
-     * @param clazz
-     * @return
-     * @param <T>
+     * @param clazz la entidad de la cual que se quieren obtener los objetos.
+     * @return un objeto de esa entidad.
+     * @param <T> 
      */
     public static <T> T getAllObjectOneToOne(Class<T> clazz) {
-        //Inicializamos la claseGlobal con la primera clase que utilice este método.
-        if(clazzGlobal == null){
+        // Inicializamos la claseGlobal con la primera clase que utilice este método.
+        if (clazzGlobal == null) {
             clazzGlobal = clazz;
         }
         /**
-         * En caso de que la claseGlobal sea distinta a la clase que se pasa como argumento, entonces se iguala a la clase
-         * y el índice se iguala a 0, porque se sobreentiende que se está buscando objetos de otra clase y no queremos que
+         * En caso de que la claseGlobal sea distinta a la clase que se pasa como
+         * argumento, entonces se iguala a la clase
+         * y el índice se iguala a 0, porque se sobreentiende que se está buscando
+         * objetos de otra clase y no queremos que
          * comience desde otro índice.
          */
-        if(clazzGlobal != clazz){
+        if (clazzGlobal != clazz) {
             i = 0;
             clazzGlobal = clazz;
         }
@@ -146,21 +186,21 @@ public class GenericDAO<T, Id extends Serializable> {
             Root<T> root = query.from(clazz);
             query.select(root);
 
-            //Usamos el contador i para establecer desde que registro empezar.
+            // Usamos el contador i para establecer desde que registro empezar.
             Query<T> hibernateQuery = getSession().createQuery(query)
-                            .setFirstResult(i) //Desde el índice actual
-                            .setMaxResults(1);
+                    .setFirstResult(i) // Desde el índice actual
+                    .setMaxResults(1);
 
             List<T> resultList = hibernateQuery.getResultList();
 
-            if(!resultList.isEmpty()){
-                i ++; //Incrementar el índice para la siguiente llamada
+            if (!resultList.isEmpty()) {
+                i++; // Incrementar el índice para la siguiente llamada
                 tx.commit(); // Finalizar la transacción después de la operación exitosa
-                return resultList.getFirst(); //Devolver el primer y unico registro
-            }else {
-                i = 0;//Reiniciar el índice si no hay más resultados.
+                return resultList.getFirst(); // Devolver el primer y unico registro
+            } else {
+                i = 0;// Reiniciar el índice si no hay más resultados.
                 tx.commit(); // Finalizar la transacción después de la operación exitosa
-                return null;//Devolver null si no hay más registros.
+                return null;// Devolver null si no hay más registros.
             }
 
         } catch (Exception e) {

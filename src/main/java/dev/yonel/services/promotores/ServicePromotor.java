@@ -1,12 +1,5 @@
 package dev.yonel.services.promotores;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
 import dev.yonel.services.Gatillo;
@@ -20,6 +13,13 @@ import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class ServicePromotor {
 
@@ -136,8 +136,8 @@ public class ServicePromotor {
      *********************************************/
 
     /**
-     * Método para configurar un MFXFilterComboBox<Promotor>.
-     * Con este método se le asigna el filtro al combo y la lista de promotores.
+     * Método para configurar un MFXFilterComboBox<Promotor>. Con este método se le asigna el filtro al combo y la lista
+     * de promotores.
      *
      * @param comboBox el comboBox que se desea configurar.
      */
@@ -170,6 +170,52 @@ public class ServicePromotor {
         comboBox.setItems(observableList);
         comboBox.setConverter(converter);
         comboBox.setFilterFunction(filterFunction);
+    }
+
+    /**
+     * Método para configurar un MFXFilterComboBox Promotor. Con este método se le asigna el filtro al combo y la lista
+     * de promotores. Se selecciona también el promotor.
+     *
+     * @param comboBox            el combo box que se desea configurar.
+     * @param promotorSeleccionar el promotor que se desea seleccionar.
+     */
+    public void configureFilterComboBox(MFXFilterComboBox<Promotor> comboBox, Promotor promotorSeleccionar) {
+
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        list.clear();
+        /*
+         * Cargamos los datos desde ServiceList para una mejor gestión, con esto
+         * evitamos cargar datos desde la base de dato in
+         * cesariamente.
+         */
+        list.addAll(ProxyABaseDeDatos.getListPromotores());
+
+        if (observableList == null) {
+            observableList = FXCollections.observableArrayList();
+        }
+
+        observableList.clear();
+        observableList = FXCollections.observableArrayList(list);
+
+        StringConverter<Promotor> converter = FunctionalStringConverter
+                .to(promotor -> (promotor == null) ? "" : promotor.getNombre());
+        Function<String, Predicate<Promotor>> filterFunction = s -> promotor -> StringUtils
+                .containsIgnoreCase(converter.toString(promotor), s);
+        if (observableList != null) {
+            for (Promotor p :
+                    observableList) {
+                if (p.getNombre().equals(promotorSeleccionar.getNombre())) {
+                    promotorSeleccionar = p;
+                }
+            }
+        }
+        comboBox.setItems(observableList);
+        comboBox.setConverter(converter);
+        comboBox.setFilterFunction(filterFunction);
+        comboBox.getSelectionModel().selectItem(promotorSeleccionar);
     }
 
     /*********************************************
@@ -262,8 +308,8 @@ public class ServicePromotor {
     }
 
     /**
-     * Método que actualiza todos los promotores de la base de datos.
-     * Este método realiza las transacciones de una en una para evitar sobrecargar la memoria.
+     * Método que actualiza todos los promotores de la base de datos. Este método realiza las transacciones de una en
+     * una para evitar sobrecargar la memoria.
      */
     public static void updateAllPromotor() {
         Promotor promotor;
@@ -277,9 +323,9 @@ public class ServicePromotor {
      * **************** MÉTODOS  *****************
      *********************************************/
     /**
-     * Verifica si existe en la base de datos el promotor que se quiere agregar en base a su nombre.
-     * En si esta clase utiliza el método existe de promotor que extiende de GenericDAO al cual se le
-     * pasa un Map con la clase y nombre del atributo que se quiere verificar si existe.
+     * Verifica si existe en la base de datos el promotor que se quiere agregar en base a su nombre. En si esta clase
+     * utiliza el método existe de promotor que extiende de GenericDAO al cual se le pasa un Map con la clase y nombre
+     * del atributo que se quiere verificar si existe.
      *
      * @return true si existe, false en caso contrario.
      */

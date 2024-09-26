@@ -1,10 +1,5 @@
 package dev.yonel.services.controllers.promotores;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import dev.yonel.App;
 import dev.yonel.controllers.PromotoresController;
 import dev.yonel.controllers.items.ItemValeController;
@@ -22,14 +17,19 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class ServicePromotoresControllerPromotor {
 
     //Variable que almacena la instancia de la clase
     private static ServicePromotoresControllerPromotor instance;
 
     /**
-     * Constructor privado para que solo se pueda cerar la instancia desde dentro de la clase.
-     * Con esto logramos de que solo halla una sola instancia de esta clase.
+     * Constructor privado para que solo se pueda cerar la instancia desde dentro de la clase. Con esto logramos de que
+     * solo halla una sola instancia de esta clase.
      */
     private ServicePromotoresControllerPromotor() {
         instance = this;
@@ -187,15 +187,15 @@ public class ServicePromotoresControllerPromotor {
     /**
      * Método para limpiar el vbox.
      */
-    public void cleanVbox() {
+    private void cleanVbox() {
         promotorVales.getChildren().clear();
     }
 
     /**
-     * Método para invertir el orden de los nodos en el VBox
-     * Se invierte el orden de las instancias de los controladores de cada Vale.
+     * Método para invertir el orden de los nodos en el VBox Se invierte el orden de las instancias de los controladores
+     * de cada Vale.
      */
-    public void invertirOrden() {
+    private void invertirOrden() {
         // Invertimos el orden de los nodos en el VBox
         ObservableList<Node> children = promotorVales.getChildren();
         List<Node> invertedList = new ArrayList<>(children);
@@ -209,9 +209,8 @@ public class ServicePromotoresControllerPromotor {
     }
 
     /**
-     * Método con el cual vamos a agregar desde el controlador del itemValePromotor
-     * los vales que se pueden liquidar.
-     * En caso de que la lista sea mayor a 0, se activa el boton liquidar.
+     * Método con el cual vamos a agregar desde el controlador del itemValePromotor los vales que se pueden liquidar. En
+     * caso de que la lista sea mayor a 0, se activa el boton liquidar.
      *
      * @param vale el vale que se va a liquidar.
      */
@@ -221,9 +220,8 @@ public class ServicePromotoresControllerPromotor {
     }
 
     /**
-     * Método con el cual vamos a remover desde el controlador itemValePromotor los
-     * vales que se iban a liquidar.
-     * En caso de que la lista sea igual a cero, de desactiva el boton liquidar.
+     * Método con el cual vamos a remover desde el controlador itemValePromotor los vales que se iban a liquidar. En
+     * caso de que la lista sea igual a cero, de desactiva el boton liquidar.
      *
      * @param vale
      */

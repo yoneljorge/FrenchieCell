@@ -1,13 +1,7 @@
 package dev.yonel.controllers;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
-import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
 import dev.yonel.utils.ui.SetVisible;
@@ -23,7 +17,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 @Getter
 public class CelularesController implements Initializable {
@@ -157,19 +155,16 @@ public class CelularesController implements Initializable {
 
             pnlAgregar.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    System.out.println(">>>>>>>>>>>Panel Agregar Celular");
                     serviceAgregar.configure();
                 }
 
             });
 
             serviceVista.configure();
-            //Cada vez que se abra la vista si hay cambios entonces se actualiza
+            //Cada vez que se abra la vista se actualiza
             pnlVista.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    if (ProxyABaseDeDatos.isCambioCelular()) {
-                        serviceVista.configure();
-                    }
+                    serviceVista.configure();
                 }
             });
 
@@ -205,7 +200,4 @@ public class CelularesController implements Initializable {
         });
         thread.start();
     }
-
-    private @Setter
-    @Getter boolean popupOpen = false;
 }
