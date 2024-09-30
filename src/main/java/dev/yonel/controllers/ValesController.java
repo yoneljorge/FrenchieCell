@@ -93,14 +93,6 @@ public class ValesController implements Initializable {
     private static ValesController instance;
 
     /*
-     * Cargamos cada servicio de cada vista.
-     */
-    @Getter(AccessLevel.NONE)
-    private ServiceValesControllerAgregar serviceAgregar;
-    @Getter(AccessLevel.NONE)
-    private ServiceValesControllerVista serviceVista;
-
-    /*
      * Lista para agregar los VBox de las vistas para una mejor gestión.
      */
     @Getter(AccessLevel.NONE)
@@ -117,7 +109,7 @@ public class ValesController implements Initializable {
         return instance;
     }
 
-    public static void restartInstance(){
+    public static void restartInstance() {
         instance = null;
     }
 
@@ -130,8 +122,6 @@ public class ValesController implements Initializable {
 
         Platform.runLater(() -> {
             this.listVBoxs = new ArrayList<>();
-            this.serviceAgregar = ServiceValesControllerAgregar.getInstance();
-            this.serviceVista = ServiceValesControllerVista.getInstance();
 
             listVBoxs.add(vboxPanelAgregar);
             listVBoxs.add(vboxPanelLista);
@@ -142,14 +132,17 @@ public class ValesController implements Initializable {
 
             vboxPanelAgregar.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    this.serviceAgregar.configure();
+                    ServiceValesControllerAgregar.getInstance().configure();
                 }
             });
 
+            //Cuando inicia la app esta carga la lista
+            ServiceValesControllerVista.getInstance().getAllItems();
+            //Cuando se muestra la interfáz tambien carga la lista.
             vboxPanelLista.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    this.serviceVista.configure();
-                    this.serviceVista.getAllItems();
+                    //ServiceValesControllerVista.getInstance().configure();
+                    ServiceValesControllerVista.getInstance().getAllItems();
                 }
             });
 
@@ -178,7 +171,7 @@ public class ValesController implements Initializable {
         btnLista.setDisable(true);
     }
 
-    public void loading(boolean valor){
+    public void loading(boolean valor) {
         Thread thread = new Thread(() -> {
             hBoxLoadingInVista.setVisible(valor);
         });

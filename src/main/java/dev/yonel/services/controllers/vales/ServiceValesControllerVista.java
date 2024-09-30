@@ -14,7 +14,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -46,7 +45,6 @@ public class ServiceValesControllerVista {
     private ServiceValesControllerVista() {
         instance = this;
 
-        setObject();
         this.listaItemsValesController = new ArrayList<>();
     }
 
@@ -56,23 +54,6 @@ public class ServiceValesControllerVista {
         }
 
         return instance;
-    }
-
-    /* ################################################## */
-    /*
-     * Creamos los Objetos que se encuentran en el FXML para luego enlazarlos con
-     * los del controlador.
-     */
-    private FlowPane flowPane_ListaDeItems;
-
-    private void setObject() {
-        this.flowPane_ListaDeItems = ValesController.getInstance().getFlowPane_ListaDeItems();
-    }
-
-    public void configure() {
-        Platform.runLater(() -> {
-
-        });
     }
 
     /*
@@ -110,7 +91,7 @@ public class ServiceValesControllerVista {
 
                 loader.setController(controller);
                 vBox = loader.load();
-                flowPane_ListaDeItems.getChildren().add(vBox);
+                ValesController.getInstance().getFlowPane_ListaDeItems().getChildren().add(vBox);
 
                 listaItemsValesController.add(controller);
             } catch (Exception e) {
@@ -126,15 +107,15 @@ public class ServiceValesControllerVista {
             removeAllItems();
 
             /*
-             Vale vale;
-            while ((vale = Vale.getAllOneToOne(Vale.class)) != null) {
-                setItems(vale);
-            }
-
-            // Invertimos el orden de los vales para que aparezcan primero los últimos
-            invertirOrden();
-            cambioEnInterfaz = false;
-
+             * Vale vale;
+             * while ((vale = Vale.getAllOneToOne(Vale.class)) != null) {
+             * setItems(vale);
+             * }
+             * 
+             * // Invertimos el orden de los vales para que aparezcan primero los últimos
+             * invertirOrden();
+             * cambioEnInterfaz = false;
+             * 
              */
 
             // Crea un hilo separado para obtener y procesar los items
@@ -151,7 +132,8 @@ public class ServiceValesControllerVista {
                     });
                 }
 
-                // Una vez que todos los items se hayan agregado, invierte el orden en el hilo de la UI
+                // Una vez que todos los items se hayan agregado, invierte el orden en el hilo
+                // de la UI
                 Platform.runLater(() -> {
                     invertirOrden();
                     cambioEnInterfaz = false;
@@ -166,7 +148,7 @@ public class ServiceValesControllerVista {
      */
 
     private void removeAllItems() {
-        flowPane_ListaDeItems.getChildren().clear();
+        ValesController.getInstance().getFlowPane_ListaDeItems().getChildren().clear();
         listaItemsValesController.clear();
     }
 
@@ -176,7 +158,7 @@ public class ServiceValesControllerVista {
      *
      * @param controller el controlador que se le desea buscar la posicón.
      * @return -1 en caso de que no encuentre la posicón, del 0 en adelante la
-     * posición en que se encuentra el controlador.
+     *         posición en que se encuentra el controlador.
      */
     public int getIndexItem(ItemValeController controller) {
         return listaItemsValesController.indexOf(controller);
@@ -189,7 +171,7 @@ public class ServiceValesControllerVista {
      * @param i la posición del item que se desea quitar.
      */
     public void removeItem(int i) {
-        flowPane_ListaDeItems.getChildren().remove(i);
+        ValesController.getInstance().getFlowPane_ListaDeItems().getChildren().remove(i);
     }
 
     /*
@@ -200,10 +182,10 @@ public class ServiceValesControllerVista {
 
     private void invertirOrden() {
         // Invertimos el orden de los nodos en el FlowPane
-        ObservableList<Node> children = flowPane_ListaDeItems.getChildren();
+        ObservableList<Node> children = ValesController.getInstance().getFlowPane_ListaDeItems().getChildren();
         List<Node> invertedList = new ArrayList<>(children);
         Collections.reverse(invertedList);
-        flowPane_ListaDeItems.getChildren().setAll(invertedList);
+        ValesController.getInstance().getFlowPane_ListaDeItems().getChildren().setAll(invertedList);
 
         // Invertimos el orden de los controles en la lista de controles
         List<ItemValeController> invertedItemVale = new ArrayList<>(listaItemsValesController);
