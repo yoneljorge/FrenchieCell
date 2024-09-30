@@ -79,13 +79,15 @@ public class ServicePromotoresControllerPromotor {
 
             // Acción al presionar el botón LIQUIDAR
             PromotoresController.getInstance().getBtnLiquidar().setOnAction(event -> {
-
+                liquidar();
             });
 
+            // Acción al presionar el botón de EDITAR_PERFIL
             PromotoresController.getInstance().getMenuItemEditarPerfil().setOnAction(event -> {
                 editarPromotor();
             });
 
+            // Acción al presionar el botón ELIMINAR_PERFIL
             PromotoresController.getInstance().getMenuItemEliminarPerfil().setOnAction(event -> {
                 eliminarPromotor();
             });
@@ -274,5 +276,30 @@ public class ServicePromotoresControllerPromotor {
                                 });
                     }
                 });
+    }
+
+    private void liquidar() {
+        mensajes.info("Liquidando vales promotor: " + servicePromotor.getNombre());
+        long dineroAPagar = 0;
+        /*
+         * Iteramos sobre la lista y vamos liquidando todos los vales.
+         */
+        for (Vale v : listValesLiquidar) {
+            v.setLiquidado(true);
+            v.update();
+            dineroAPagar = dineroAPagar + v.getComision();
+        }
+        AlertUtil.information(PromotoresController.getInstance().getVBoxRoot().getScene().getWindow(),
+                "Vales liquidados",
+                "Se le tiene que pagar al gestor: " + dineroAPagar);
+        // Actualizamos el promotor y la vista con la nueva información.
+        servicePromotor.updatePromotor();
+        loadPromotor(servicePromotor.getIdPromotor());
+
+        // Desactivamos el boton Liquidar.
+        PromotoresController.getInstance().getBtnLiquidar().setDisable(true);
+
+        // Limpiamos la lista
+        listValesLiquidar.clear();
     }
 }

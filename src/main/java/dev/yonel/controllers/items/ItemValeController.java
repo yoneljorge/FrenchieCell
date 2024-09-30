@@ -60,23 +60,30 @@ public class ItemValeController implements Initializable {
         this.lblComision.setText(comision);
 
         /*
-         * Si el vale está en garantia entonces deshabilitamos el checkBox.
+         * Si el vales ya fue liquidado ocultamos el checkBox
          */
-        if (hideCheckBox) {
+        if (!vale.getLiquidado()) {
+            /*
+             * Si el vale está en garantia entonces deshabilitamos el checkBox.
+             */
+            if (hideCheckBox) {
+                checkBoxLiquidar.setVisible(false);
+                if (vale.getGarantia()) {
+                    vboxVale.getStyleClass().add("vale-enGarantia");
+                } else {
+                    vboxVale.getStyleClass().add("vale-sinGarantia");
+                }
+            } else {
+                if (vale.getGarantia()) {
+                    checkBoxLiquidar.setDisable(true);
+                    vboxVale.getStyleClass().add("vale-enGarantia");
+                } else {
+                    checkBoxLiquidar.setDisable(false);
+                    vboxVale.getStyleClass().add("vale-sinGarantia");
+                }
+            }
+        }else{
             checkBoxLiquidar.setVisible(false);
-            if (vale.getGarantia()) {
-                vboxVale.getStyleClass().add("vale-enGarantia");
-            } else {
-                vboxVale.getStyleClass().add("vale-sinGarantia");
-            }
-        } else {
-            if (vale.getGarantia()) {
-                checkBoxLiquidar.setDisable(true);
-                vboxVale.getStyleClass().add("vale-enGarantia");
-            } else {
-                checkBoxLiquidar.setDisable(false);
-                vboxVale.getStyleClass().add("vale-sinGarantia");
-            }
         }
 
         /*
@@ -96,10 +103,12 @@ public class ItemValeController implements Initializable {
     }
 
     /**
-     * Método con el que vamos a igualar cada variable correspondiente a cada label con la informacion del vale para
+     * Método con el que vamos a igualar cada variable correspondiente a cada label
+     * con la informacion del vale para
      * luego mostrarla en la GUI.
      *
-     * @param vale Objeto que representa una instancia del vale que se quiere mostrar.
+     * @param vale Objeto que representa una instancia del vale que se quiere
+     *             mostrar.
      */
     public void setVale(Vale vale) {
         this.vale = vale;
@@ -115,7 +124,8 @@ public class ItemValeController implements Initializable {
     private boolean hideCheckBox = false;
 
     /**
-     * Método con el que ocultamos el checkBox con el cual chequeamos el vale para liquidarlo o pagarlo.
+     * Método con el que ocultamos el checkBox con el cual chequeamos el vale para
+     * liquidarlo o pagarlo.
      */
     public void hideCheckBox() {
         hideCheckBox = true;
@@ -143,7 +153,6 @@ public class ItemValeController implements Initializable {
 
         // Ejecutar la tarea en un hilo separado
         new Thread(task).start();
-
 
     }
 }
