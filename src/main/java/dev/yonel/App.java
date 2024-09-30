@@ -3,8 +3,10 @@ package dev.yonel;
 import java.io.IOException;
 
 import dev.yonel.controllers.DashboardController;
+import dev.yonel.services.Mensajes;
 import dev.yonel.services.Updates;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,6 +24,13 @@ public class App extends Application {
     private DashboardController dashboardController;
     private static @Getter Stage stage;
 
+    private Mensajes mensajes = new Mensajes(getClass());
+
+    private static App instance;
+
+    public static App getInstance(){
+        return instance;
+    }
     @Override
     public void init() throws IOException {
 
@@ -30,23 +39,23 @@ public class App extends Application {
          * bloquear el hilo principal.
          */
         Thread initThread = new Thread(() -> {
-            System.out.println("Ejecutando initThread");
+            mensajes.info("Ejecutando initThread");
             // Actualizamos la base de datos.
             Updates.run();
 
             FXMLLoader loader;
             try {
                 loader = fxmlLoader("viewDashboard");
-                this.dashboardController = new DashboardController();
+                this.dashboardController = DashboardController.getInstance();
                 loader.setController(dashboardController);
                 this.root = loader.load();
                 this.mainScene = new Scene(root);
             } catch (IOException e) {
-                System.out.println("Error en la ejecución del initThread");
+                mensajes.err("Error en la ejecución del initThread");
                 e.printStackTrace();
             }
 
-            System.out.println("Terminando ejecución initThread");
+            mensajes.info("Terminando ejecución initThread");
         });
 
         initThread.start();
@@ -56,9 +65,11 @@ public class App extends Application {
          * antes de que continúe la ejecución del programa.
          */
         try {
-            System.out.println("Esperando a que se termine de ejecutar initThread");
+            mensajes.info("Esperando a que se termine de ejecutar initThread");
             initThread.join();
         } catch (Exception e) {
+            mensajes.err("Error esperando a que termine de ejecutar initThread");
+            mensajes.err(e.getMessage());
             e.printStackTrace();
         }
 
@@ -67,6 +78,8 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
+        instance = this;
+        
         stage = primaryStage;
 
         primaryStage.setScene(mainScene);
@@ -103,4 +116,69 @@ public class App extends Application {
         launch(args);
     }
 
+    public void restartApp() {
+        // Cerra la ventana actual
+
+        stage.close();
+
+        /*
+         * Se crea un Thread para realizar la carga de la base de datos y del FXML sin
+         * bloquear el hilo principal.
+         */
+        Thread initThread = new Thread(() -> {
+            mensajes.info("Ejecutando initThread");
+            // Actualizamos la base de datos.
+            Updates.run();
+
+            FXMLLoader loader;
+            try {
+                loader = fxmlLoader("viewDashboard");
+                this.dashboardController = DashboardController.getInstance();
+                loader.setController(dashboardController);
+                this.root = loader.load();
+                this.mainScene = new Scene(root);
+            } catch (IOException e) {
+                mensajes.err("Error en la ejecución del initThread");
+                e.printStackTrace();
+            }
+
+            mensajes.info("Terminando ejecución initThread");
+        });
+
+        initThread.start();
+
+        /*
+         * Usamos .join() para asegurarnos de que el hilo de inicialización termine
+         * antes de que continúe la ejecución del programa.
+         */
+        try {
+            mensajes.info("Esperando a que se termine de ejecutar initThread");
+            initThread.join();
+        } catch (Exception e) {
+            mensajes.err("Error esperando a que termine de ejecutar initThread");
+            mensajes.err(e.getMessage());
+            e.printStackTrace();
+        }
+
+        stage = new Stage();
+
+        stage.setScene(mainScene);
+        // Le quitamos los botones de maximizar y minimizar a la interfaz.
+        // primaryStage.initStyle(StageStyle.UNDECORATED);
+
+        // Cuando se haga clic sobre la ventanan esta se puede arrastrar
+        root.setOnMousePressed(event -> {
+            x = event.getSceneX();
+            y = event.getSceneY();
+        });
+
+        // Se arrastre la ventada
+        root.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - x);
+            stage.setY(event.getScreenY() - y);
+        });
+
+        stage.show();
+
+    }
 }

@@ -40,7 +40,7 @@ public class LiquidarVales {
 
     public void printVales() {
         for (Vale vale : listaVales) {
-            System.out.println(vale);
+            
         }
     }
 

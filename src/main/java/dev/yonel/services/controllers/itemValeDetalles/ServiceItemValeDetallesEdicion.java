@@ -337,7 +337,7 @@ public class ServiceItemValeDetallesEdicion {
         newVale.setPromotor(filterComboBoxPromotor.getValue());
         newVale.setCliente(txtCliente.getText());
         newVale.setClienteTelefono(Long.parseLong(txtTelefonoCliente.getText()));
-        newVale.setImei(filterComboBoxImei.getValue().getImeiUno());
+        newVale.setImei(filterComboBoxImei.getValue());
         newVale.setMarca(filterComboBoxImei.getValue().getMarca());
         newVale.setModelo(filterComboBoxImei.getValue().getModelo());
         newVale.setPrecio(Double.parseDouble(txtPrecio.getText()));
@@ -398,7 +398,7 @@ public class ServiceItemValeDetallesEdicion {
             btnGuardar.setDisable(false);
         } else if (!txtTelefonoCliente.getText().equals(String.valueOf(controller.getVale().getClienteTelefono()))) {
             btnGuardar.setDisable(false);
-        } else if (!filterComboBoxImei.getValue().getImeiUno().equals(controller.getVale().getImei())) {
+        } else if (!filterComboBoxImei.getValue().getImeiUno().equals(controller.getVale().getImei().getImeiUno())) {
             btnGuardar.setDisable(false);
         } else if (!txtPrecio.getText().equals(String.valueOf(controller.getVale().getPrecio()))) {
             btnGuardar.setDisable(false);

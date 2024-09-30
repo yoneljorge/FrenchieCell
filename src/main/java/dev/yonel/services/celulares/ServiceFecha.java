@@ -108,8 +108,6 @@ public class ServiceFecha {
                         }
                     }
                 } else {
-                    System.out.println("ComboMarca: " + comboMarca.getValue().getMarca() +
-                            "\nComboModelo: " + comboModelo.getValue().getModelo());
                     for (Celular c : listCelulares) {
                         if (c.getMarca().getMarca().equals(this.comboMarca.getValue().getMarca())
                                 && c.getModelo().getModelo().equals(this.comboModelo.getValue().getModelo())) {

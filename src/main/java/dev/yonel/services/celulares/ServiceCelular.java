@@ -1,5 +1,13 @@
 package dev.yonel.services.celulares;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
@@ -10,7 +18,6 @@ import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.services.vales.ServiceVales;
 import dev.yonel.utils.Fecha;
-import dev.yonel.utils.data_access.UtilsHibernate;
 import dev.yonel.utils.validation.Validator;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.utils.StringUtils;
@@ -18,18 +25,6 @@ import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
-import lombok.val;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
 public class ServiceCelular {
 
@@ -380,7 +375,7 @@ public class ServiceCelular {
      * @param comboBox    que se desea configurar.
      * @param imeiCelular el imei del celular que se desea seleccionar.
      */
-    public void configureFilterComboBoxImeiForEditarVales(MFXFilterComboBox<Celular> comboBox, Long imeiCelular) {
+    public void configureFilterComboBoxImeiForEditarVales(MFXFilterComboBox<Celular> comboBox, Celular imeiCelular) {
         if (listImei == null) {
             listImei = new ArrayList<>();
         }
@@ -397,7 +392,7 @@ public class ServiceCelular {
             if (!c.getVendido()) {
                 listImei.add(c);
             }
-            if (c.getImeiUno().equals(imeiCelular)) {
+            if (c.getImeiUno().equals(imeiCelular.getImeiUno())) {
                 listImei.add(c);
             }
         }
@@ -417,7 +412,7 @@ public class ServiceCelular {
         // Si se encuentra el celular entonces se selecciona.
         if (observableListImei != null) {
             for (Celular c : observableListImei) {
-                if (c.getImeiUno().equals(imeiCelular)) {
+                if (c.getImeiUno().equals(imeiCelular.getImeiUno())) {
                     comboBox.getSelectionModel().selectItem(c);
                     break;
                 }
@@ -443,7 +438,7 @@ public class ServiceCelular {
         mensajes.info("Buscando el vale de este celular");
         Vale vale;
         while ((vale = Vale.getAllOneToOne(Vale.class)) != null) {
-            if (vale.getImei().equals(celular.getImeiUno())) {
+            if (vale.getImei().getImeiUno().equals(celular.getImeiUno())) {
                 mensajes.info("Vale encontrado");
                 return vale;
             }
@@ -451,4 +446,14 @@ public class ServiceCelular {
         mensajes.info("No hay vales asociados a este celular.");
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "ServiceCelular [idCelular=" + idCelular + ", marca=" + marca + ", modelo=" + modelo + ", imei_Uno="
+                + imei_Uno + ", imei_Dos=" + imei_Dos + ", precio=" + precio + ", fechaInventario=" + fechaInventario
+                + ", vendido=" + vendido + ", observaciones=" + observaciones + ", dualSim=" + dualSim + ", celular="
+                + celular + "]";
+    }
+
+    
 }

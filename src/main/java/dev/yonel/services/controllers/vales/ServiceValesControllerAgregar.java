@@ -252,7 +252,7 @@ public class ServiceValesControllerAgregar {
                 .setPromotor(filterComboBoxPromotor.getValue())
                 .setCliente(txtCliente.getText())
                 .setClienteTelefono(Long.parseLong(txtTelefonoCliente.getText()))
-                .setImei(filterComboBoxImei.getValue().getImeiUno())
+                .setImei(filterComboBoxImei.getValue())
                 .setMarca(filterComboBoxImei.getValue().getMarca())
                 .setModelo(filterComboBoxImei.getValue().getModelo())
                 .setPrecio(Double.parseDouble(txtPrecio.getText()))

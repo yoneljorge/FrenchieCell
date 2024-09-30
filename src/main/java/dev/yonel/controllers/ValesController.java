@@ -117,6 +117,10 @@ public class ValesController implements Initializable {
         return instance;
     }
 
+    public static void restartInstance(){
+        instance = null;
+    }
+
     public void initialize(URL location, ResourceBundle resource) {
         /*
          * Agregamos los VBox de cada vista a la lista

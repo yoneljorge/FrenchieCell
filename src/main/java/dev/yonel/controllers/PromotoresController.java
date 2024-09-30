@@ -25,6 +25,9 @@ public class PromotoresController implements Initializable {
 
     private static PromotoresController instance;
 
+    @FXML
+    private VBox vBoxRoot;
+    
     // Panel Agregar Promotor
     @FXML
     private VBox vboxAgregar;
@@ -106,13 +109,6 @@ public class PromotoresController implements Initializable {
     @Getter(AccessLevel.NONE)
     private ArrayList<VBox> listVBox = new ArrayList<>();
 
-    @Getter(AccessLevel.NONE)
-    private ServicePromotoresControllerAgregar serviceAgregar;
-    @Getter(AccessLevel.NONE)
-    private ServicePromotoresControllerVista serviceVista;
-    @Getter(AccessLevel.NONE)
-    private ServicePromotoresControllerPromotor servicePromotor;
-
     private PromotoresController() {
         instance = this;
     }
@@ -124,44 +120,53 @@ public class PromotoresController implements Initializable {
         return instance;
     }
 
+    public static void restartInstance() {
+        instance = null;
+    }
+
     public void initialize(URL location, ResourceBundle resources) {
 
         Platform.runLater(() -> {
-            this.serviceAgregar = ServicePromotoresControllerAgregar.getInstance();
-            this.serviceVista = ServicePromotoresControllerVista.getInstance();
-            this.servicePromotor = ServicePromotoresControllerPromotor.getInstance();
 
             // Agregamos los VBox al ArrayList
             listVBox.add(vboxAgregar);
             listVBox.add(vboxLista);
             listVBox.add(vboxPromotor);
 
+            vboxLista.setVisible(true);
+            ServicePromotoresControllerVista.restartInstance();
+            ServicePromotoresControllerVista.getInstance().configure();
+            ServicePromotoresControllerVista.getInstance().getAllItems();
+
             vboxAgregar.setVisible(false);
-            vboxLista.setVisible(false);
             vboxPromotor.setVisible(false);
 
             /*
-            Implementaciones siguientes:
-            En cada panel hay un listener esperando a que se ponga visible o se oculte el panel.
-            Si el panel se pone visible entonces ejecuta la acción que se encuentra dentro del if().
+             * Implementaciones siguientes:
+             * En cada panel hay un listener esperando a que se ponga visible o se oculte el
+             * panel.
+             * Si el panel se pone visible entonces ejecuta la acción que se encuentra
+             * dentro del if().
              */
             vboxAgregar.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    serviceAgregar.configure();
+                    ServicePromotoresControllerAgregar.restartInstance();
+                    ServicePromotoresControllerAgregar.getInstance().configure();
                 }
             });
 
             vboxLista.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    if (serviceVista.isNotNull()) {
-                        serviceVista.getAllItems();
-                    }
+                    ServicePromotoresControllerVista.restartInstance();
+                    ServicePromotoresControllerVista.getInstance().configure();
+                    ServicePromotoresControllerVista.getInstance().getAllItems();
                 }
             });
 
             vboxPromotor.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    servicePromotor.configure();
+                    ServicePromotoresControllerPromotor.restartInstance();
+                    ServicePromotoresControllerPromotor.getInstance().configure();
                 }
             });
 
@@ -184,7 +189,7 @@ public class PromotoresController implements Initializable {
     }
 
     public void goToLista() {
-        serviceVista.configure();
+        // serviceVista.configure();
         changeView(getInstance().vboxLista, true, false);
     }
 

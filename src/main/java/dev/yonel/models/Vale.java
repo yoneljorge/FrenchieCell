@@ -37,8 +37,9 @@ public class Vale extends BaseEntity<Vale, Long> implements Serializable {
     private Long comision = 0l;
 
 
-    @Column(name = "imei")
-    private Long imei = 0l;
+    @ManyToOne
+    @JoinColumn(name = "imei", referencedColumnName = "imei_uno")
+    private Celular imei;
     @ManyToOne
     @JoinColumn(name = "marca", referencedColumnName = "marca")
     private Marca marca;

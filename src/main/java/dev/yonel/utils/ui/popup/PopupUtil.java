@@ -1,7 +1,5 @@
 package dev.yonel.utils.ui.popup;
 
-import javafx.stage.Stage;
-
 public interface PopupUtil {
 
     public void load();

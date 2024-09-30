@@ -265,9 +265,7 @@ public class PopupUtilImp implements PopupUtil {
         popupStage.setX(x);
         popupStage.setY(y);
 
-
         popupStage.showAndWait();
-
     }
 
     /**

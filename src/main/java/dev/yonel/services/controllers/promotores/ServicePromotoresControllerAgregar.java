@@ -4,34 +4,15 @@ import dev.yonel.controllers.PromotoresController;
 import dev.yonel.services.Gatillo;
 import dev.yonel.services.promotores.ServicePromotor;
 import dev.yonel.utils.validation.MFXTextFieldUtil;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTextField;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 
 public class ServicePromotoresControllerAgregar {
 
     private static ServicePromotoresControllerAgregar instance;
 
-    private MFXTextField txtNombre;
-    private MFXTextField txtApellidos;
-    private MFXTextField txtCelular;
-    private MFXButton btnLimpiar;
-    private MFXButton btnAgregar;
-    private Label validacionNombre;
-    private Label validacionApellidos;
-    private Label validacionCelular;
-    private Label labelEstado;
-
-    private PromotoresController promotoresController = PromotoresController.getInstance();
-
     private ServicePromotoresControllerAgregar() {
         instance = this;
-
-        Platform.runLater(() -> {
-            setObjects();
-        });
     }
 
     public static ServicePromotoresControllerAgregar getInstance() {
@@ -41,16 +22,8 @@ public class ServicePromotoresControllerAgregar {
         return instance;
     }
 
-    private void setObjects() {
-        this.txtNombre = promotoresController.getTxtNombre();
-        this.txtApellidos = promotoresController.getTxtApellidos();
-        this.txtCelular = promotoresController.getTxtCelular();
-        this.btnLimpiar = promotoresController.getBtnLimpiar();
-        this.btnAgregar = promotoresController.getBtnAgregar();
-        this.validacionNombre = promotoresController.getValidacionNombre();
-        this.validacionApellidos = promotoresController.getValidacionApellidos();
-        this.validacionCelular = promotoresController.getValidacionCelular();
-        this.labelEstado = promotoresController.getLabelEstado_AgregarPromotor();
+    public static void restartInstance(){
+        instance = null;
     }
 
     /*********************************************
@@ -59,23 +32,26 @@ public class ServicePromotoresControllerAgregar {
 
     public void configure() {
         Platform.runLater(() -> {
-            MFXTextFieldUtil.validateString(txtNombre, validacionNombre);
-            txtNombre.setText("");
-            validacionNombre.setText("");
+            MFXTextFieldUtil.validateString(PromotoresController.getInstance().getTxtNombre(),
+            PromotoresController.getInstance().getValidacionNombre());
+            PromotoresController.getInstance().getTxtNombre().setText("");
+            PromotoresController.getInstance().getValidacionNombre().setText("");
 
-            MFXTextFieldUtil.validateString(txtApellidos, validacionApellidos);
-            txtApellidos.setText("");
-            validacionApellidos.setText("");
+            MFXTextFieldUtil.validateString(PromotoresController.getInstance().getTxtApellidos(), 
+            PromotoresController.getInstance().getValidacionApellidos());
+            PromotoresController.getInstance().getTxtApellidos().setText("");
+            PromotoresController.getInstance().getValidacionApellidos().setText("");
 
-            MFXTextFieldUtil.validatePhoneNumber(txtCelular, validacionCelular);
-            txtCelular.setText("");
-            validacionCelular.setText("");
+            MFXTextFieldUtil.validatePhoneNumber(PromotoresController.getInstance().getTxtCelular(),
+            PromotoresController.getInstance().getValidacionCelular());
+            PromotoresController.getInstance().getTxtCelular().setText("");
+            PromotoresController.getInstance().getValidacionCelular().setText("");
 
-            btnAgregar.setOnAction(event -> {
+            PromotoresController.getInstance().getBtnAgregar().setOnAction(event -> {
                 agreagar();
             });
 
-            btnLimpiar.setOnAction(event -> {
+            PromotoresController.getInstance().getBtnLimpiar().setOnAction(event -> {
                 limpiar();
             });
         });
@@ -85,14 +61,14 @@ public class ServicePromotoresControllerAgregar {
         ServicePromotor promotor = new ServicePromotor();
 
         if (isValid()) {
-            promotor.setNombre(txtNombre.getText());
-            promotor.setApellidos(txtApellidos.getText());
-            promotor.setTelefono(Long.parseLong(txtCelular.getText()));
+            promotor.setNombre(PromotoresController.getInstance().getTxtNombre().getText());
+            promotor.setApellidos(PromotoresController.getInstance().getTxtApellidos().getText());
+            promotor.setTelefono(Long.parseLong(PromotoresController.getInstance().getTxtCelular().getText()));
 
             if (promotor.save()) {
-                txtNombre.setText("");
-                txtApellidos.setText("");
-                txtCelular.setText("");
+                PromotoresController.getInstance().getTxtNombre().setText("");
+                PromotoresController.getInstance().getTxtApellidos().setText("");
+                PromotoresController.getInstance().getTxtCelular().setText("");
                 /*
                  * Informamos que hay cambios en el apartado de promotores
                  */
@@ -113,36 +89,36 @@ public class ServicePromotoresControllerAgregar {
     private boolean isValid() {
         int i = 0;
 
-        if (txtNombre.getText() != null) {
-            if (!txtNombre.getText().equals("")) {
-                if (txtNombre.isValid()) {
+        if (PromotoresController.getInstance().getTxtNombre().getText() != null) {
+            if (!PromotoresController.getInstance().getTxtNombre().getText().equals("")) {
+                if (PromotoresController.getInstance().getTxtNombre().isValid()) {
                     i++;
                 }
             } else {
-                validacionNombre.setText("Campo obligatorio.");
-                validacionNombre.setVisible(true);
+                PromotoresController.getInstance().getValidacionNombre().setText("Campo obligatorio.");
+                PromotoresController.getInstance().getValidacionNombre().setVisible(true);
             }
         }
 
-        if (txtApellidos.getText() != null) {
-            if (!txtApellidos.getText().equals("")) {
-                if (txtApellidos.isValid()) {
+        if (PromotoresController.getInstance().getTxtApellidos().getText() != null) {
+            if (!PromotoresController.getInstance().getTxtApellidos().getText().equals("")) {
+                if (PromotoresController.getInstance().getTxtApellidos().isValid()) {
                     i++;
                 }
             } else {
-                validacionApellidos.setText("Campo obligatorio.");
-                validacionApellidos.setVisible(true);
+                PromotoresController.getInstance().getValidacionApellidos().setText("Campo obligatorio.");
+                PromotoresController.getInstance().getValidacionApellidos().setVisible(true);
             }
         }
 
-        if (txtCelular.getText() != null) {
-            if (!txtCelular.getText().equals("")) {
-                if (txtCelular.isValid()) {
+        if (PromotoresController.getInstance().getTxtCelular().getText() != null) {
+            if (!PromotoresController.getInstance().getTxtCelular().getText().equals("")) {
+                if (PromotoresController.getInstance().getTxtCelular().isValid()) {
                     i++;
                 }
             } else {
-                validacionCelular.setText("Campo obligatorio.");
-                validacionCelular.setVisible(true);
+                PromotoresController.getInstance().getValidacionCelular().setText("Campo obligatorio.");
+                PromotoresController.getInstance().getValidacionCelular().setVisible(true);
             }
         }
 
@@ -150,9 +126,9 @@ public class ServicePromotoresControllerAgregar {
     }
 
     private void limpiar() {
-        txtNombre.clear();
-        txtApellidos.clear();
-        txtCelular.clear();
+        PromotoresController.getInstance().getTxtNombre().clear();
+        PromotoresController.getInstance().getTxtApellidos().clear();
+        PromotoresController.getInstance().getTxtCelular().clear();
     }
 
     /**
@@ -162,12 +138,12 @@ public class ServicePromotoresControllerAgregar {
      * @param estado el mensaje que se desea mostrar.
      */
     public void setEstadoInformativo(String estado) {
-        labelEstado.setText(estado);
-        labelEstado.getStyleClass().add("label");
+        PromotoresController.getInstance().getLabelEstado_AgregarPromotor().setText(estado);
+        PromotoresController.getInstance().getLabelEstado_AgregarPromotor().getStyleClass().add("label");
 
         PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(10));
         pause.setOnFinished(event -> {
-            labelEstado.setText("");
+            PromotoresController.getInstance().getLabelEstado_AgregarPromotor().setText("");
         });
         pause.play();
     }
@@ -179,12 +155,12 @@ public class ServicePromotoresControllerAgregar {
      * @param estado el mensaje que se desea mostrar.
      */
     public void setEstadoError(String estado) {
-        labelEstado.setText(estado);
-        labelEstado.getStyleClass().add("label-error");
+        PromotoresController.getInstance().getLabelEstado_AgregarPromotor().setText(estado);
+        PromotoresController.getInstance().getLabelEstado_AgregarPromotor().getStyleClass().add("label-error");
 
         PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(10));
         pause.setOnFinished(event -> {
-            labelEstado.setText(null);
+            PromotoresController.getInstance().getLabelEstado_AgregarPromotor().setText(null);
         });
         pause.play();
     }

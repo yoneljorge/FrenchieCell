@@ -98,7 +98,6 @@ public class ServiceValesControllerVista {
     private void setItems(Vale vale) {
 
         if (vale != null) {
-            System.out.println("Agregando un nuevo itemVale");
             ItemValeController controller = new ItemValeController();
             controller.setVale(vale);
             controller.hideCheckBox();
@@ -117,7 +116,6 @@ public class ServiceValesControllerVista {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            System.out.println("Terminando de agregar un nuevo itemVale.");
         }
     }
 

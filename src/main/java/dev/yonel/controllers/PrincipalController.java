@@ -25,8 +25,22 @@ public class PrincipalController implements Initializable {
 
     private @Setter Stage stage;
 
-    public PrincipalController() {
+    private static PrincipalController instance;
 
+    private PrincipalController() {
+
+    }
+
+    public static PrincipalController getInstance(){
+        if(instance == null){
+            instance = new PrincipalController();
+        }
+
+        return instance;
+    }
+
+    public static void restartInstance(){
+        instance = null;
     }
 
     @Override

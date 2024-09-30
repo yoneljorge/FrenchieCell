@@ -1,5 +1,9 @@
 package dev.yonel.controllers.popup;
 
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
 import dev.yonel.controllers.CelularesController;
 import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
@@ -8,7 +12,6 @@ import dev.yonel.services.celulares.ServiceCelular;
 import dev.yonel.services.celulares.ServiceMarca;
 import dev.yonel.services.celulares.ServiceModelo;
 import dev.yonel.utils.AlertUtil;
-import dev.yonel.utils.DialogsUtils;
 import dev.yonel.utils.ui.popup.PopupController;
 import dev.yonel.utils.validation.MFXTextFieldUtil;
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -18,7 +21,6 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -27,10 +29,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
 
 public class PopupCelularController implements Initializable, PopupController {
 
@@ -92,14 +90,20 @@ public class PopupCelularController implements Initializable, PopupController {
     @Override
     public void initialize(URL location, ResourceBundle rb) {
 
+        //Ponemos en el cache
+        vBoxRoot.setCache(true);
         /*
          * Configuramos los controles
          */
 
-        //Primero hay que configurar los comboBox y después hacer la selección.
+        // Primero hay que configurar los comboBox y después hacer la selección.
         Platform.runLater(() -> {
             serviceMarca.configureComboBox(cmbMarca);
             cmbMarca.getSelectionModel().selectItem(celular.getMarca());
+            // Exception in thread "JavaFX Application Thread"
+            // java.lang.NullPointerException: Cannot invoke
+            // "dev.yonel.models.Marca.getMarca()" because the return value of
+            // "dev.yonel.models.Modelo.getMarca()" is null
             serviceModelo.configureComboBoxEdicion(cmbModelo, cmbMarca,
                     celular.getMarca().getMarca(), celular.getModelo().getModelo());
 
@@ -131,7 +135,7 @@ public class PopupCelularController implements Initializable, PopupController {
                 update();
             });
 
-            //###########################################
+            // ###########################################
             cmbMarca.selectedItemProperty().addListener(new ChangeListener<Marca>() {
                 @Override
                 public void changed(ObservableValue<? extends Marca> observable, Marca oldValue, Marca newValue) {
@@ -182,7 +186,8 @@ public class PopupCelularController implements Initializable, PopupController {
             });
             dateFechaInventario.valueProperty().addListener(new ChangeListener<LocalDate>() {
                 @Override
-                public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+                public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
+                        LocalDate newValue) {
                     if (newValue != null) {
                         enableActualizar();
                     }
@@ -232,15 +237,15 @@ public class PopupCelularController implements Initializable, PopupController {
     }
 
     private void update() {
-        //Parte de validación
+        // Parte de validación
         if (cmbMarca.getValue() == null) {
             setEstadoError("Seleccione una Marca");
         } else if (cmbModelo.getValue() == null) {
             setEstadoError("Seleccione un Moedlo");
         } else if (isValid()) {
-            //Parte de actualización
+            // Parte de actualización
             setEstadoInfo("Guardando...");
-            //Mostramos que está cargando
+            // Mostramos que está cargando
             CelularesController.getInstance().loading(true);
 
             serviceCelular.setMarca(cmbMarca.getValue());
@@ -254,11 +259,12 @@ public class PopupCelularController implements Initializable, PopupController {
             if (serviceCelular.update()) {
                 CelularesController.getInstance().loading(false);
                 AlertUtil.information(vBoxRoot.getScene().getWindow(), "Celular actualizado", null);
-                //DialogsUtils.openInfo(vBoxRoot, "Celular actualizado", "Edición");
+                // DialogsUtils.openInfo(vBoxRoot, "Celular actualizado", "Edición");
                 onCloseAction.run();
             } else {
                 CelularesController.getInstance().loading(false);
-                AlertUtil.error("Celular no actualizado", "Posiblemente a un error de conexión,\nsi el error persiste contacte al desarrollador.");
+                AlertUtil.error("Celular no actualizado",
+                        "Posiblemente a un error de conexión,\nsi el error persiste contacte al desarrollador.");
             }
         }
     }
@@ -317,7 +323,7 @@ public class PopupCelularController implements Initializable, PopupController {
         }
     }
 
-    /* Variable que va a almacenar la instancia Runnable*/
+    /* Variable que va a almacenar la instancia Runnable */
     private Runnable onCloseAction;
 
     /**
@@ -330,17 +336,6 @@ public class PopupCelularController implements Initializable, PopupController {
     @Override
     public void onCloseAction(Runnable action) {
         this.onCloseAction = action;
-    }
-
-    private Runnable autoHideFalse;
-    private Runnable autoHideTrue;
-
-    public void setAutoHideFalse(Runnable action) {
-        this.autoHideFalse = action;
-    }
-
-    public void setAutoHideTrue(Runnable action) {
-        this.autoHideTrue = action;
     }
 
 }

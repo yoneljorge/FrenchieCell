@@ -110,18 +110,11 @@ public class CelularesController implements Initializable {
     @Getter(AccessLevel.NONE)
     private ArrayList<Pane> listPane = new ArrayList<>();
 
-    // Servicios de las vistas
-    @Getter(AccessLevel.NONE)
-    private ServiceCelularControllerAgregar serviceAgregar;
-    @Getter(AccessLevel.NONE)
-    private ServiceCelularControllerVista serviceVista;
-
     /**
      * Constructor privado para poder implementar el patrón de diseño Singlenton.
      */
     private CelularesController() {
         instance = this;
-
     }
 
     /**
@@ -136,6 +129,10 @@ public class CelularesController implements Initializable {
         return instance;
     }
 
+    public static void restartInstance() {
+        instance = null;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -145,8 +142,8 @@ public class CelularesController implements Initializable {
          */
         Platform.runLater(() -> {
 
-            this.serviceAgregar = ServiceCelularControllerAgregar.getInstance();
-            this.serviceVista = ServiceCelularControllerVista.getInstance();
+            ServiceCelularControllerAgregar.restartInstance();
+            ServiceCelularControllerVista.restartInstance();
 
             // Agregamos los pane a la lista y ponemos la vista como el visible.
             listPane.add(pnlAgregar);
@@ -155,33 +152,30 @@ public class CelularesController implements Initializable {
 
             pnlAgregar.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    serviceAgregar.configure();
+                    // ServiceCelularControllerAgregar.restartInstance();
+                    ServiceCelularControllerAgregar.getInstance().configure();
                 }
 
             });
 
-            serviceVista.configure();
-            //Cada vez que se abra la vista se actualiza
+            ServiceCelularControllerVista.getInstance().configure();
+            // Cada vez que se abra la vista se actualiza
             pnlVista.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
-                    serviceVista.configure();
+                    ServiceCelularControllerVista.restartInstance();
+                    ServiceCelularControllerVista.getInstance().configure();
                 }
             });
 
-
             btnVista.setOnAction(event -> {
-                SetVisible.This(listPane, pnlVista);
-                btnAgregar.setDisable(false);
-                btnVista.setDisable(true);
+                goToLista();
             });
 
             btnAgregar.setOnAction(evetnt -> {
-                SetVisible.This(listPane, pnlAgregar);
-                btnAgregar.setDisable(true);
-                btnVista.setDisable(false);
+                goToAgregar();
             });
 
-            //this.scrollPane.setContent(vboxItemVista);
+            // this.scrollPane.setContent(vboxItemVista);
             this.scrollPane.setFitToWidth(true);
             this.scrollPane.setFitToHeight(true);
         });
@@ -191,7 +185,8 @@ public class CelularesController implements Initializable {
     /**
      * Méotodo con el que hacemos visible el HBox que contiene el gif de cargando.
      *
-     * @param valor <code>true</code> en caso de que se quiera mostrar <br></br>
+     * @param valor <code>true</code> en caso de que se quiera mostrar <br>
+     *              </br>
      *              <code>false</code> en caso contrario.
      */
     public void loading(boolean valor) {
@@ -199,5 +194,17 @@ public class CelularesController implements Initializable {
             hBoxLoadingInVista.setVisible(valor);
         });
         thread.start();
+    }
+
+    public void goToLista() {
+        SetVisible.This(listPane, pnlVista);
+        btnAgregar.setDisable(false);
+        btnVista.setDisable(true);
+    }
+
+    public void goToAgregar() {
+        SetVisible.This(listPane, pnlAgregar);
+        btnAgregar.setDisable(true);
+        btnVista.setDisable(false);
     }
 }

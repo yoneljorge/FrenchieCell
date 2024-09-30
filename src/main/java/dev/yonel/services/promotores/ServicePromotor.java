@@ -3,6 +3,7 @@ package dev.yonel.services.promotores;
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
 import dev.yonel.services.Gatillo;
+import dev.yonel.services.Mensajes;
 import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.promotores.ServicePromotoresControllerAgregar;
 import dev.yonel.services.vales.ServiceVales;
@@ -27,6 +28,8 @@ public class ServicePromotor {
 
     private static ServicePromotor instance;
 
+    private Mensajes mensajes = new Mensajes(getClass());
+
     // Listas para los promotores
     private List<Promotor> list;
     private ObservableList<Promotor> observableList;
@@ -39,7 +42,7 @@ public class ServicePromotor {
         this.promotor = promotor;
     }
 
-    public static ServicePromotor getInstance() {
+    private static ServicePromotor getInstance() {
         if (instance == null) {
             instance = new ServicePromotor();
         }
@@ -131,12 +134,21 @@ public class ServicePromotor {
         }
     }
 
+    public void setPromotor(Promotor promotor) {
+        this.promotor = promotor;
+    }
+
+    public Promotor getPromotor() {
+        return this.promotor;
+    }
+
     /*********************************************
      * ********** MÉTODOS PARA OBJETOS ***********
      *********************************************/
 
     /**
-     * Método para configurar un MFXFilterComboBox<Promotor>. Con este método se le asigna el filtro al combo y la lista
+     * Método para configurar un MFXFilterComboBox<Promotor>. Con este método se le
+     * asigna el filtro al combo y la lista
      * de promotores.
      *
      * @param comboBox el comboBox que se desea configurar.
@@ -173,7 +185,8 @@ public class ServicePromotor {
     }
 
     /**
-     * Método para configurar un MFXFilterComboBox Promotor. Con este método se le asigna el filtro al combo y la lista
+     * Método para configurar un MFXFilterComboBox Promotor. Con este método se le
+     * asigna el filtro al combo y la lista
      * de promotores. Se selecciona también el promotor.
      *
      * @param comboBox            el combo box que se desea configurar.
@@ -205,8 +218,7 @@ public class ServicePromotor {
         Function<String, Predicate<Promotor>> filterFunction = s -> promotor -> StringUtils
                 .containsIgnoreCase(converter.toString(promotor), s);
         if (observableList != null) {
-            for (Promotor p :
-                    observableList) {
+            for (Promotor p : observableList) {
                 if (p.getNombre().equals(promotorSeleccionar.getNombre())) {
                     promotorSeleccionar = p;
                 }
@@ -219,7 +231,7 @@ public class ServicePromotor {
     }
 
     /*********************************************
-     * ********** MÉTODOS CRUD  ******************
+     * ********** MÉTODOS CRUD ******************
      *********************************************/
 
     /**
@@ -258,7 +270,6 @@ public class ServicePromotor {
         long porPagar = 0L;
         long totalVales = 0L;
 
-        long dineroTotal = 0L;
         long dineroPorPagar = 0L;
         long dineroPagado = 0L;
 
@@ -266,7 +277,7 @@ public class ServicePromotor {
         Promotor promotor = Promotor.getById(Promotor.class, idPromotor);
 
         while ((vale = ServiceVales.findValesByPromotorOneToOne(promotor.getIdPromotor())) != null) {
-            //Iteramos la variable totalVales de uno en uno cada vez que aparezca
+            // Iteramos la variable totalVales de uno en uno cada vez que aparezca
             // un vale asociado a ese promotor
             totalVales++;
 
@@ -282,7 +293,6 @@ public class ServicePromotor {
                 }
             }
         }
-
 
         promotor.setValesPagados(pagados);
         promotor.setValesEnGarantia(enGarantia);
@@ -304,11 +314,57 @@ public class ServicePromotor {
     }
 
     public boolean updatePromotor() {
-        return updatePromotor(promotor.getIdPromotor());
+
+        long enGarantia = 0L;
+        long pagados = 0L;
+        long porPagar = 0L;
+        long totalVales = 0L;
+
+        long dineroPorPagar = 0L;
+        long dineroPagado = 0L;
+
+        Vale vale;
+
+        while ((vale = ServiceVales.findValesByPromotorOneToOne(promotor.getIdPromotor())) != null) {
+            // Iteramos la variable totalVales de uno en uno cada vez que aparezca
+            // un vale asociado a ese promotor
+            totalVales++;
+
+            if (vale.getLiquidado() != null && vale.getLiquidado()) {
+                pagados++;
+                dineroPagado = dineroPagado + vale.getComision();
+            } else {
+                if (vale.getGarantia() != null && vale.getGarantia()) {
+                    enGarantia++;
+                } else {
+                    porPagar++;
+                    dineroPorPagar = dineroPorPagar + vale.getComision();
+                }
+            }
+        }
+
+        promotor.setValesPagados(pagados);
+        promotor.setValesEnGarantia(enGarantia);
+        promotor.setValesPorPagar(porPagar);
+        promotor.setTotalDeVales(totalVales);
+
+        promotor.setDineroTotal(dineroPagado + dineroPorPagar);
+        promotor.setDineroTotalPorPagar(dineroPorPagar);
+        promotor.setDineroTotalPagado(dineroPagado);
+
+        if (promotor.update()) {
+            Gatillo.newPromotor();
+
+            return true;
+        } else {
+
+            return false;
+        }
     }
 
     /**
-     * Método que actualiza todos los promotores de la base de datos. Este método realiza las transacciones de una en
+     * Método que actualiza todos los promotores de la base de datos. Este método
+     * realiza las transacciones de una en
      * una para evitar sobrecargar la memoria.
      */
     public static void updateAllPromotor() {
@@ -319,12 +375,31 @@ public class ServicePromotor {
         }
     }
 
+    public boolean delete() {
+        mensajes.info("Eliminando promotor");
+        if (promotor.delete()) {
+            
+            Vale vale;
+
+            while ((vale = ServiceVales.findValesByPromotorOneToOne(promotor.getIdPromotor())) != null) {
+                ServiceVales serviceVales = new ServiceVales(vale);
+                serviceVales.eliminar(vale.getImei());
+            }
+            return true;
+        }else{
+            mensajes.err("Error al eliminar el promotor.");
+            return false;
+        }
+    }
+
     /*********************************************
-     * **************** MÉTODOS  *****************
+     * **************** MÉTODOS *****************
      *********************************************/
     /**
-     * Verifica si existe en la base de datos el promotor que se quiere agregar en base a su nombre. En si esta clase
-     * utiliza el método existe de promotor que extiende de GenericDAO al cual se le pasa un Map con la clase y nombre
+     * Verifica si existe en la base de datos el promotor que se quiere agregar en
+     * base a su nombre. En si esta clase
+     * utiliza el método existe de promotor que extiende de GenericDAO al cual se le
+     * pasa un Map con la clase y nombre
      * del atributo que se quiere verificar si existe.
      *
      * @return true si existe, false en caso contrario.
@@ -347,6 +422,5 @@ public class ServicePromotor {
         }
         return false;
     }
-
 
 }

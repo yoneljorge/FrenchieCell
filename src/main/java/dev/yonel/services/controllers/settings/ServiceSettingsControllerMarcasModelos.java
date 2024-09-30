@@ -1,9 +1,5 @@
 package dev.yonel.services.controllers.settings;
 
-import java.lang.foreign.Linker.Option;
-import java.util.List;
-import java.util.Optional;
-
 import dev.yonel.controllers.SettingsController;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
@@ -11,19 +7,18 @@ import dev.yonel.services.Mensajes;
 import dev.yonel.services.celulares.ServiceMarca;
 import dev.yonel.services.celulares.ServiceModelo;
 import dev.yonel.utils.AlertUtil;
-import io.github.palexdev.mfxcore.settings.Setting;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TextInputDialog;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
- * Clase en la que vamos a implementar la lógica que tiene que ver con el
- * apartado de Marcas y Modelos en el controller Settings.
- * Esta clase emplea el Patrón de Diseño Singlenton por lo que solo habrá una
- * instancia de esta clase.
- * Esta clase para su ejecución depende de SettingsController.
- * 
+ * Clase en la que vamos a implementar la lógica que tiene que ver con el apartado de Marcas y Modelos en el controller
+ * Settings. Esta clase emplea el Patrón de Diseño Singlenton por lo que solo habrá una instancia de esta clase. Esta
+ * clase para su ejecución depende de SettingsController.
  */
 public class ServiceSettingsControllerMarcasModelos {
 
@@ -42,7 +37,7 @@ public class ServiceSettingsControllerMarcasModelos {
 
     /**
      * Método para obtener la instancia de clase.
-     * 
+     *
      * @return <code>instance</code> la instancia de esta clase.
      */
     public static ServiceSettingsControllerMarcasModelos getInstance() {
@@ -105,10 +100,9 @@ public class ServiceSettingsControllerMarcasModelos {
 
     /**
      * <p>
-     * Método con el cual llenamos el listViewModelo con los Modelos
-     * correspondientes a la marca pasada como parámetro.
+     * Método con el cual llenamos el listViewModelo con los Modelos correspondientes a la marca pasada como parámetro.
      * </p>
-     * 
+     *
      * @param marca a la que se le desea buscar los modelos.
      */
     private void llenarListaModelo(Marca marca) {
@@ -220,7 +214,7 @@ public class ServiceSettingsControllerMarcasModelos {
             });
         } else {
             AlertUtil.error(SettingsController.getInstance().getVBox_Root().getScene().getWindow(),
-             "Agregar Modelo", "No tienes una marca seleccionada.");
+                    "Agregar Modelo", "No tienes una marca seleccionada.");
         }
 
     }
@@ -234,7 +228,7 @@ public class ServiceSettingsControllerMarcasModelos {
                 () -> {
                     ServiceModelo serviceModelo = new ServiceModelo();
                     serviceModelo.setModelo(modeloSeleccionado);
-                    if(serviceModelo.delete()){
+                    if (serviceModelo.delete()) {
                         setEstadoInformation("Modelo " + modeloSeleccionado + " elliminado");
                         Marca marcaSeleccionada = SettingsController.getInstance().getListView_Marcas().getSelectionModel().getSelectedItem();
                         llenarListaModelo(marcaSeleccionada);
@@ -243,8 +237,7 @@ public class ServiceSettingsControllerMarcasModelos {
     }
 
     /**
-     * Método con el cual vamos a pasar mensajes de información al Label de
-     * estado.
+     * Método con el cual vamos a pasar mensajes de información al Label de estado.
      *
      * @param estado el mensaje que se desea mostrar.
      */
@@ -260,8 +253,7 @@ public class ServiceSettingsControllerMarcasModelos {
     }
 
     /**
-     * Método con el que vamos a pasar mensajes de error al Label de
-     * estado.
+     * Método con el que vamos a pasar mensajes de error al Label de estado.
      *
      * @param estado el mensaje que se desea mostrar.
      */

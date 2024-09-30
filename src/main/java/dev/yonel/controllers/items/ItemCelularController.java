@@ -45,7 +45,6 @@ public class ItemCelularController implements Initializable {
     private boolean vendido;
 
     private ServiceCelular serviceCelular;
-    private ServiceCelularControllerVista serviceVista = ServiceCelularControllerVista.getInstance();
 
     private Mensajes mensajes = new Mensajes(ItemCelularController.class);
 
@@ -62,15 +61,18 @@ public class ItemCelularController implements Initializable {
         this.labelFecha.setText(fecha);
         if (!this.vendido) {
             this.labelVendido.setText("NO");
+            itemCelular.getStyleClass().add("vale-enGarantia");
         } else {
             this.labelVendido.setText("SI");
+            itemCelular.getStyleClass().add("vale-sinGarantia");
         }
 
         btnQuitar.setOnAction(event -> {
             AlertUtil.advertencia("Desea eliminar el celular de la base de datos?", getInfoCelular(), () -> {
                 if (serviceCelular.delete()) {
-                    serviceVista.removeItem(serviceVista.getIndexItemCelularController(this));
-                    serviceVista.cargarItems();
+                    ServiceCelularControllerVista.getInstance().removeItem(
+                        ServiceCelularControllerVista.getInstance().getIndexItemCelularController(this));
+                    ServiceCelularControllerVista.getInstance().cargarItems();
                 } else {
                     AlertUtil.error("Error en base de datos?",
                             "No se pudo eliminar el celular\nsi el error persiste contacte\nal desarrolador.");

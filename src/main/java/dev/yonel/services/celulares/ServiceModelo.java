@@ -1,12 +1,5 @@
 package dev.yonel.services.celulares;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import dev.yonel.models.Celular;
 import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
@@ -29,11 +22,16 @@ import javafx.util.StringConverter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 @NoArgsConstructor
 public class ServiceModelo {
@@ -72,7 +70,6 @@ public class ServiceModelo {
     /**
      * Méotodo para guardar un objeto de tipo Modelo en la base de datos.
      *
-     * @param modelo el objeto.
      * @return true en caso de que se guarde, false en caso de que exista, no se
      *         guarde o le falten datos.
      */
@@ -148,7 +145,7 @@ public class ServiceModelo {
      * <p>
      * Este método elimina todos los celulares que pertenencen a este modelo.
      * </p>
-     * 
+     *
      * @return
      *         <ul>
      *         <li>{@code true} en caso de que se elimine el modelo sin errores</li>
@@ -172,7 +169,7 @@ public class ServiceModelo {
                 serviceCelular.delete();
             }
 
-            //Informamos que hay cambios en los modelos
+            // Informamos que hay cambios en los modelos
             Gatillo.newModelo();
             return true;
         } else {
@@ -185,8 +182,7 @@ public class ServiceModelo {
     /**
      * Método que verifica si el objeto modelo no es nulo o si no está vacío.
      *
-     * @return true en caso de que este lleno, false
-     *         en caso contrario.
+     * @return true en caso de que este lleno, false en caso contrario.
      */
     private boolean isFull() {
         if (this.modelo.getModelo() == null) {
@@ -223,7 +219,6 @@ public class ServiceModelo {
         this.listModeloNew.clear();
         ServiceMarca serviceMarca = new ServiceMarca();
         listModeloNew.addAll(serviceMarca.getModelosForMarca(this.comboBoxMarca.getValue()));
-        
 
         this.observableListModelo.clear();
         this.observableListModelo = FXCollections.observableArrayList(this.listModeloNew);
@@ -308,8 +303,9 @@ public class ServiceModelo {
     }
 
     /**
-     * Método para configurar un MFXFilterComboBox de tipo Modelo.
-     * Este método crea una lista de Modelos a partir de la Marca seleccionada.
+     * Método para configurar un MFXFilterComboBox de tipo Modelo. Este método crea
+     * una lista de Modelos a partir de la
+     * Marca seleccionada.
      *
      * @param comboBoxModelo
      * @param comboBoxMarca
@@ -420,10 +416,8 @@ public class ServiceModelo {
         });
     }
 
-    // Variable que va a hacer función de índice.
+    // Contador par saber en que posición se encontró el último celular.
     private int i;
-    // Variable donde vamos a almacenar el modelo actual que estamos buscando.
-    private Modelo modeloBuscar;
 
     /**
      * Méotodo con el que vamos a buscar los celulares que pertenecen al modelo
@@ -432,8 +426,8 @@ public class ServiceModelo {
      * Devuelve los celulares de uno en uno.<br>
      * </br>
      * Si se cambia de modelo en el proceso de obtener los celulares se reinicia el
-     * índice.
-     * Este método debe ser ejecutado dentro de un bloque while.<br>
+     * índice. Este método debe ser
+     * ejecutado dentro de un bloque while.<br>
      * </br>
      * Ejemplo:
      * <code>while((celular = serviceModelo.getCelularForModelo) != null){}</code>

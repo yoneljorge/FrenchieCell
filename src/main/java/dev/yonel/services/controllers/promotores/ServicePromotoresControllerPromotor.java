@@ -1,47 +1,45 @@
 package dev.yonel.services.controllers.promotores;
 
-import dev.yonel.App;
-import dev.yonel.controllers.PromotoresController;
-import dev.yonel.controllers.items.ItemValeController;
-import dev.yonel.models.Promotor;
-import dev.yonel.models.Vale;
-import dev.yonel.services.promotores.ServicePromotor;
-import dev.yonel.services.vales.ServiceVales;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import dev.yonel.App;
+import dev.yonel.controllers.PromotoresController;
+import dev.yonel.controllers.items.ItemValeController;
+import dev.yonel.controllers.popup.PopupPromotorController;
+import dev.yonel.models.Promotor;
+import dev.yonel.models.Vale;
+import dev.yonel.services.Mensajes;
+import dev.yonel.services.promotores.ServicePromotor;
+import dev.yonel.services.vales.ServiceVales;
+import dev.yonel.utils.AlertUtil;
+import dev.yonel.utils.ui.popup.PopupUtil;
+import dev.yonel.utils.ui.popup.PopupUtilImp;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.layout.VBox;
+
 public class ServicePromotoresControllerPromotor {
 
-    //Variable que almacena la instancia de la clase
+    private static ServicePromotor servicePromotor;
+
+    private Mensajes mensajes = new Mensajes(getClass());
+
+    // Variable que almacena la instancia de la clase
     private static ServicePromotoresControllerPromotor instance;
 
     /**
-     * Constructor privado para que solo se pueda cerar la instancia desde dentro de la clase. Con esto logramos de que
+     * Constructor privado para que solo se pueda cerar la instancia desde dentro de
+     * la clase. Con esto logramos de que
      * solo halla una sola instancia de esta clase.
      */
     private ServicePromotoresControllerPromotor() {
         instance = this;
-
-        /*
-        Con Platform.runLater() logramos de que ejecute el código que está dentro de
-        el luego de que la halla iniciado la aplicación.
-         */
-        Platform.runLater(() -> {
-            //Cargamos los objetos o componentes.
-            setObjects();
-        });
     }
 
     /**
@@ -56,54 +54,40 @@ public class ServicePromotoresControllerPromotor {
         return instance;
     }
 
-
-    //Controles que tiene la vista.
-    private FlowPane promotorVales;
-    private MFXButton btnRegresar;
-    private MFXButton btnLiquidar;
-    private MenuItem editarPerfil;
-    private MenuItem eliminarPerfil;
-    private Label dineroPorPagar;
-    private Label valesPorPagar;
-    private Label valesGarantia;
-    private Label valesTotal;
-    private Label labelPromotor;
-    private Label dineroPagado;
-    private List<Vale> listVales;
-    private List<Vale> listValesLiquidar;
-    private List<ItemValeController> itemValePromotorControllers;
-    //Instancia del constructor
-    private PromotoresController promotoresController = PromotoresController.getInstance();
-
-
-    private void setObjects() {
-        this.listVales = new ArrayList<>();
-        this.listValesLiquidar = new ArrayList<>();
-        this.itemValePromotorControllers = new ArrayList<>();
-        this.promotorVales = promotoresController.getFlowPanePromotorVales();
-        this.btnRegresar = promotoresController.getBtnRegresar();
-        this.btnLiquidar = promotoresController.getBtnLiquidar();
-        this.editarPerfil = promotoresController.getMenuItemEditarPerfil();
-        this.eliminarPerfil = promotoresController.getMenuItemEliminarPerfil();
-        this.dineroPorPagar = promotoresController.getLblDineroPorPagar();
-        this.valesPorPagar = promotoresController.getLblValesPorPagar();
-        this.valesGarantia = promotoresController.getLblValesGarantia();
-        this.valesTotal = promotoresController.getLblValesTotal();
-        this.labelPromotor = promotoresController.getLblPromotor();
-        this.dineroPagado = promotoresController.getLblDineroPagado();
+    /**
+     * <p>
+     * Método con el que vamos a reiniciar la instancia.
+     * </p>
+     */
+    public static void restartInstance() {
+        instance = null;
     }
+
+    private List<Vale> listVales = new ArrayList<>();
+    private List<Vale> listValesLiquidar = new ArrayList<>();
+    private List<ItemValeController> itemValePromotorControllers = new ArrayList<>();
 
     /**
      * Méotodo con el que vamos a configurar los botones y objetos de la vista.
      */
     public void configure() {
         Platform.runLater(() -> {
-            btnRegresar.setOnAction(event -> {
-                promotoresController.goToLista();
+            // Acción al presionar el botón REGRESAR
+            PromotoresController.getInstance().getBtnRegresar().setOnAction(event -> {
+                PromotoresController.getInstance().goToLista();
             });
 
-            btnLiquidar.setOnAction(event -> {
+            // Acción al presionar el botón LIQUIDAR
+            PromotoresController.getInstance().getBtnLiquidar().setOnAction(event -> {
 
+            });
+
+            PromotoresController.getInstance().getMenuItemEditarPerfil().setOnAction(event -> {
+                editarPromotor();
+            });
+
+            PromotoresController.getInstance().getMenuItemEliminarPerfil().setOnAction(event -> {
+                eliminarPromotor();
             });
         });
     }
@@ -115,14 +99,14 @@ public class ServicePromotoresControllerPromotor {
      */
     public void loadPromotor(Long id) {
 
-        promotoresController.goToPromotor();
+        PromotoresController.getInstance().goToPromotor();
 
-        ServicePromotor promotor = new ServicePromotor(Promotor.getById(Promotor.class, id));
+        servicePromotor = new ServicePromotor(Promotor.getById(Promotor.class, id));
 
         /*
          * Introducimos la información del promotor en el Panel.
          */
-        setDatosInPanel(promotor);
+        setDatosInPanel(servicePromotor);
 
         /*
          * Limpiamos el VBox para que no se repitan los vales
@@ -153,12 +137,15 @@ public class ServicePromotoresControllerPromotor {
     private void setDatosInPanel(ServicePromotor promotor) {
 
         // Ingresamos los datos del promotor en cada label.
-        labelPromotor.setText(promotor.getNombre() + " " + promotor.getApellidos());
-        valesTotal.setText(String.valueOf(promotor.getValesTotal()));
-        valesGarantia.setText(String.valueOf(promotor.getValesEnGarantia()));
-        valesPorPagar.setText(String.valueOf(promotor.getValesPorPagar()));
-        dineroPorPagar.setText(String.valueOf(promotor.getDineroTotalPorPagar()));
-        dineroPagado.setText(String.valueOf(promotor.getDineroTotalPagado()));
+        PromotoresController.getInstance().getLblPromotor()
+                .setText(promotor.getNombre() + " " + promotor.getApellidos());
+        PromotoresController.getInstance().getLblValesTotal().setText(String.valueOf(promotor.getValesTotal()));
+        PromotoresController.getInstance().getLblValesGarantia().setText(String.valueOf(promotor.getValesEnGarantia()));
+        PromotoresController.getInstance().getLblValesPorPagar().setText(String.valueOf(promotor.getValesPorPagar()));
+        PromotoresController.getInstance().getLblDineroPorPagar()
+                .setText(String.valueOf(promotor.getDineroTotalPorPagar()));
+        PromotoresController.getInstance().getLblDineroPagado()
+                .setText(String.valueOf(promotor.getDineroTotalPagado()));
     }
 
     private void setItems(Vale vale) {
@@ -175,7 +162,7 @@ public class ServicePromotoresControllerPromotor {
                 loader.setController(controller);
                 vbox = loader.load();
                 // vBoxItems.getChildren().add(hbox);
-                promotorVales.getChildren().add(vbox);
+                PromotoresController.getInstance().getFlowPanePromotorVales().getChildren().add(vbox);
 
                 itemValePromotorControllers.add(controller);
             } catch (IOException e) {
@@ -188,19 +175,20 @@ public class ServicePromotoresControllerPromotor {
      * Método para limpiar el vbox.
      */
     private void cleanVbox() {
-        promotorVales.getChildren().clear();
+        PromotoresController.getInstance().getFlowPanePromotorVales().getChildren().clear();
     }
 
     /**
-     * Método para invertir el orden de los nodos en el VBox Se invierte el orden de las instancias de los controladores
+     * Método para invertir el orden de los nodos en el VBox Se invierte el orden de
+     * las instancias de los controladores
      * de cada Vale.
      */
     private void invertirOrden() {
         // Invertimos el orden de los nodos en el VBox
-        ObservableList<Node> children = promotorVales.getChildren();
+        ObservableList<Node> children = PromotoresController.getInstance().getFlowPanePromotorVales().getChildren();
         List<Node> invertedList = new ArrayList<>(children);
         Collections.reverse(invertedList);
-        promotorVales.getChildren().setAll(invertedList);
+        PromotoresController.getInstance().getFlowPanePromotorVales().getChildren().setAll(invertedList);
 
         // Invertimos el orden de los controles
         List<ItemValeController> invertedItemsValePromotor = new ArrayList<>(itemValePromotorControllers);
@@ -209,18 +197,20 @@ public class ServicePromotoresControllerPromotor {
     }
 
     /**
-     * Método con el cual vamos a agregar desde el controlador del itemValePromotor los vales que se pueden liquidar. En
+     * Método con el cual vamos a agregar desde el controlador del itemValePromotor
+     * los vales que se pueden liquidar. En
      * caso de que la lista sea mayor a 0, se activa el boton liquidar.
      *
      * @param vale el vale que se va a liquidar.
      */
     public void addValeLiquidar(Vale vale) {
         listValesLiquidar.add(vale);
-        btnLiquidar.setDisable(false);
+        PromotoresController.getInstance().getBtnLiquidar().setDisable(false);
     }
 
     /**
-     * Método con el cual vamos a remover desde el controlador itemValePromotor los vales que se iban a liquidar. En
+     * Método con el cual vamos a remover desde el controlador itemValePromotor los
+     * vales que se iban a liquidar. En
      * caso de que la lista sea igual a cero, de desactiva el boton liquidar.
      *
      * @param vale
@@ -228,7 +218,61 @@ public class ServicePromotoresControllerPromotor {
     public void removeValeLiquidar(Vale vale) {
         listValesLiquidar.remove(vale);
         if (listValesLiquidar.size() == 0) {
-            btnLiquidar.setDisable(true);
+            PromotoresController.getInstance().getBtnLiquidar().setDisable(true);
         }
+    }
+
+    private void editarPromotor() {
+        PopupUtil popupUtil = new PopupUtilImp();
+        PopupPromotorController controller = new PopupPromotorController(servicePromotor);
+        controller.onCloseAction(popupUtil.close());
+        popupUtil.setController(controller);
+        popupUtil.setFxml("popup/popupPromotor");
+
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                popupUtil.load();
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                popupUtil.show();
+            }
+
+            @Override
+            protected void failed() {
+                mensajes.err(getMessage());
+                mensajes.err("Error cargando el PopupPromotorController");
+            }
+        };
+        // Ejecutar la tarea en un hilo separado
+        // Execute the task in a separate thread.
+        new Thread(task).start();
+    }
+
+    private void eliminarPromotor() {
+        AlertUtil.advertencia(PromotoresController.getInstance().getVBoxRoot().getScene().getWindow(),
+                "Eliminar Gestor",
+                "¿Estás seguro que deseas eliminar el Gestor?\nEsta acción eliminará todo lo relacionado con el.",
+                () -> {
+
+                    if (servicePromotor.delete()) {
+                        AlertUtil.information(
+                                PromotoresController.getInstance().getVBoxRoot().getScene().getWindow(),
+                                "Eliminar Gestor",
+                                "Gestor eliminado.\nSe debe reiniciar la app para aplicar todos los cambios.");
+
+                        AlertUtil.confirmation(
+                                PromotoresController.getInstance().getVBoxRoot().getScene().getWindow(),
+                                "Reiniciar Aplicación",
+                                "¿Deseas reiniciar la aplicación?",
+                                () -> {
+                                    App.getInstance().restartApp();
+                                });
+                    }
+                });
     }
 }

@@ -24,9 +24,6 @@ public class Gatillo {
 
     public static void newPromotor() {
         ProxyABaseDeDatos.setCambioPromotor(true);
-        if (ServicePromotoresControllerVista.getInstance().isNotNull()) {
-            ServicePromotoresControllerVista.getInstance().setCambiosEnItems(true);
-        }
     }
 
     public static void newVale() {

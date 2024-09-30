@@ -1,5 +1,8 @@
 package dev.yonel.controllers.items;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import dev.yonel.controllers.ValesController;
 import dev.yonel.controllers.popup.ItemValeDetallesController;
 import dev.yonel.models.Vale;
@@ -12,12 +15,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import lombok.Setter;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class ItemValeController implements Initializable {
 
@@ -42,11 +41,9 @@ public class ItemValeController implements Initializable {
 
     private String gestor, cliente, telefonoCliente, marca, modelo,
             fechaVenta, comision;
-    private Popup popup;
+
     private @Setter Stage stage;
     private Vale vale;
-
-    private double x, y;
 
     public ItemValeController() {
 
@@ -68,17 +65,17 @@ public class ItemValeController implements Initializable {
         if (hideCheckBox) {
             checkBoxLiquidar.setVisible(false);
             if (vale.getGarantia()) {
-                vboxVale.getStyleClass().add("hbox-enGarantia");
+                vboxVale.getStyleClass().add("vale-enGarantia");
             } else {
-                vboxVale.getStyleClass().add("hbox-sinGarantia");
+                vboxVale.getStyleClass().add("vale-sinGarantia");
             }
         } else {
             if (vale.getGarantia()) {
                 checkBoxLiquidar.setDisable(true);
-                vboxVale.getStyleClass().add("hbox-enGarantia");
+                vboxVale.getStyleClass().add("vale-enGarantia");
             } else {
                 checkBoxLiquidar.setDisable(false);
-                vboxVale.getStyleClass().add("hbox-sinGarantia");
+                vboxVale.getStyleClass().add("vale-sinGarantia");
             }
         }
 
@@ -121,7 +118,6 @@ public class ItemValeController implements Initializable {
      * Método con el que ocultamos el checkBox con el cual chequeamos el vale para liquidarlo o pagarlo.
      */
     public void hideCheckBox() {
-        System.out.println("Estableciendo el chechbox.setDisable en true");
         hideCheckBox = true;
     }
 

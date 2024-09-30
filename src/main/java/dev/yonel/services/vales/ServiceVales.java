@@ -100,8 +100,6 @@ public class ServiceVales {
         mensajes.info("Actualizando vale");
         Vale newVale = vale;
 
-        System.out.println(oldVale.getFechaVenta());
-        System.out.println(newVale.getFechaVenta());
         // Rectificamos la fecha de la gantia en caso de que halla sido cambiada la
         // fecha de venta.
         if (!oldVale.getFechaVenta().equals(newVale.getFechaVenta())) {

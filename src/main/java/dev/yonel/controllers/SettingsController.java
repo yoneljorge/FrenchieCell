@@ -60,6 +60,10 @@ public class SettingsController implements Initializable {
         return instance;
     }
 
+    public static void restartInstance(){
+        instance = null;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resource) {
         

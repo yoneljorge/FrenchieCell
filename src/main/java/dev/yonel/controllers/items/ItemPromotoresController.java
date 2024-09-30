@@ -46,11 +46,10 @@ public class ItemPromotoresController implements Initializable {
         this.labelTotal.setText(total);
 
         itemPromotor.setOnMouseClicked(event -> {
-            System.out.println("HBox -> me estas haciendo clic");
+            
         });
 
         btnVer.setOnAction(event -> {
-            System.out.println("Boton -> me estás haciendo clic");
             ServicePromotoresControllerPromotor.getInstance().loadPromotor(idPromotor);
         });
     }

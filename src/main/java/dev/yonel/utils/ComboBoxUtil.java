@@ -20,7 +20,6 @@ public class ComboBoxUtil<T> {
     private boolean loadingData = false;
 
     public ComboBoxUtil(ComboBox<T> comboBox, List<T> items, Function<T, String> displayFunction) {
-        System.out.println("Se crea el constructor de ComboBoxUtil");
 
         if (displayFunction == null) {
             throw new IllegalArgumentException("El displayFunction no puede ser null");
@@ -73,7 +72,6 @@ public class ComboBoxUtil<T> {
     }
 
     private void setupFiltering() {
-        System.out.println("Configurando el filtrado");
 
         FilteredList<T> filteredList = new FilteredList<>(observableList, p -> true);
         TextField editor = (TextField) comboBox.getEditor();

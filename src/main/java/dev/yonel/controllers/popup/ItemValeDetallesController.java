@@ -1,10 +1,12 @@
 package dev.yonel.controllers.popup;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import dev.yonel.models.Celular;
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
 import dev.yonel.services.controllers.itemValeDetalles.ServiceItemValeDetallesEdicion;
-import dev.yonel.services.controllers.itemValeDetalles.ServiceItemValeDetallesVista;
 import dev.yonel.utils.ui.popup.PopupController;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
@@ -18,9 +20,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class ItemValeDetallesController implements Initializable, PopupController {
 
@@ -162,13 +161,11 @@ public class ItemValeDetallesController implements Initializable, PopupControlle
         btnCancelar.setOnAction(event -> {
             goToVista();
         });
-
-        ServiceItemValeDetallesVista serviceItemValeDetallesVista = new ServiceItemValeDetallesVista(this);
     }
 
-
     /**
-     * Método con el cual vamos a crear la interfaz Runnable para cuando se haga clic en el boton se ejecute el métod
+     * Método con el cual vamos a crear la interfaz Runnable para cuando se haga
+     * clic en el boton se ejecute el métod
      * hidePopup desde donde se llamó el popup.
      *
      * @param onCloseAction variable de instancia.
@@ -178,7 +175,8 @@ public class ItemValeDetallesController implements Initializable, PopupControlle
     }
 
     /**
-     * Método con el que vamos a poner visible el vbox de la vista y oculto el de editar.
+     * Método con el que vamos a poner visible el vbox de la vista y oculto el de
+     * editar.
      */
     public void goToVista() {
         vBoxVista.setDisable(false);
@@ -194,10 +192,12 @@ public class ItemValeDetallesController implements Initializable, PopupControlle
     ServiceItemValeDetallesEdicion servicioEdicion;
 
     /**
-     * Método con el que vamos a poner visible el vbox de edicion y oculto el de la vista.
+     * Método con el que vamos a poner visible el vbox de edicion y oculto el de la
+     * vista.
      */
     public void goToEdicion() {
-        //Se le pasa esta instancia para que recupere los controles y los pueda configurar.
+        // Se le pasa esta instancia para que recupere los controles y los pueda
+        // configurar.
         servicioEdicion = new ServiceItemValeDetallesEdicion(this);
 
         vBoxVista.setDisable(true);
