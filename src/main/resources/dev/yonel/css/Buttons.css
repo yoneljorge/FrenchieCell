@@ -34,21 +34,21 @@
 }
 
 #custom {
-	-fx-background-color: -mfx-purple;
+	-fx-background-color: -mfx-frenchieOne;
 	-fx-text-fill: white
 }
 
 .outline-button {
 	-fx-background-color: transparent;
-	-fx-border-color: -mfx-purple;
+	-fx-border-color: -mfx-frenchieOne;
 	-fx-border-radius: 3;
 
-	-fx-text-fill: -mfx-purple;
+	-fx-text-fill: -mfx-frenchieOne;
 }
 
 .outline-button:hover,
 .outline-button:focused {
-	-fx-background-color: -mfx-purple;
+	-fx-background-color: -mfx-frenchieOne;
 	-fx-text-fill: white;
 }
 

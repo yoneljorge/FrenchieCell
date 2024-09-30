@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vBox_Root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vBox_Root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" stylesheets="@../css/ScrollPane.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox prefHeight="45.0" prefWidth="777.0" />
       <ScrollPane prefHeight="494.0" prefWidth="777.0">
@@ -44,7 +44,7 @@
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" stylesheets="@../css/Label.css">
                      <children>
-                        <Label fx:id="lblEstadoMarcasModelos" text="lblEstadoMarcasModelos" />
+                        <Label fx:id="lblEstadoMarcasModelos" visible="false" />
                      </children>
                   </HBox>
                </children>

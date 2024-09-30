@@ -3,11 +3,14 @@
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -46,9 +49,9 @@
                         <Insets left="14.0" />
                      </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="53.0" prefWidth="793.0" spacing="10.0" stylesheets="@../css/Label.css" VBox.vgrow="ALWAYS">
+                  <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="53.0" prefWidth="793.0" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../css/Label.css">
                            <children>
                               <Label text="Ventas">
                                  <font>
@@ -62,7 +65,7 @@
                               </Label>
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="53.0" prefWidth="138.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="53.0" prefWidth="138.0" stylesheets="@../css/Label.css">
                            <children>
                               <Label prefHeight="25.0" prefWidth="124.0" text="Vales en Garantía">
                                  <font>
@@ -76,7 +79,7 @@
                               </Label>
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="53.0" prefWidth="123.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="53.0" prefWidth="123.0" stylesheets="@../css/Label.css">
                            <children>
                               <Label text="Vales por Pagar">
                                  <font>
@@ -90,7 +93,7 @@
                               </Label>
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="53.0" prefWidth="127.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="53.0" prefWidth="127.0" stylesheets="@../css/Label.css">
                            <children>
                               <Label text="Dinero por Pagar">
                                  <font>
@@ -104,7 +107,7 @@
                               </Label>
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../css/Label.css">
                            <children>
                               <Label text="Pagado">
                                  <font>
@@ -118,12 +121,32 @@
                               </Label>
                            </children>
                         </VBox>
-                        <MenuButton alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Opciones" textFill="WHITE">
+                        <MenuButton alignment="CENTER_RIGHT" mnemonicParsing="false" style="-fx-text-fill: white;" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Opciones" textFill="WHITE">
                           <items>
                             <MenuItem fx:id="menuItemEditarPerfil" mnemonicParsing="false" text="Editar Perfil" />
                             <MenuItem fx:id="menuItemEliminarPerfil" mnemonicParsing="false" text="Eliminar Perfil" />
                           </items>
                         </MenuButton>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <Label text="Fecha a filtrar:">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <DatePicker fx:id="datePickerFechaDesde" editable="false" prefHeight="25.0" prefWidth="138.0" promptText="Desde" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="datePickerFechaHasta" alignment="CENTER">
+                           <children>
+                              <DatePicker editable="false" prefHeight="25.0" prefWidth="136.0" promptText="Hasta" />
+                           </children>
+                        </HBox>
+                        <MFXButton fx:id="btnAplicarFiltroFecha" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Aplicar" />
                      </children>
                   </HBox>
                   <ScrollPane fx:id="scrollPane2" prefHeight="418.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
@@ -133,10 +156,31 @@
                   </ScrollPane>
                   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="41.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Buttons.css" VBox.vgrow="ALWAYS">
                      <children>
-                        <MFXButton fx:id="btnRegresar" styleClass="outline-button" text="Regresar" />
-                        <MFXButton fx:id="btnLiquidar" disable="true" styleClass="outline-button" text="Liquidar" />
+                        <HBox fx:id="hBoxLoadingInPromotor" alignment="CENTER" prefHeight="24.0" prefWidth="169.0" spacing="10.0" visible="false">
+                           <children>
+                              <Label text="CARGANDO" />
+                              <ImageView fitHeight="12.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/typing.gif" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="49.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="-250.0" right="100.0" />
+                           </HBox.margin>
+                        </HBox>
+                        <HBox spacing="20.0">
+                           <children>
+                              <MFXButton fx:id="btnRegresar" styleClass="outline-button" text="Regresar" />
+                              <MFXButton fx:id="btnLiquidar" disable="true" styleClass="outline-button" text="Liquidar" />
+                           </children>
+                        </HBox>
                      </children>
                   </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0" />
                </children>
             </VBox>
             <VBox fx:id="vboxLista" alignment="TOP_CENTER" visible="false">

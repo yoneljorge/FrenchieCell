@@ -3,6 +3,7 @@ package dev.yonel.controllers.items;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import dev.yonel.controllers.PromotoresController;
 import dev.yonel.controllers.ValesController;
 import dev.yonel.controllers.popup.ItemValeDetallesController;
 import dev.yonel.models.Vale;
@@ -141,13 +142,19 @@ public class ItemValeController implements Initializable {
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                popupUtil.load(() -> ValesController.getInstance().loading(true));
+                popupUtil.load(() -> {
+                    ValesController.getInstance().loading(true);
+                    PromotoresController.getInstance().loading(true);
+                });
                 return null;
             }
 
             @Override
             protected void succeeded() {
-                popupUtil.show(() -> ValesController.getInstance().loading(false));
+                popupUtil.show(() -> {
+                    ValesController.getInstance().loading(false);
+                    PromotoresController.getInstance().loading(false);
+                });
             }
         };
 

@@ -5,9 +5,13 @@
 
 
 .label{
-    -fx-text-fill: -mfx-purple;
+    -fx-text-fill: -mfx-frenchieOne;
 }
 
 .label-error{
     -fx-text-fill: -mfx-red;
+}
+
+#label-white{
+    -fx-text-fill: white;
 }

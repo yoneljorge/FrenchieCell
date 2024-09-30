@@ -1,6 +1,7 @@
 package dev.yonel.services.controllers.promotores;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -301,5 +302,11 @@ public class ServicePromotoresControllerPromotor {
 
         // Limpiamos la lista
         listValesLiquidar.clear();
+    }
+
+    private void filtrarPorFecha(LocalDate fechaDesde, LocalDate fechaHasta) {
+
+        
+
     }
 }

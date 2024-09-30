@@ -5,6 +5,7 @@ import dev.yonel.models.Celular;
 import dev.yonel.models.Promotor;
 import dev.yonel.models.Vale;
 import dev.yonel.services.celulares.ServiceCelular;
+import dev.yonel.services.controllers.promotores.ServicePromotoresControllerPromotor;
 import dev.yonel.services.controllers.vales.ServiceValesControllerVista;
 import dev.yonel.services.promotores.ServicePromotor;
 import dev.yonel.services.vales.ServiceVales;
@@ -27,9 +28,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Clase en la que se va a ejecutar la lógica de edición del controlador ItemValeDetalles, por lo que depende del
- * controlador de ItemValeDetallesController. La clase desde la cual se va a realizar la llamda es de la clase
- * ItemValeController y se tiene que pasar la instancia que se esta corriendo en ese momento.
+ * Clase en la que se va a ejecutar la lógica de edición del controlador
+ * ItemValeDetalles, por lo que depende del
+ * controlador de ItemValeDetallesController. La clase desde la cual se va a
+ * realizar la llamda es de la clase
+ * ItemValeController y se tiene que pasar la instancia que se esta corriendo en
+ * ese momento.
  */
 public class ServiceItemValeDetallesEdicion {
 
@@ -67,7 +71,6 @@ public class ServiceItemValeDetallesEdicion {
     private Promotor newPromotor;
 
     private List<MFXTextField> listMFXTextField;
-
 
     public ServiceItemValeDetallesEdicion(ItemValeDetallesController controller) {
         this.controller = controller;
@@ -127,7 +130,7 @@ public class ServiceItemValeDetallesEdicion {
 
         checkBoxServicioMensajeria.setSelected(controller.getVale().getMensajeria());
 
-        //Si tiene mensajeria se habilita y se le pasan los datos.
+        // Si tiene mensajeria se habilita y se le pasan los datos.
         if (controller.getVale().getMensajeria()) {
             txtCostoMensajeria.setText(String.valueOf(controller.getVale().getCostoMensajeria()));
             txtDireccion.setText(controller.getVale().getDireccion());
@@ -189,7 +192,8 @@ public class ServiceItemValeDetallesEdicion {
         });
         datePickerFechaVenta.valueProperty().addListener(new ChangeListener<LocalDate>() {
             @Override
-            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue,
+                    LocalDate newValue) {
                 if (newValue != null) {
                     enableActualizar();
                 }
@@ -239,7 +243,8 @@ public class ServiceItemValeDetallesEdicion {
             update();
         });
 
-        //Obtenemos el celular y el promotor actual para comparar a la hora de actualizar.
+        // Obtenemos el celular y el promotor actual para comparar a la hora de
+        // actualizar.
         oldCelular = filterComboBoxImei.getValue();
         oldPromotor = filterComboBoxPromotor.getValue();
     }
@@ -253,19 +258,30 @@ public class ServiceItemValeDetallesEdicion {
             if (serviceVales.update(controller.getVale(), oldCelular, newCelular, oldPromotor, newPromotor)) {
                 AlertUtil.information(controller.getRoot().getScene().getWindow(), "Vale actualizado", null);
                 controller.getOnCloseAction().run();
+                //Actualizamos la vista de los vales
                 ServiceValesControllerVista.getInstance().getAllItems();
 
-            } else {
-                AlertUtil.error(controller.getRoot().getScene().getWindow(), "Error actualizando vale.", "Si el error persiste contacte al desarrollador.");
-            }
+                //Actualizamos el viejo promotor
+                servicePromotor.setPromotor(oldPromotor);
+                    servicePromotor.updatePromotor();
+                //Actualizamos el nuevo promotor
+                servicePromotor.setPromotor(newPromotor);
+                servicePromotor.updatePromotor();
 
+                //Actualizamos la vista del promotor
+                ServicePromotoresControllerPromotor.getInstance().loadPromotor(oldPromotor.getIdPromotor());
+
+            } else {
+                AlertUtil.error(controller.getRoot().getScene().getWindow(), "Error actualizando vale.",
+                        "Si el error persiste contacte al desarrollador.");
+            }
 
         }
     }
 
-
     /**
-     * Método para insertar los datos en los campos al seleccionar un celular en la lista de imeis.
+     * Método para insertar los datos en los campos al seleccionar un celular en la
+     * lista de imeis.
      *
      * @param celular el celular que se desea agregar los datos.
      */
@@ -360,7 +376,8 @@ public class ServiceItemValeDetallesEdicion {
     }
 
     /**
-     * Método estático con el cual vamos a pasar mensajes de información al Label de estado.
+     * Método estático con el cual vamos a pasar mensajes de información al Label de
+     * estado.
      *
      * @param estado el mensaje que se desea mostrar.
      */
@@ -376,7 +393,8 @@ public class ServiceItemValeDetallesEdicion {
     }
 
     /**
-     * Método estático con el que vamos a pasar mensajes de error al Label de estado.
+     * Método estático con el que vamos a pasar mensajes de error al Label de
+     * estado.
      *
      * @param estado el mensaje que se desea mostrar.
      */
@@ -412,7 +430,8 @@ public class ServiceItemValeDetallesEdicion {
             btnGuardar.setDisable(false);
         } else if (controller.getVale().getCostoMensajeria() == 0 && !txtCostoMensajeria.getText().equals("")) {
             btnGuardar.setDisable(false);
-        } else if (controller.getVale().getCostoMensajeria() != 0 && !txtCostoMensajeria.getText().equals(String.valueOf(controller.getVale().getCostoMensajeria()))) {
+        } else if (controller.getVale().getCostoMensajeria() != 0
+                && !txtCostoMensajeria.getText().equals(String.valueOf(controller.getVale().getCostoMensajeria()))) {
             btnGuardar.setDisable(false);
         } else {
             btnGuardar.setDisable(true);

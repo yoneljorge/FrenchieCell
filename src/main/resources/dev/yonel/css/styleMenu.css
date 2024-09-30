@@ -1,11 +1,13 @@
 .button
 {
--fx-background-color : #7a0ed9;
+-fx-background-color : #00133d;
 -fx-text-fill : #e7e5e5;
 }
 
 .button:hover{
--fx-background-color : #10165F;
+/*-fx-background-color : #10165F;*/
+-fx-background-color: #2a768d;
+
 }
 
 .button:pressed
@@ -14,12 +16,14 @@
 }
 
 .button-seleccionado{
-    -fx-background-color : rgba(16,22,95,0.5);
+    /*-fx-background-color : rgba(16,22,95,1);*/
+
+    -fx-background-color: #2a768d88;
     -fx-text-fill : #e7e5e5;
 }
 
 .button-seleccionado:hover{
--fx-background-color : #10165F;
+-fx-background-color : #2a768d;
 }
 
 .button-seleccionado:pressed

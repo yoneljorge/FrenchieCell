@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="root" prefHeight="598.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="root" prefHeight="598.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox fx:id="vBoxVista" prefHeight="409.0" prefWidth="350.0" stylesheets="@../../css/styleItem.css" visible="false">
          <children>
@@ -458,7 +458,7 @@
             </HBox>
             <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="377.0">
                <children>
-                  <Label fx:id="lblEstado" text="Estado" />
+                  <Label fx:id="lblEstado" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="350.0" spacing="10.0" stylesheets="@../../css/Buttons.css">

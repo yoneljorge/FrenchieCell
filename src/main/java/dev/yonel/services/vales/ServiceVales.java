@@ -32,6 +32,9 @@ public class ServiceVales {
 
     }
 
+    public Vale getVale(){
+        return this.vale;
+    }
     /********************************************
      ********** MÉTODOS CRUD ********************
      */

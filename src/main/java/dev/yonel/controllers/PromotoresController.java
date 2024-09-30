@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.AccessLevel;
@@ -94,6 +95,14 @@ public class PromotoresController implements Initializable {
     private Label lblDineroPagado;
     @FXML
     private ScrollPane scrollPane2;
+    @FXML
+    private HBox hBoxLoadingInPromotor;
+    @FXML
+    private DatePicker datePickerFechaDesde;
+    @FXML
+    private DatePicker datePickerFechaHasta;
+    @FXML
+    private MFXButton btnAplicarFiltoFecha;
 
     // General
     @Getter(AccessLevel.NONE)
@@ -205,5 +214,12 @@ public class PromotoresController implements Initializable {
         SetVisible.This(listVBox, vboxToShow);
         btnPromotores.setDisable(promotoresDisable);
         btnAgregarPromotor.setDisable(agregarPromotorDisable);
+    }
+
+    public void loading(boolean valor){
+        Thread thread = new Thread(() -> {
+            hBoxLoadingInPromotor.setVisible(valor);
+        });
+        thread.start();
     }
 }

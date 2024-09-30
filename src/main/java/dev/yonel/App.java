@@ -6,10 +6,10 @@ import dev.yonel.controllers.DashboardController;
 import dev.yonel.services.Mensajes;
 import dev.yonel.services.Updates;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import lombok.Getter;
 
@@ -23,7 +23,7 @@ public class App extends Application {
     private Parent root;
     private DashboardController dashboardController;
     private static @Getter Stage stage;
-
+    private @Getter Image icon = new Image(getClass().getResourceAsStream("icons/icon.png"));
     private Mensajes mensajes = new Mensajes(getClass());
 
     private static App instance;
@@ -64,7 +64,7 @@ public class App extends Application {
          * Usamos .join() para asegurarnos de que el hilo de inicialización termine
          * antes de que continúe la ejecución del programa.
          */
-        try {
+        try {   
             mensajes.info("Esperando a que se termine de ejecutar initThread");
             initThread.join();
         } catch (Exception e) {
@@ -81,6 +81,9 @@ public class App extends Application {
         instance = this;
         
         stage = primaryStage;
+
+        //Establecemos el icono de la aplicacion
+        primaryStage.getIcons().add(icon);
 
         primaryStage.setScene(mainScene);
         // Le quitamos los botones de maximizar y minimizar a la interfaz.
@@ -161,6 +164,9 @@ public class App extends Application {
         }
 
         stage = new Stage();
+
+        //Image icon = new Image(getClass().getResourceAsStream("/icons/icon.png"));
+        stage.getIcons().add(icon);
 
         stage.setScene(mainScene);
         // Le quitamos los botones de maximizar y minimizar a la interfaz.
