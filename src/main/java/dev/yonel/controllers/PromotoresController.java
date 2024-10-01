@@ -102,7 +102,11 @@ public class PromotoresController implements Initializable {
     @FXML
     private DatePicker datePickerFechaHasta;
     @FXML
-    private MFXButton btnAplicarFiltoFecha;
+    private MFXButton btnAplicarFiltroFecha;
+    @FXML
+    private Label labelEstado_Promotor;
+    @FXML
+    private MFXButton btnReset;
 
     // General
     @Getter(AccessLevel.NONE)

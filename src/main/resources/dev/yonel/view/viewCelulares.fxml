@@ -152,9 +152,9 @@
                         <HBox prefHeight="24.0" prefWidth="570.0" spacing="10.0">
                            <children>
                               <Label text="LEYENDA:" />
-                              <Label text="CON GARANTÍA" />
+                              <Label text="POR VENDER" />
                               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#75ff33" height="17.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
-                              <Label text="SIN GARANTÍA">
+                              <Label text="VENDIDOS">
                                  <HBox.margin>
                                     <Insets left="10.0" />
                                  </HBox.margin>

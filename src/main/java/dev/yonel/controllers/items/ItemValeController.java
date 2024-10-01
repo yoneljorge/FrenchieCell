@@ -84,6 +84,7 @@ public class ItemValeController implements Initializable {
                 }
             }
         }else{
+            vboxVale.getStyleClass().add("vale-liquidado");
             checkBoxLiquidar.setVisible(false);
         }
 

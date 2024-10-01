@@ -39,20 +39,7 @@ public class ServiceCelularControllerVista {
     private ServiceModelo serviceModelo;
     private FilterItemsCelular filterItems;
 
-    /*
-     * private VBox vBoxItems;
-     * private MFXButton btnRecargar;
-     * private MFXFilterComboBox<Marca> comboMarca;
-     * private MFXFilterComboBox<Modelo> comboModelo;
-     * private MFXFilterComboBox<LocalDate> comboFecha;
-     * private MFXTextField txtFiltrarImei;
-     * private Label validarFiltrarImei;
-     * private CheckBox checkDual;
-     * private Label cantidad;
-     * private RadioButton radioButtonTodos;
-     * private RadioButton radioButtonSi;
-     * private RadioButton radioButtonNo;
-     */
+ 
     private ToggleGroup radioButtonsGrupo = new ToggleGroup();
 
     // Lista para almacenar las instancias de ItemCelularController

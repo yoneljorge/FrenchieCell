@@ -129,29 +129,31 @@
                         </MenuButton>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                  <VBox>
                      <children>
-                        <Label text="Fecha a filtrar:">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Label>
+                        <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="28.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <Label text="Fecha a filtrar:">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker fx:id="datePickerFechaDesde" editable="false" prefHeight="25.0" prefWidth="138.0" promptText="Desde" />
+                              <DatePicker fx:id="datePickerFechaHasta" editable="false" prefHeight="25.0" prefWidth="136.0" promptText="Hasta" />
+                              <MFXButton fx:id="btnAplicarFiltroFecha" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Aplicar" />
+                              <MFXButton fx:id="btnReset" buttonType="RAISED" depthLevel="LEVEL4" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Reset" />
+                           </children>
+                        </HBox>
                         <HBox alignment="CENTER">
                            <children>
-                              <DatePicker fx:id="datePickerFechaDesde" editable="false" prefHeight="25.0" prefWidth="138.0" promptText="Desde" />
+                              <Label fx:id="labelEstado_Promotor" stylesheets="@../css/Label.css" text="Label" visible="false" />
                            </children>
                         </HBox>
-                        <HBox fx:id="datePickerFechaHasta" alignment="CENTER">
-                           <children>
-                              <DatePicker editable="false" prefHeight="25.0" prefWidth="136.0" promptText="Hasta" />
-                           </children>
-                        </HBox>
-                        <MFXButton fx:id="btnAplicarFiltroFecha" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Aplicar" />
                      </children>
-                  </HBox>
-                  <ScrollPane fx:id="scrollPane2" prefHeight="418.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
+                  </VBox>
+                  <ScrollPane fx:id="scrollPane2" VBox.vgrow="ALWAYS">
                      <content>
-                        <FlowPane fx:id="flowPanePromotorVales" alignment="TOP_CENTER" hgap="10.0" prefHeight="405.0" prefWidth="770.0" styleClass="splitmenubutton" stylesheets="@../css/styleItem.css" vgap="10.0" />
+                        <FlowPane fx:id="flowPanePromotorVales" alignment="TOP_CENTER" hgap="10.0" styleClass="splitmenubutton" stylesheets="@../css/styleItem.css" vgap="10.0" />
                      </content>
                   </ScrollPane>
                   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="41.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Buttons.css" VBox.vgrow="ALWAYS">
@@ -172,7 +174,7 @@
                               <Insets left="-250.0" right="100.0" />
                            </HBox.margin>
                         </HBox>
-                        <HBox spacing="20.0">
+                        <HBox alignment="CENTER" spacing="20.0">
                            <children>
                               <MFXButton fx:id="btnRegresar" styleClass="outline-button" text="Regresar" />
                               <MFXButton fx:id="btnLiquidar" disable="true" styleClass="outline-button" text="Liquidar" />
@@ -180,7 +182,6 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0" />
                </children>
             </VBox>
             <VBox fx:id="vboxLista" alignment="TOP_CENTER" visible="false">

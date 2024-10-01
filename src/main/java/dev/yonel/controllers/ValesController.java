@@ -88,6 +88,16 @@ public class ValesController implements Initializable {
     @Getter(AccessLevel.NONE)
     @FXML
     private HBox hBoxLoadingInVista;
+    @FXML
+    private DatePicker datePickerFechaDesde;
+    @FXML
+    private DatePicker datePickerFechaHasta;
+    @FXML
+    private MFXButton btnAplicarFiltroFecha;
+    @FXML
+    private Label labelEstado_Promotor;
+    @FXML
+    private MFXButton btnReset;
 
     @Getter(AccessLevel.NONE)
     private static ValesController instance;
@@ -136,7 +146,8 @@ public class ValesController implements Initializable {
                 }
             });
 
-            //Cuando inicia la app esta carga la lista
+            //Cuando inicia la app esta carga la lista y configura
+            ServiceValesControllerVista.getInstance().configure();
             ServiceValesControllerVista.getInstance().getAllItems();
             //Cuando se muestra la interfáz tambien carga la lista.
             vboxPanelLista.visibleProperty().addListener((observable, oldValue, newValue) -> {

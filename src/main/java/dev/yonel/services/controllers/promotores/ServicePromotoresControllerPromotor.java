@@ -18,6 +18,7 @@ import dev.yonel.services.vales.ServiceVales;
 import dev.yonel.utils.AlertUtil;
 import dev.yonel.utils.ui.popup.PopupUtil;
 import dev.yonel.utils.ui.popup.PopupUtilImp;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -91,6 +92,18 @@ public class ServicePromotoresControllerPromotor {
             // Acción al presionar el botón ELIMINAR_PERFIL
             PromotoresController.getInstance().getMenuItemEliminarPerfil().setOnAction(event -> {
                 eliminarPromotor();
+            });
+
+            // Acción al presiodnar el boton APLICAR_FILTRO
+            PromotoresController.getInstance().getBtnAplicarFiltroFecha().setOnAction(event -> {
+                filtrarPorFecha(PromotoresController.getInstance().getDatePickerFechaDesde().getValue(),
+                        PromotoresController.getInstance().getDatePickerFechaHasta().getValue(),
+                        servicePromotor.getIdPromotor());
+            });
+
+            // Acción al presionar el boton RESET
+            PromotoresController.getInstance().getBtnReset().setOnAction(event -> {
+                reset();
             });
         });
     }
@@ -304,9 +317,59 @@ public class ServicePromotoresControllerPromotor {
         listValesLiquidar.clear();
     }
 
-    private void filtrarPorFecha(LocalDate fechaDesde, LocalDate fechaHasta) {
+    private void filtrarPorFecha(LocalDate fechaDesde, LocalDate fechaHasta, long id) {
 
-        
+        if (fechaDesde == null || fechaHasta == null) {
+            setEstadoError("No pueden haber fechas en blanco.");
+            throw new IllegalArgumentException("No pueden haber fechas en blanco.");
+        }
 
+        cleanVbox();
+
+        listVales.clear();
+
+        Vale v;
+        while ((v = ServiceVales.findValesByPromotorOneToOne(id)) != null) {
+            LocalDate fechaVale = v.getFechaVenta();
+            if ((fechaVale.isEqual(fechaHasta) || fechaVale.isBefore(fechaHasta)) &&
+                    (fechaVale.isEqual(fechaDesde) || fechaVale.isAfter(fechaDesde))) {
+                setItems(v);
+            }
+        }
+
+        invertirOrden();
+    }
+
+    /**
+     * Método con el que vamos a pasar mensajes de error al Label de
+     * estado.
+     * 
+     * @param estado el mensaje que se desea mostrar.
+     */
+    public void setEstadoError(String estado) {
+        PromotoresController.getInstance().getLabelEstado_Promotor().setText(estado);
+        PromotoresController.getInstance().getLabelEstado_Promotor().getStyleClass().add("label-error");
+
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(10));
+        pause.setOnFinished(event -> {
+            PromotoresController.getInstance().getLabelEstado_Promotor().setText(null);
+        });
+        pause.play();
+    }
+
+    public void reset() {
+        PromotoresController.getInstance().getDatePickerFechaDesde().setValue(null);
+        PromotoresController.getInstance().getDatePickerFechaHasta().setValue(null);
+
+        cleanVbox();
+
+        listVales.clear();
+
+        Vale v;
+        while ((v = ServiceVales.findValesByPromotorOneToOne(servicePromotor.getIdPromotor())) != null) {
+            setItems(v);
+        }
+
+        invertirOrden();
     }
 }

@@ -132,15 +132,20 @@ public class ItemValeDetallesController implements Initializable, PopupControlle
         vBoxVista.setVisible(true);
         vBoxEdicion.setVisible(false);
 
-        /*
-         * Si el vale está en garantia ponemos el color verde de fondo.
-         */
-        if (vale.getGarantia()) {
-            vBoxVista.getStyleClass().add("vale-enGarantia");
-            vBoxEdicion.getStyleClass().add("vale-enGarantia");
-        } else {
-            vBoxVista.getStyleClass().add("vale-sinGarantia");
-            vBoxEdicion.getStyleClass().add("vale-sinGarantia");
+        if (!vale.getLiquidado()) {
+            /*
+             * Si el vale está en garantia ponemos el color verde de fondo.
+             */
+            if (vale.getGarantia()) {
+                vBoxVista.getStyleClass().add("vale-enGarantia");
+                vBoxEdicion.getStyleClass().add("vale-enGarantia");
+            } else {
+                vBoxVista.getStyleClass().add("vale-sinGarantia");
+                vBoxEdicion.getStyleClass().add("vale-sinGarantia");
+            }
+        }else{
+            vBoxEdicion.getStyleClass().add("vale-liquidado");
+            vBoxVista.getStyleClass().add("vale-liquidado");
         }
 
         if (vale.getDiasGarantia() <= 7) {

@@ -108,6 +108,10 @@ public class ServiceValesControllerAgregar {
             ValesController.getInstance().getBtnGuardar().setOnAction(event -> {
                 guardar();
             });
+
+            ValesController.getInstance().getBtnLimpiar().setOnAction(event -> {
+                limpiarCampos();
+            });
         });
     }
 
@@ -255,5 +259,20 @@ public class ServiceValesControllerAgregar {
             ValesController.getInstance().getLabelEstado().setText(null);
         });
         pause.play();
+    }
+
+    private void limpiarCampos(){
+        ValesController.getInstance().getFilterComboBoxPromotor().setValue(null);
+        ValesController.getInstance().getTxtCliente().setText("");
+        ValesController.getInstance().getTxtTelefonoCliente().setText("");
+        ValesController.getInstance().getFilterComboBoxImei().setValue(null);
+        ValesController.getInstance().getTxtMarca().setText("");
+        ValesController.getInstance().getTxtModelo().setText("");
+        ValesController.getInstance().getTxtPrecio().setText("");
+        ValesController.getInstance().getDatePickerFechaVenta().setValue(null);
+        ValesController.getInstance().getTxtComision().setText("");
+        ValesController.getInstance().getCheckBoxServicioMensajeria().setSelected(false);
+        ValesController.getInstance().getTxtDireccion().setText("");
+        ValesController.getInstance().getTxtCostoMensajeria().setText("");
     }
 }

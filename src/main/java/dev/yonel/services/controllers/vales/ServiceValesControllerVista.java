@@ -1,5 +1,6 @@
 package dev.yonel.services.controllers.vales;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,11 +9,11 @@ import dev.yonel.App;
 import dev.yonel.controllers.ValesController;
 import dev.yonel.controllers.items.ItemValeController;
 import dev.yonel.models.Vale;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import lombok.Setter;
 
@@ -54,6 +55,17 @@ public class ServiceValesControllerVista {
         }
 
         return instance;
+    }
+
+    public void configure() {
+        ValesController.getInstance().getBtnAplicarFiltroFecha().setOnAction(event -> {
+            filtrarPorFecha(ValesController.getInstance().getDatePickerFechaDesde().getValue(),
+                    ValesController.getInstance().getDatePickerFechaHasta().getValue());
+        });
+
+        ValesController.getInstance().getBtnReset().setOnAction(event -> {
+            reset();
+        });
     }
 
     /*
@@ -101,45 +113,32 @@ public class ServiceValesControllerVista {
     }
 
     public void getAllItems() {
-        if (cambioEnInterfaz) {
 
-            // Limpia la interfaz antes de comenzar a agreagar items.
-            removeAllItems();
+        // Limpia la interfaz antes de comenzar a agreagar items.
+        removeAllItems();
 
-            /*
-             * Vale vale;
-             * while ((vale = Vale.getAllOneToOne(Vale.class)) != null) {
-             * setItems(vale);
-             * }
-             * 
-             * // Invertimos el orden de los vales para que aparezcan primero los últimos
-             * invertirOrden();
-             * cambioEnInterfaz = false;
-             * 
-             */
+        // Crea un hilo separado para obtener y procesar los items
+        new Thread(() -> {
+            Vale vale;
 
-            // Crea un hilo separado para obtener y procesar los items
-            new Thread(() -> {
-                Vale vale;
+            // Itera sobre todos los vales
+            while ((vale = Vale.getAllOneToOne(Vale.class)) != null) {
+                final Vale currentVale = vale;
 
-                // Itera sobre todos los vales
-                while ((vale = Vale.getAllOneToOne(Vale.class)) != null) {
-                    final Vale currentVale = vale;
-
-                    // Ejecuta el método setItems() en el hilo de la UI
-                    Platform.runLater(() -> {
-                        setItems(currentVale);
-                    });
-                }
-
-                // Una vez que todos los items se hayan agregado, invierte el orden en el hilo
-                // de la UI
+                // Ejecuta el método setItems() en el hilo de la UI
                 Platform.runLater(() -> {
-                    invertirOrden();
-                    cambioEnInterfaz = false;
+                    setItems(currentVale);
                 });
-            }).start(); // Inicia el hilo separad
-        }
+            }
+
+            // Una vez que todos los items se hayan agregado, invierte el orden en el hilo
+            // de la UI
+            Platform.runLater(() -> {
+                invertirOrden();
+                cambioEnInterfaz = false;
+            });
+        }).start(); // Inicia el hilo separad
+
     }
     /*
      * ###################################################
@@ -194,10 +193,64 @@ public class ServiceValesControllerVista {
         listaItemsValesController.addAll(invertedItemVale);
     }
 
-    /*
-     * Agregamos una varibale booleana la cual va a ser true si ya hay un popup de
-     * un valeDetalles abierto.
-     * La misma va a estar a la espera de que se establezca en true o false en
-     * dependencia de si se abre o se cierra.
+    private void filtrarPorFecha(LocalDate fechaDesde, LocalDate fechaHasta) {
+
+        if (fechaDesde == null || fechaHasta == null) {
+            setEstadoError("No pueden haber fechas en blanco.");
+            throw new IllegalArgumentException("No pueden haber fechas nulas.");
+        }
+
+        // Limpia la interfaz antes de comenzar a agreagar items.
+        removeAllItems();
+
+        // Crea un hilo separado para obtener y procesar los items
+        new Thread(() -> {
+
+            Vale v;
+            while ((v = Vale.getAllOneToOne(Vale.class)) != null) {
+                LocalDate fechaVale = v.getFechaVenta();
+                if ((fechaVale.isEqual(fechaHasta) || fechaVale.isBefore(fechaHasta)) &&
+                        (fechaVale.isEqual(fechaDesde) || fechaVale.isAfter(fechaDesde))) {
+                    final Vale currentVale = v;
+
+                    // Ejecuta el método setItems() en el hilo de la UI
+                    Platform.runLater(() -> {
+                        setItems(currentVale);
+                    });
+                }
+            }
+
+            // Una vez que todos los items se hayan agregado, invierte el orden en el hilo
+            // de la UI
+            Platform.runLater(() -> {
+                invertirOrden();
+            });
+        }).start(); // Inicia el hilo separado
+    }
+
+    public void reset() {
+        ValesController.getInstance().getDatePickerFechaDesde().setValue(null);
+        ValesController.getInstance().getDatePickerFechaHasta().setValue(null);
+
+        getAllItems();
+    }
+
+    /**
+     * Método con el que vamos a pasar mensajes de error al Label de
+     * estado.
+     * 
+     * @param estado el mensaje que se desea mostrar.
      */
+    public void setEstadoError(String estado) {
+        ValesController.getInstance().getLabelEstado_Promotor().setVisible(true);;
+        ValesController.getInstance().getLabelEstado_Promotor().setText(estado);
+        ValesController.getInstance().getLabelEstado_Promotor().getStyleClass().add("label-error");
+
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(10));
+        pause.setOnFinished(event -> {
+            ValesController.getInstance().getLabelEstado_Promotor().setText(null);
+        });
+        pause.play();
+    }
+
 }

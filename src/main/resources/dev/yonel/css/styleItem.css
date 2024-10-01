@@ -58,6 +58,9 @@
 -fx-background-color: rgba(255,192,179,1) ;
 }
 
+.vale-liquidado{
+    -fx-background-color: rgba(42,118,141,0.5);
+}
 
 .menu-button
 {
