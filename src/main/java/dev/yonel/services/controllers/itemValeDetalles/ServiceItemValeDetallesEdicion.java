@@ -375,22 +375,6 @@ public class ServiceItemValeDetallesEdicion {
         serviceVales = new ServiceVales(newVale);
     }
 
-    /**
-     * Método estático con el cual vamos a pasar mensajes de información al Label de
-     * estado.
-     *
-     * @param estado el mensaje que se desea mostrar.
-     */
-    private void setEstadoInformativo(String estado) {
-        labelEstado.setText(estado);
-        labelEstado.getStyleClass().add("label");
-
-        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(10));
-        pause.setOnFinished(event -> {
-            labelEstado.setText("");
-        });
-        pause.play();
-    }
 
     /**
      * Método estático con el que vamos a pasar mensajes de error al Label de

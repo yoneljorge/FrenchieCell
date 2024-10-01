@@ -168,16 +168,6 @@ public class DashboardController implements Initializable {
         }
     }
 
-    private void loadPrincipal() {
-        if (principal == null) {
-            // Recargar la instancia del controlador y la vista
-            PrincipalController.restartInstance();
-
-            LoadControllers.load("viewPrincipal", PrincipalController.getInstance(), "principal", vbox -> {
-                principal = vbox;
-            });
-        }
-    }
 
     private void loadCelular() {
         if (celulares == null) {

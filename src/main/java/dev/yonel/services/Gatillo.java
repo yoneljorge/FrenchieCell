@@ -1,6 +1,5 @@
 package dev.yonel.services;
 
-import dev.yonel.services.controllers.promotores.ServicePromotoresControllerVista;
 import dev.yonel.services.controllers.vales.ServiceValesControllerVista;
 
 public class Gatillo {

@@ -4,18 +4,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Clase creada para almacenar los log y mensajes que se generan en la aplicación.
+ * Clase creada para almacenar los log y mensajes que se generan en la
+ * aplicación.
  */
 public class Mensajes {
 
-    /* Variable estática para almacenar los mensajes de forma global.*/
-    private static Map<Class, String> mensajes = new HashMap<>();
+    /* Variable estática para almacenar los mensajes de forma global. */
+    private static Map<Class<?>, String> mensajes = new HashMap<>();
 
+    private Class<?> clazz;
 
-    private Runnable onSetMensaje;
-    private Class clazz;
-
-
+    /**
+     * <p>
+     * Constructor para la clase Mensajes.
+     * </p>
+     * 
+     * @param clazz la clase desde la cual se va a enviar el men
+     *              aje.
+     */
     public Mensajes(Class<?> clazz) {
         if (clazz == null) {
             throw new IllegalArgumentException("La clase no puede ser nula");
@@ -36,18 +42,4 @@ public class Mensajes {
     public String getMensaje() {
         return mensajes.get(clazz);
     }
-
-    /**
-     * Método con el cual vamos a crear la interfaz Runnable para cuando se ejecute
-     * el método setMensaje en un servicio, se actualice el mensaje de estado en la
-     * clase desde donde se está ejecutando el servicio.
-     *
-     * @param load
-     */
-
-    //public TipoMensaje runOnSetMensaje(Runnable load) {
-    //        onSetMensaje = load;
-    //        return this.tipoMensaje;
-    //    }
-
 }

@@ -31,7 +31,7 @@ public class ServiceItemValeDetallesVista {
         Celular celular = new Celular();
 
         while ((celular = Celular.getAllOneToOne(Celular.class)) != null) {
-            if (celular.getImeiUno().equals(controller.getVale().getImei())) {
+            if (celular.getImeiUno().equals(controller.getVale().getImei().getImeiUno())) {
                 break;
             }
         }

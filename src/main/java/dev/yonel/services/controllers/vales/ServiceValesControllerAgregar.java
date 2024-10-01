@@ -262,10 +262,10 @@ public class ServiceValesControllerAgregar {
     }
 
     private void limpiarCampos(){
-        ValesController.getInstance().getFilterComboBoxPromotor().setValue(null);
+        ValesController.getInstance().getFilterComboBoxPromotor().getSelectionModel().clearSelection();
         ValesController.getInstance().getTxtCliente().setText("");
         ValesController.getInstance().getTxtTelefonoCliente().setText("");
-        ValesController.getInstance().getFilterComboBoxImei().setValue(null);
+        ValesController.getInstance().getFilterComboBoxImei().getSelectionModel().clearSelection();
         ValesController.getInstance().getTxtMarca().setText("");
         ValesController.getInstance().getTxtModelo().setText("");
         ValesController.getInstance().getTxtPrecio().setText("");
