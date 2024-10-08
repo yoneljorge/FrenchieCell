@@ -35,6 +35,7 @@
 .hbox-enGarantia{
 -fx-background-color: rgba(51,255,87,1) ;
 }
+
 .hbox-enGarantia:hover{
 -fx-background-color: rgba(51,255,87,0.5) ;
 -fx-border-color: #7a0ed9;

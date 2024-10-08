@@ -18,11 +18,11 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<VBox styleClass="vbox" stylesheets="@../css/ScrollPane.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<VBox styleClass="hBox" stylesheets="@../css/ScrollPane.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="50.0" styleClass="hbox">
+      <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="50.0" styleClass="hBox">
          <children>
-            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="396.0" spacing="20.0">
+            <HBox alignment="CENTER" minWidth="-Infinity" prefHeight="50.0" prefWidth="396.0" spacing="20.0">
                <children>
                   <MFXButton id="custom" fx:id="btnVista" disable="true" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Lista" />
                   <MFXButton id="custom" fx:id="btnAgregar" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Agregar" />
@@ -30,9 +30,9 @@
             </HBox>
          </children>
       </HBox>
-      <StackPane styleClass="hbox">
+      <StackPane styleClass="hBox">
          <children>
-            <VBox fx:id="pnlVista" alignment="TOP_CENTER" styleClass="vbox">
+            <VBox fx:id="pnlVista" alignment="TOP_CENTER" styleClass="hBox">
                <children>
                   <HBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" prefHeight="47.0" spacing="10.0">
                      <children>
@@ -129,9 +129,9 @@
                         <Insets left="22.0" />
                      </padding>
                   </HBox>
-                  <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" VBox.vgrow="SOMETIMES">
+                  <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" styleClass="hBox" VBox.vgrow="SOMETIMES">
                      <content>
-                        <VBox fx:id="vboxItemVista" alignment="TOP_CENTER" spacing="10.0" styleClass="vbox" />
+                        <VBox fx:id="vboxItemVista" alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" styleClass="hBox" />
                      </content>
                   </ScrollPane>
                   <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="19.0" prefWidth="781.0" VBox.vgrow="ALWAYS">

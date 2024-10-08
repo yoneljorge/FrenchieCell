@@ -3,25 +3,45 @@ package dev.yonel.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import dev.yonel.controllers.popup.PopupCelularController;
-import dev.yonel.models.Celular;
-import dev.yonel.utils.ui.popup.PopupUtil;
-import dev.yonel.utils.ui.popup.PopupUtilImp;
+import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
+import dev.yonel.services.controllers.principal.ConfigureAreChart;
+import dev.yonel.services.controllers.principal.ConfigureListOldCelulares;
+import dev.yonel.services.controllers.principal.PieChart_Marcas;
+import dev.yonel.services.controllers.principal.SetLabelInfoStock;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Setter;
 
-
 public class PrincipalController implements Initializable {
 
     @FXML
-    private VBox pnItems;
+    private VBox root;
     @FXML
-    private Button btnButton;
-
+    private AreaChart<String, Number> areaChart_VentasDiarias;
+    @FXML
+    private CategoryAxis categoryAxis;
+    @FXML
+    private NumberAxis numberAxis;
+    @FXML
+    private PieChart pieChart_Marcas;
+    @FXML
+    private Label labelEnStock;
+    @FXML
+    private Label labelImporte;
+    @FXML
+    private Label labelPorPagar;
+    @FXML
+    private Label labelEnGarantia;
+    @FXML
+    private ListView<String> listViewOldCelulares;
 
     private @Setter Stage stage;
 
@@ -31,33 +51,35 @@ public class PrincipalController implements Initializable {
 
     }
 
-    public static PrincipalController getInstance(){
-        if(instance == null){
+    public static PrincipalController getInstance() {
+        if (instance == null) {
             instance = new PrincipalController();
         }
 
         return instance;
     }
 
-    public static void restartInstance(){
+    public static void restartInstance() {
         instance = null;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        load();
 
-        btnButton.setOnAction(event -> {
-            PopupCelularController controller = new PopupCelularController(Celular.getById(Celular.class, 1));
-            PopupUtil popup = new PopupUtilImp();
+        root.visibleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                load();
+            }
 
-            controller.onCloseAction(popup.close());
-
-            popup.setController(controller);
-            popup.setFxml("popup/popupCelular");
-
-            popup.load();
-            popup.show(null, null);
         });
-
     }
+
+    private void load() {
+        ConfigureAreChart.getInstance().configure(areaChart_VentasDiarias, categoryAxis, numberAxis);
+        PieChart_Marcas.getInstance().configure(pieChart_Marcas);
+        SetLabelInfoStock.getInstance().configure(labelEnStock, labelImporte, labelEnGarantia, labelPorPagar);
+        ConfigureListOldCelulares.getInstnace().configure(listViewOldCelulares);
+    }
+
 }

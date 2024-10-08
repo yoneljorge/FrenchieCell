@@ -7,8 +7,8 @@ import dev.yonel.services.Gatillo;
 import dev.yonel.services.Mensajes;
 import dev.yonel.services.celulares.ServiceCelular;
 import dev.yonel.services.promotores.ServicePromotor;
-import dev.yonel.utils.Fecha;
 import dev.yonel.utils.data_access.UtilsHibernate;
+import dev.yonel.utils.fechaUtil.FechaUtil;
 import lombok.NoArgsConstructor;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -55,7 +55,7 @@ public class ServiceVales {
 
         ServicePromotor servicePromotor = new ServicePromotor(promotor);
 
-        vale.setDiasGarantia(Fecha.getDiasEntre(vale.getFechaVenta(), LocalDate.now()));
+        vale.setDiasGarantia(FechaUtil.getDiasEntre(vale.getFechaVenta(), LocalDate.now()));
 
         if (serviceCelular.update()) {
             if (this.vale.save()) {
@@ -108,7 +108,7 @@ public class ServiceVales {
         if (!oldVale.getFechaVenta().equals(newVale.getFechaVenta())) {
             newVale.setFechaGarantia(this.vale.getFechaVenta().plusWeeks(1));
 
-            int dias = Fecha.getDiasEntre(vale.getFechaVenta(), LocalDate.now());
+            int dias = FechaUtil.getDiasEntre(vale.getFechaVenta(), LocalDate.now());
             // Si la cantidad de días es menor e igual a 7 entonces todavía está en garantia
             if (dias <= 7) {
                 vale.setGarantia(true);
@@ -218,7 +218,7 @@ public class ServiceVales {
         Vale vale;
 
         while ((vale = Vale.getAllOneToOne(Vale.class)) != null) {
-            int dias = Fecha.getDiasEntre(vale.getFechaVenta(), LocalDate.now());
+            int dias = FechaUtil.getDiasEntre(vale.getFechaVenta(), LocalDate.now());
             // Si la cantidad de días es menor e igual a 7 entonces todavía está en garantia
             if (dias <= 7) {
                 vale.setGarantia(true);
@@ -316,5 +316,4 @@ public class ServiceVales {
         }
         return null;
     }
-
 }

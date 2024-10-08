@@ -1,11 +1,11 @@
-package dev.yonel.utils;
+package dev.yonel.utils.fechaUtil;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 
-public class Fecha {
+public class FechaUtil {
 
     // Creamos los formatos de fecha
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -61,7 +61,7 @@ public class Fecha {
      * @param fechaInicio fecha desde la que se quiere empezar a contar.
      * @param fechaFin    fecha hasta la que se quiere contar.
      * @return un Long que representa la cantidad de días que hay entre las dos
-     * fechas.
+     *         fechas.
      */
     public static Integer getDiasEntre(LocalDate fechaInicio, LocalDate fechaFin) {
         if (fechaInicio == null || fechaFin == null) {
@@ -69,5 +69,29 @@ public class Fecha {
         }
         String dias = String.valueOf(ChronoUnit.DAYS.between(fechaInicio, fechaFin));
         return Integer.parseInt(dias);
+    }
+
+    /**
+     * <p>
+     * Méotodo con el que a partir de un {@code LocalDate} obtenemos el día y el més
+     * en el siguiente formato {@code 1 de ENE}.
+     * </p>
+     * <p>
+     * Se construye un {@code StreamBuilder} con el dato del día y del mes a partir
+     * del ENUM {@link Meses}.
+     * </p>
+     * 
+     * @param fecha
+     * @return
+     */
+    public static String getMesDia(LocalDate fecha) {
+        StringBuilder diaMes = new StringBuilder();
+
+        diaMes.append(fecha.getDayOfMonth());
+        diaMes.append(" de ");
+        // Meses meses = Meses.fromNumber(fecha.getMonthValue());
+        diaMes.append(Meses.fromNumber(fecha.getMonthValue()).getShortName());
+
+        return diaMes.toString();
     }
 }

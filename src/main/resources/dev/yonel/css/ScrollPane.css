@@ -1,4 +1,3 @@
-
 /* Elimina el borde del ScrollPane */
 .scroll-pane {
     -fx-background-color: transparent; /* Elimina el fondo */

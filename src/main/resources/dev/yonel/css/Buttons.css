@@ -34,21 +34,21 @@
 }
 
 #custom {
-	-fx-background-color: -mfx-frenchieOne;
+	-fx-background-color: -mfx-frenchieTwo;
 	-fx-text-fill: white
 }
 
 .outline-button {
 	-fx-background-color: transparent;
-	-fx-border-color: -mfx-frenchieOne;
+	-fx-border-color: -mfx-frenchieTwo;
 	-fx-border-radius: 3;
 
-	-fx-text-fill: -mfx-frenchieOne;
+	-fx-text-fill: -mfx-frenchieTwo;
 }
 
 .outline-button:hover,
 .outline-button:focused {
-	-fx-background-color: -mfx-frenchieOne;
+	-fx-background-color: -mfx-frenchieTwo;
 	-fx-text-fill: white;
 }
 

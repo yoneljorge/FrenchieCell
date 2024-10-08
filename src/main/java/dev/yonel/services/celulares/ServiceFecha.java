@@ -11,7 +11,7 @@ import dev.yonel.models.Marca;
 import dev.yonel.models.Modelo;
 import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerVista;
-import dev.yonel.utils.Fecha;
+import dev.yonel.utils.fechaUtil.FechaUtil;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.utils.StringUtils;
 import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
@@ -49,7 +49,7 @@ public class ServiceFecha {
         }
 
         StringConverter<LocalDate> converter = FunctionalStringConverter
-                .to(fecha -> (fecha == null) ? "" : Fecha.getStringOfLocalDate(fecha));
+                .to(fecha -> (fecha == null) ? "" : FechaUtil.getStringOfLocalDate(fecha));
         Function<String, Predicate<LocalDate>> filterFunction = s -> fecha -> StringUtils
                 .containsIgnoreCase(converter.toString(fecha), s);
 

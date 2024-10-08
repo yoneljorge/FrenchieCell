@@ -1,0 +1,55 @@
+@import '../MFXColors.css';
+
+.chart{
+    -fx-padding: 10px;
+}
+
+.chart-content{
+
+}
+
+.chart-legend{
+    -fx-background-color: transparent;
+    -fx-padding: 20px;
+    -fx-text-fill: #000000;
+}
+
+.chart-plot-background{
+    -fx-background-color: transparent;
+}
+
+.chart-vertical-grid-lines{
+    
+}
+
+.chart-horizontal-grid-lines{
+    
+}
+
+.chart-alternative-row-fill {
+    -fx-fill: transparent;
+    -fx-stroke: transparent;
+    -fx-stroke-width: 0;
+}
+
+.axis{
+    -fx-font-size: 1.4em;
+    -fx-tick-label-fill: #e9e7e7;
+    -fx-tick-length: 20;
+    -fx-minor-tick-length: 10;
+}
+
+.axis-label{
+    -fx-text-fill: #e9e7e7;
+}
+
+.chart-bar {
+    -fx-bar-fill: #9fa7b6 ;
+    -fx-bar-gap: 5px;
+
+}
+
+.chart-pie-label{
+    -fx-fill: #e9e7e7;
+    -fx-font-size: 14px;
+}

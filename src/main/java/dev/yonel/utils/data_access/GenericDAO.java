@@ -142,7 +142,8 @@ public class GenericDAO<T, Id extends Serializable> {
      * Método que recupera todos los objetos de uno en uno de la clase genérica T en
      * la base de datos.
      * <p>
-     * Debe de utilizarse en un bulce while debido a que va a ir obteniendo los objetos de uno en uno desde la base de
+     * Debe de utilizarse en un bulce while debido a que va a ir obteniendo los
+     * objetos de uno en uno desde la base de
      * datos y cuando
      * llegue al final va a
      * retornar un null.
@@ -161,7 +162,7 @@ public class GenericDAO<T, Id extends Serializable> {
      *
      * @param clazz la entidad de la cual que se quieren obtener los objetos.
      * @return un objeto de esa entidad.
-     * @param <T> 
+     * @param <T>
      */
     public static <T> T getAllObjectOneToOne(Class<T> clazz) {
         // Inicializamos la claseGlobal con la primera clase que utilice este método.
@@ -201,6 +202,59 @@ public class GenericDAO<T, Id extends Serializable> {
                 i = 0;// Reiniciar el índice si no hay más resultados.
                 tx.commit(); // Finalizar la transacción después de la operación exitosa
                 return null;// Devolver null si no hay más registros.
+            }
+
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback(); // Deshacer la transacción en caso de error
+            }
+            e.printStackTrace(); // Manejar o registrar la excepción según sea necesario
+            return null; // Devolver un valor nulo en caso de error
+        }
+    }
+
+    private static int iInvertido = 0;
+    private static Object clazzGlobalInvertido;
+
+    public static <T> T getAllObjectOneToOneInvertido(Class<T> clazz) {
+        // Inicializamos la claseGlobal con la primera clase que utilice este método.
+        if (clazzGlobalInvertido == null) {
+            clazzGlobalInvertido = clazz;
+        }
+        /**
+         * En caso de que la claseGlobal sea distinta a la clase que se pasa como
+         * argumento, entonces se iguala a la clase
+         * y el índice se iguala a 0, porque se sobreentiende que se está buscando
+         * objetos de otra clase y no queremos que
+         * comience desde otro índice.
+         */
+        if (clazzGlobalInvertido != clazz) {
+            iInvertido = 0;
+            clazzGlobalInvertido = clazz;
+        }
+        Transaction tx = getSession().beginTransaction();
+        try {
+            HibernateCriteriaBuilder builder = getSession().getCriteriaBuilder();
+            CriteriaQuery<T> query = builder.createQuery(clazz);
+            Root<T> root = query.from(clazz);
+            query.select(root);
+            query.orderBy(builder.desc(root.get("id"))); // Orden inverso por ID (ajusta según tu campo)
+
+            // Usamos el contador i para establecer desde qué registro empezar.
+            Query<T> hibernateQuery = getSession().createQuery(query)
+                    .setFirstResult(iInvertido) // Desde el índice actual
+                    .setMaxResults(1);
+
+            List<T> resultList = hibernateQuery.getResultList();
+
+            if (!resultList.isEmpty()) {
+                iInvertido++; // Incrementar el índice para la siguiente llamada
+                tx.commit(); // Finalizar la transacción después de la operación exitosa
+                return resultList.get(0); // Devolver el primer y único registro
+            } else {
+                iInvertido = 0; // Reiniciar el índice si no hay más resultados.
+                tx.commit(); // Finalizar la transacción después de la operación exitosa
+                return null; // Devolver null si no hay más registros.
             }
 
         } catch (Exception e) {

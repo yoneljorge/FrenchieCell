@@ -7,28 +7,34 @@
 .button:hover{
 /*-fx-background-color : #10165F;*/
 -fx-background-color: #2a768d;
+-fx-background-radius: 10px;
 
 }
 
 .button:pressed
 {
 -fx-background-color : #1620A1;
+-fx-background-radius: 10px;
+-fx-background-radius: 10px;
 }
 
 .button-seleccionado{
     /*-fx-background-color : rgba(16,22,95,1);*/
 
     -fx-background-color: #2a768d88;
+    -fx-background-radius: 10px;
     -fx-text-fill : #e7e5e5;
 }
 
 .button-seleccionado:hover{
 -fx-background-color : #2a768d;
+-fx-background-radius: 10px;
 }
 
 .button-seleccionado:pressed
 {
 -fx-background-color : #1620A1;
+-fx-background-radius: 10px;
 }
 
 

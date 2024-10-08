@@ -17,7 +17,7 @@ import dev.yonel.services.Mensajes;
 import dev.yonel.services.ProxyABaseDeDatos;
 import dev.yonel.services.controllers.celulares.ServiceCelularControllerAgregar;
 import dev.yonel.services.vales.ServiceVales;
-import dev.yonel.utils.Fecha;
+import dev.yonel.utils.fechaUtil.FechaUtil;
 import dev.yonel.utils.validation.Validator;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.utils.StringUtils;
@@ -143,7 +143,7 @@ public class ServiceCelular {
     }
 
     public String getFechaInventario() {
-        return Fecha.getStringOfLocalDate(this.fechaInventario);
+        return FechaUtil.getStringOfLocalDate(this.fechaInventario);
     }
 
     public void setObservaciones(String observaciones) {
