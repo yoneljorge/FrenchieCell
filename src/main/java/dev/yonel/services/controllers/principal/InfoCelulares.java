@@ -25,9 +25,12 @@ public class InfoCelulares {
         instance = this;    
     }
 
+    private static synchronized void createInstance(){
+        instance = new InfoCelulares();
+    }
     public static InfoCelulares getInstance(){
         if(instance == null){
-            instance = new InfoCelulares();
+            createInstance();
         }
 
         return instance;

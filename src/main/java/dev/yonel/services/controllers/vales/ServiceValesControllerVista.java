@@ -74,11 +74,6 @@ public class ServiceValesControllerVista {
      * ###################################################
      */
 
-    /*
-     * Variable con la cual vamos a monitoriar los cambios de la interfaz
-     */
-    private @Setter boolean cambioEnInterfaz = true;
-
     /**
      * Método con el que vamos a insertar en la interfaz item de tipo vale.
      * Este método crea un objeto de tipo FXMLLoader mediante el fxml "itemVale".
@@ -135,7 +130,6 @@ public class ServiceValesControllerVista {
             // de la UI
             Platform.runLater(() -> {
                 invertirOrden();
-                cambioEnInterfaz = false;
             });
         }).start(); // Inicia el hilo separad
 

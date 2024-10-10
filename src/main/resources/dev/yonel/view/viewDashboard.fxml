@@ -8,12 +8,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="989.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="TOP_CENTER" maxWidth="200.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="189.0" style="-fx-background-color: #00133d;" HBox.hgrow="SOMETIMES">
+      <VBox alignment="TOP_CENTER" maxWidth="200.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="212.0" style="-fx-background-color: #00133d;" HBox.hgrow="SOMETIMES">
          <children>
-            <StackPane prefHeight="109.0" prefWidth="256.0">
+            <StackPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="109.0" prefWidth="256.0">
                <children>
                   <ImageView fitHeight="73.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -49,6 +50,9 @@
                <padding>
                   <Insets left="50.0" />
                </padding>
+               <font>
+                  <Font size="18.0" />
+               </font>
             </Button>
             <Button fx:id="btnCelulares" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="259.0" stylesheets="@../css/styleMenu.css" text="Celulares">
                <graphic>
@@ -61,6 +65,9 @@
                <padding>
                   <Insets left="50.0" />
                </padding>
+               <font>
+                  <Font size="18.0" />
+               </font>
             </Button>
             <Button fx:id="btnPromotores" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="259.0" stylesheets="@../css/styleMenu.css" text="Gestores">
                <graphic>
@@ -73,6 +80,9 @@
                <padding>
                   <Insets left="50.0" />
                </padding>
+               <font>
+                  <Font size="18.0" />
+               </font>
             </Button>
             <Button fx:id="btnVales" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="259.0" stylesheets="@../css/styleMenu.css" text="Vales">
                <graphic>
@@ -85,6 +95,9 @@
                <padding>
                   <Insets left="50.0" />
                </padding>
+               <font>
+                  <Font size="18.0" />
+               </font>
             </Button>
             <Button fx:id="btnSettings" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="259.0" stylesheets="@../css/styleMenu.css" text="Configuración">
                <graphic>
@@ -97,6 +110,24 @@
                <padding>
                   <Insets left="50.0" />
                </padding>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnSumario" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="259.0" stylesheets="@../css/styleMenu.css" text="Sumario">
+               <graphic>
+                  <ImageView fitHeight="23.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/sumaryList.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <padding>
+                  <Insets left="50.0" />
+               </padding>
+               <font>
+                  <Font size="18.0" />
+               </font>
             </Button>
             <Button fx:id="btnSignout" alignment="BASELINE_LEFT" graphicTextGap="22.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="259.0" stylesheets="@../css/styleMenu.css" text="Salir">
                <graphic>
@@ -109,6 +140,9 @@
                <padding>
                   <Insets left="50.0" />
                </padding>
+               <font>
+                  <Font size="18.0" />
+               </font>
             </Button>
             <HBox alignment="BOTTOM_RIGHT" prefHeight="169.0" prefWidth="175.0">
                <children>

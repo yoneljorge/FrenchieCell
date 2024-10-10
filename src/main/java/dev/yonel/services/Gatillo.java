@@ -1,7 +1,6 @@
 package dev.yonel.services;
 
 import dev.yonel.services.controllers.principal.InfoCelulares;
-import dev.yonel.services.controllers.vales.ServiceValesControllerVista;
 
 public class Gatillo {
 
@@ -16,6 +15,7 @@ public class Gatillo {
     public static void newCelular() {
         ProxyABaseDeDatos.setCambioCelular(true);
         ProxyABaseDeDatos.setCambioImei(true);
+        load();
     }
 
     public static void newImei() {
@@ -29,6 +29,20 @@ public class Gatillo {
     public static void newVale() {
         ProxyABaseDeDatos.setCambioValeByPromotor(true);
         ProxyABaseDeDatos.setCambioVale(true);
-        ServiceValesControllerVista.getInstance().setCambioEnInterfaz(true);
+        load();
+    }
+
+    private static void load(){
+        Thread load = new Thread(() -> {
+            InfoCelulares.getInstance().update();
+        });
+
+        load.start();
+
+        try {
+            load.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

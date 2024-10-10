@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import dev.yonel.services.LoadControllers;
+import dev.yonel.services.controllers.dashboard.Sumary;
 import dev.yonel.utils.AlertUtil;
+import dev.yonel.utils.FileChooserUtil;
 import dev.yonel.utils.ui.SetVisible;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -32,6 +34,9 @@ public class DashboardController implements Initializable {
     private Button btnSettings;
     @FXML
     private Button btnSignout;
+    @FXML
+    private Button btnSumario;
+
     @FXML
     private @Getter StackPane stackPane;
 
@@ -154,6 +159,10 @@ public class DashboardController implements Initializable {
             AlertUtil.advertencia("Desea salir?", null, () -> Platform.exit());
         });
 
+        btnSumario.setOnAction(event -> {
+            saveSumary();
+        });
+
     }
 
     private void setStyleToBotton(Button boton) {
@@ -207,5 +216,10 @@ public class DashboardController implements Initializable {
                 settings = vbox;
             });
         }
+    }
+
+    private void saveSumary(){
+        FileChooserUtil fileChooserUtil = new FileChooserUtil();
+        fileChooserUtil.getSaveDialog(Sumary.getSumary());
     }
 }
