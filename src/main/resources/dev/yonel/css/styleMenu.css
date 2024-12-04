@@ -74,6 +74,18 @@
     -fx-font-size: 17;
 }
 
+.label-black
+{
+    -fx-text-fill: #000000;
+    -fx-font-size: 15;
+}
+
 #custom{
     -fx-font-size: 12;
+}
+
+.vbox-estatus{
+    /*-fx-background-color: rgba(105, 100, 175, 0.692);*/
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 10 px
 }

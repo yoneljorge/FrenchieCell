@@ -2,24 +2,33 @@ package dev.yonel.controllers;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import dev.yonel.services.LoadControllers;
+import dev.yonel.App;
 import dev.yonel.services.controllers.dashboard.Sumary;
+import dev.yonel.services.controllers.dashboard.TYPE_CLOUD;
 import dev.yonel.utils.AlertUtil;
 import dev.yonel.utils.FileChooserUtil;
 import dev.yonel.utils.ui.SetVisible;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
 
 public class DashboardController implements Initializable {
 
+    @FXML
+    private StackPane root;
+    @FXML
+    private HBox mainContent;
     @FXML
     private VBox pnItems = null;
     @FXML
@@ -40,17 +49,61 @@ public class DashboardController implements Initializable {
     @FXML
     private @Getter StackPane stackPane;
 
-    private VBox principal;
-    private VBox celulares;
-    private VBox promotores;
-    private VBox vales;
-    private VBox settings;
+    @FXML
+    private StackPane stackPaneCloud;
+    @FXML
+    private VBox vbox_cloud;
+    @FXML
+    private VBox vbox_cloudCross;
+    @FXML
+    private VBox vbox_cloudDownload;
+    @FXML
+    private VBox vbox_cloudSync;
+    @FXML
+    private VBox vbox_cloudUpload;
+    @FXML
+    private VBox vbox_conected;
+    @FXML
+    private VBox vbox_disconected;
 
-    private @Getter final ArrayList<VBox> listVBox = new ArrayList<>();
+    /*
+     * Nodos en los cuales se van a ir almacenando las interfaces de las vistas
+     */
+    private Node principal;
+    private Node celulares;
+    private Node promotores;
+    private Node vales;
+    private Node settings;
+
+    /*
+     * Guardamos la vista para el overlyLoading
+     */
+    private StackPane loadingOverlay;
+
+    /*
+     * Lista donde vamos a ir almacenando los nodos de las vistas
+     */
+    private @Getter final ArrayList<Node> listNodes = new ArrayList<>();
+    /*
+     * Lista donde vamos a ir almacenando los botones
+     */
     private List<Button> listaBotones = new ArrayList<>();
 
+    /*
+     * Lista donde almacenamos los vbox que tienen las imagenes de la nube y
+     * conexión.
+     */
+    private List<VBox> listVBoxClouds = new ArrayList<>();
+
+    /**
+     * Única instancia de esta clase.
+     */
     private static DashboardController instance;
 
+    /**
+     * Constructor privado para que solo se pueda acceder desde dentro de esta
+     * clase.
+     */
     private DashboardController() {
         instance = this;
     }
@@ -70,49 +123,60 @@ public class DashboardController implements Initializable {
             LoadControllers.load("viewPrincipal", PrincipalController.getInstance(), "principal", vbox -> {
                 principal = vbox;
             });
-
             LoadControllers.load("viewCelulares", CelularesController.getInstance(),
                     "celulares", vbox -> {
                         celulares = vbox;
                         celulares.setVisible(false);
                     });
-
             LoadControllers.load("viewPromotores", PromotoresController.getInstance(),
                     "promotores", vbox -> {
                         promotores = vbox;
                         promotores.setVisible(false);
                     });
-
             LoadControllers.load("viewVales", ValesController.getInstance(), "vales",
                     vbox -> {
                         vales = vbox;
                         vales.setVisible(false);
                     });
-
             LoadControllers.load("viewSettings", SettingsController.getInstance(),
                     "settings", vbox -> {
                         settings = vbox;
                         settings.setVisible(false);
                     });
 
+            /*
+             * Cargamos el panel LoadingOverlay.
+             */
+            try {
+                FXMLLoader loader = App.fxmlLoader("viewLoadingOverlay");
+                loader.setController(LoadingOverlayController.getInstance());
+                loadingOverlay = loader.load();
+                root.getChildren().add(loadingOverlay);
+                StackPane.setAlignment(loadingOverlay, javafx.geometry.Pos.CENTER);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         });
 
-        /*
-         * Platform.runLater(() -> {
-         * 
-         * 
-         * 
-         * 
-         * });
-         */
-
         // Agregamos todos los botones a la lista para una mejor gestión.
-        listaBotones.add(btnGeneral);
-        listaBotones.add(btnCelulares);
-        listaBotones.add(btnPromotores);
-        listaBotones.add(btnSettings);
-        listaBotones.add(btnSignout);
-        listaBotones.add(btnVales);
+        listaBotones.addAll(Arrays.asList(
+                btnGeneral,
+                btnCelulares,
+                btnPromotores,
+                btnSettings,
+                btnSignout,
+                btnVales));
+
+        // Agregamos todos los vbox relacionados con la nube en una lista
+        listVBoxClouds.addAll(Arrays.asList(
+                vbox_conected,
+                vbox_disconected,
+                vbox_cloud,
+                vbox_cloudCross,
+                vbox_cloudDownload,
+                vbox_cloudSync,
+                vbox_cloudUpload));
 
         // Como la primera ventana que aparece es la principal entonces ponemos
         // el boton general como seleccionado.
@@ -120,14 +184,14 @@ public class DashboardController implements Initializable {
 
         btnGeneral.setOnAction(event -> {
             // Manejar la visibilidad de los VBox en la lista
-            SetVisible.This(listVBox, principal);
+            SetVisible.This(listNodes, principal);
             setStyleToBotton(btnGeneral);
         });
 
         btnCelulares.setOnAction(event -> {
             loadCelular();
 
-            SetVisible.This(listVBox, celulares);
+            SetVisible.This(listNodes, celulares);
             CelularesController.getInstance().goToLista();
             setStyleToBotton(btnCelulares);
         });
@@ -135,7 +199,7 @@ public class DashboardController implements Initializable {
         btnPromotores.setOnAction(event -> {
             loadPromotores();
 
-            SetVisible.This(listVBox, promotores);
+            SetVisible.This(listNodes, promotores);
             PromotoresController.getInstance().goToLista();
             setStyleToBotton(btnPromotores);
         });
@@ -143,7 +207,7 @@ public class DashboardController implements Initializable {
         btnVales.setOnAction(event -> {
             loadVales();
 
-            SetVisible.This(listVBox, vales);
+            SetVisible.This(listNodes, vales);
             ValesController.getInstance().goToLista();
             setStyleToBotton(btnVales);
         });
@@ -151,7 +215,7 @@ public class DashboardController implements Initializable {
         btnSettings.setOnAction(event -> {
             loadSettings();
 
-            SetVisible.This(listVBox, settings);
+            SetVisible.This(listNodes, settings);
             setStyleToBotton(btnSettings);
         });
 
@@ -177,13 +241,12 @@ public class DashboardController implements Initializable {
         }
     }
 
-
     private void loadCelular() {
         if (celulares == null) {
             CelularesController.restartInstance();
 
             LoadControllers.load("viewCelulares", CelularesController.getInstance(), "celulares", vbox -> {
-                celulares = vbox;
+                celulares = (VBox) vbox;
             });
         }
     }
@@ -193,7 +256,7 @@ public class DashboardController implements Initializable {
             PromotoresController.restartInstance();
 
             LoadControllers.load("viewPromotores", PromotoresController.getInstance(), "promotores", vbox -> {
-                promotores = vbox;
+                promotores = (VBox) vbox;
             });
         }
     }
@@ -203,7 +266,7 @@ public class DashboardController implements Initializable {
             ValesController.restartInstance();
 
             LoadControllers.load("viewVales", ValesController.getInstance(), "vales", vbox -> {
-                vales = vbox;
+                vales = (VBox) vbox;
             });
         }
     }
@@ -213,13 +276,64 @@ public class DashboardController implements Initializable {
             SettingsController.restartInstance();
 
             LoadControllers.load("viewSettings", SettingsController.getInstance(), "settings", vbox -> {
-                settings = vbox;
+                settings = (VBox) vbox;
             });
         }
     }
 
-    private void saveSumary(){
+    private void saveSumary() {
         FileChooserUtil fileChooserUtil = new FileChooserUtil();
         fileChooserUtil.getSaveDialog(Sumary.getSumary());
+    }
+
+    public void showLoadingOverlay() {
+        LoadingOverlayController.getInstance().show(mainContent);
+    }
+
+    public void hideLoadingOverlay() {
+        LoadingOverlayController.getInstance().hide(mainContent);
+    }
+
+    public void setTypeCloud(TYPE_CLOUD type) {
+        switch (type.getType()) {
+            case "Conected" -> {
+                SetVisible.This(listVBoxClouds, vbox_conected);
+                break;
+            }
+
+            case "Disconected" -> {
+                SetVisible.This(listVBoxClouds, vbox_disconected);
+                break;
+            }
+
+            case "Cloud Cross" -> {
+                SetVisible.This(listVBoxClouds, vbox_cloudCross);
+                break;
+            }
+
+            case "Cloud Sync" -> {
+                SetVisible.This(listVBoxClouds, vbox_cloudSync);
+                break;
+            }
+
+            case "Download" -> {
+                SetVisible.This(listVBoxClouds, vbox_cloudDownload);
+                break;
+            }
+
+            case "Upload" -> {
+                SetVisible.This(listVBoxClouds, vbox_cloudUpload);
+                break;
+            }
+
+            case "Cloud" -> {
+                SetVisible.This(listVBoxClouds, vbox_cloud);
+                break;
+            }
+
+            default -> {
+                break;
+            }
+        }
     }
 }

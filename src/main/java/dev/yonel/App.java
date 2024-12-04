@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import dev.yonel.controllers.DashboardController;
 import dev.yonel.services.Mensajes;
+import dev.yonel.services.Scheduled;
 import dev.yonel.services.Updates;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,9 +30,10 @@ public class App extends Application {
 
     private static App instance;
 
-    public static App getInstance(){
+    public static App getInstance() {
         return instance;
     }
+
     @Override
     public void init() throws IOException {
 
@@ -64,7 +67,7 @@ public class App extends Application {
          * Usamos .join() para asegurarnos de que el hilo de inicialización termine
          * antes de que continúe la ejecución del programa.
          */
-        try {   
+        try {
             mensajes.info("Esperando a que se termine de ejecutar initThread");
             initThread.join();
         } catch (Exception e) {
@@ -79,10 +82,10 @@ public class App extends Application {
     public void start(Stage primaryStage) throws IOException {
 
         instance = this;
-        
+
         stage = primaryStage;
 
-        //Establecemos el icono de la aplicacion
+        // Establecemos el icono de la aplicacion
         primaryStage.getIcons().add(icon);
 
         primaryStage.setScene(mainScene);
@@ -103,6 +106,7 @@ public class App extends Application {
 
         primaryStage.show();
 
+        Scheduled.runTasks();
     }
 
     public static Parent loadFXML(String fxml) throws IOException {
@@ -112,11 +116,6 @@ public class App extends Application {
 
     public static FXMLLoader fxmlLoader(String fxml) throws IOException {
         return new FXMLLoader(App.class.getResource("view/" + fxml + ".fxml"));
-    }
-
-    public static void main(String[] args) {
-        System.setProperty("javafx.preloader", "dev.yonel.MyPreloader");
-        launch(args);
     }
 
     public void restartApp() {
@@ -165,7 +164,7 @@ public class App extends Application {
 
         stage = new Stage();
 
-        //Image icon = new Image(getClass().getResourceAsStream("/icons/icon.png"));
+        // Image icon = new Image(getClass().getResourceAsStream("/icons/icon.png"));
         stage.getIcons().add(icon);
 
         stage.setScene(mainScene);
@@ -185,6 +184,11 @@ public class App extends Application {
         });
 
         stage.show();
-
     }
+
+    public static void main(String[] args) {
+        System.setProperty("javafx.preloader", "dev.yonel.MyPreloader");
+        launch(args);
+    }
+
 }

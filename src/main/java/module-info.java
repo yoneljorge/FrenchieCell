@@ -15,11 +15,25 @@ module dev.yonel {
 
     //Con esto se soulciona el error cannot access javax.naming.Referenceable.
     requires transitive java.naming;
+    //Modulos de google
+    requires com.google.api.client.json.gson;
+    requires com.google.api.client;
+    requires com.google.api.services.drive;
+    requires com.google.api.client.auth;
+    requires google.api.client;
+    requires com.google.api.client.extensions.jetty.auth;
+    requires com.google.api.client.extensions.java6.auth;
+    requires dropbox.core.sdk;
+    requires undertow.core;
+    requires org.json;
+    requires com.fasterxml.jackson.databind;
+
 
     opens dev.yonel to javafx.fxml;
     opens dev.yonel.controllers to javafx.fxml;
     opens dev.yonel.controllers.items to javafx.fxml;
     opens dev.yonel.controllers.popup to javafx.fxml;
+    opens dev.yonel.controllers.settings to javafx.fxml;
     exports dev.yonel;
 
 

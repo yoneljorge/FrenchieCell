@@ -1,24 +1,23 @@
-package dev.yonel.services;
+package dev.yonel.controllers;
 
 import java.io.IOException;
 
 import dev.yonel.App;
-import dev.yonel.controllers.DashboardController;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.VBox;
+import javafx.scene.Node;
 
 public class LoadControllers {
 
     public static void load(String fxml, Object controllerInstance, String vBoxId, LoadCallback callback) {
 
-        Task<VBox> task = new Task<VBox>() {
+        Task<Node> task = new Task<Node>() {
             @Override
-            protected VBox call() throws Exception {
+            protected Node call() throws Exception {
                 FXMLLoader loader = App.fxmlLoader(fxml);
                 loader.setController(controllerInstance);
-                VBox vBoxLoading = null;
+                Node vBoxLoading = null;
 
                 try {
                     // Cargar el VBox en segundo plano
@@ -37,22 +36,22 @@ public class LoadControllers {
 
             @Override
             protected void succeeded() {
-                VBox vBox = getValue();
+                Node vBox = getValue();
 
                 if (vBox != null) {
                     Platform.runLater(() -> {
                         // Busca si ya existe un VBox con el mismo id en la lista de VBox
-                        VBox existingVBoxInList = DashboardController.getInstance().getListVBox().stream()
+                        Node existingVBoxInList = DashboardController.getInstance().getListNodes().stream()
                                 .filter(v -> vBoxId.equals(v.getId()))
                                 .findFirst()
                                 .orElse(null);
 
                         if (existingVBoxInList != null) {
-                            DashboardController.getInstance().getListVBox().remove(existingVBoxInList);
+                            DashboardController.getInstance().getListNodes().remove(existingVBoxInList);
                         }
 
                         // Buscamos si ya existe un VBox con el mismo id en el StackPane
-                        VBox existingVBoxInStackPane = (VBox) DashboardController.getInstance().getStackPane()
+                        Node existingVBoxInStackPane = (Node) DashboardController.getInstance().getStackPane()
                                 .getChildren()
                                 .stream()
                                 .filter(v -> vBoxId.equals(v.getId()))
@@ -65,11 +64,11 @@ public class LoadControllers {
                         }
 
                         // Agrega el nuevo VBox a la lista y al stackPane
-                        DashboardController.getInstance().getListVBox().add(vBox);
+                        DashboardController.getInstance().getListNodes().add(vBox);
                         DashboardController.getInstance().getStackPane().getChildren().add(vBox);
 
                         // Llamamos al callback una vez que el VBox está listo
-                        callback.onLoaded(vBox);
+                        callback.onLoaded((Node)vBox);
                     });
                 }
             }
@@ -85,7 +84,42 @@ public class LoadControllers {
         }
     }
 
+    public static void load(String fxml, Object controllerInstance, LoadCallback callback){
+        Task<Node> task = new Task<Node>() {
+            @Override
+            protected Node call() throws Exception{
+                FXMLLoader loader = App.fxmlLoader(fxml);
+                loader.setController(controllerInstance);
+                Node node = null;
+
+                try {
+                    node = loader.load();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return node;
+            }
+
+            @Override
+            protected void succeeded(){
+                Node node = getValue();
+                if(node != null){
+                    callback.onLoaded(node);
+                }
+            }
+        };
+
+        Thread thread = new Thread(task);
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public interface LoadCallback {
-        void onLoaded(VBox vbox);
+        void onLoaded(Node node);
     }
 }

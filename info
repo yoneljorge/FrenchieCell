@@ -9,5 +9,5 @@ id: 16 fecha: 2024-10-08
 id: 17 fecha: 2024-10-08
 inStock: 9
 importe: 3638.0
-enGarantia: 3
-porPagar: 0
+enGarantia: 0
+porPagar: 2

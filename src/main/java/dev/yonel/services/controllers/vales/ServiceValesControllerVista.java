@@ -15,7 +15,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import lombok.Setter;
 
 /**
  * Clase que utiliza el patrón de diseño Singlenton para que solo halla una sola

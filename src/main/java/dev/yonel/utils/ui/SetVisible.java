@@ -2,6 +2,7 @@ package dev.yonel.utils.ui;
 
 import java.util.List;
 
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -15,6 +16,18 @@ public class SetVisible {
             }else{
                 vboxElement.setVisible(true);
                 vboxElement.setDisable(false);
+            }
+        }
+    }
+
+    public static void This(List<Node> list, Node node){
+        for (Node n : list) {
+            if (n != node) {
+                n.setVisible(false);
+                n.setDisable(true);
+            }else{
+                n.setVisible(true);
+                n.setDisable(false);
             }
         }
     }
