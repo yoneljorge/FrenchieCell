@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fx:id="node_Root" hbarPolicy="NEVER" stylesheets="@../css/Panel.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <VBox fx:id="vBox_InScrollPane" alignment="TOP_CENTER" />
+   </content>
+</ScrollPane>

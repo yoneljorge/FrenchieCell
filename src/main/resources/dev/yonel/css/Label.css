@@ -1,0 +1,17 @@
+@import '../fonts/Fonts.css';
+@import 'Common.css';
+@import 'MFXColors.css';
+
+
+
+.label{
+    -fx-text-fill: -mfx-frenchieTwo;
+}
+
+.label-error{
+    -fx-text-fill: -mfx-red;
+}
+
+#label-white{
+    -fx-text-fill: white;
+}

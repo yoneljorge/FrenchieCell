@@ -1,0 +1,112 @@
+
+@import '../fonts/Fonts.css';
+@import 'Common.css';
+@import 'MFXColors.css';
+
+.button
+{
+-fx-background-color :  #2a8a85;
+-fx-text-fill : #e7e5e5;
+-fx-font-size: 15;
+-fx-border-radius: 5px;
+-fx-background-radius: 5px;
+}
+.button:hover{
+-fx-background-color : #2a5f8a;
+-fx-cursor: hand;
+}
+.button:pressed
+{
+-fx-background-color : #552a8a;
+}
+
+.hbox
+{
+-fx-background-color: #eeebeb;
+}
+
+.hbox:hover{
+    -fx-background-color: #e0e0e0;
+    -fx-border-color: #7a0ed9;
+    -fx-border-radius: 10px;
+}
+/*Estilo para los HBox de los vales*/
+
+.hbox-enGarantia{
+-fx-background-color: rgba(51,255,87,1) ;
+}
+
+.hbox-enGarantia:hover{
+-fx-background-color: rgba(51,255,87,0.5) ;
+-fx-border-color: #7a0ed9;
+-fx-border-radius: 10px;
+}
+
+.hbox-sinGarantia{
+-fx-background-color: rgba(255,87,51,1) ;
+}
+.hbox-sinGarantia:hover{
+-fx-background-color: rgba(255,87,51,0.5) ;
+-fx-border-color: #7a0ed9;
+-fx-border-radius: 10px;
+}
+
+/*Estilo para los vales con detalles*/
+.vale-enGarantia{
+-fx-background-color: rgba(179,255,192,1) ;
+}
+.vale-sinGarantia{
+-fx-background-color: rgba(255,192,179,1) ;
+}
+
+.vale-liquidado{
+    -fx-background-color: rgba(42,118,141,0.5);
+}
+
+.menu-button
+{
+    -fx-background-color: #2a8a85;
+    -fx-text-fill : #e7e5e5;
+    -fx-font-size: 15;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.menu-button:hover
+{
+    -fx-background-color: #2a5f8a;
+    -fx-cursor: hand;
+}
+
+.menu-button .menu-item:hover
+{
+    -fx-background-color: #2a5f8a;
+    -fx-text-fill: #e7e5e5;
+    -fx-cursor: hand;
+}
+.menu-button .menu-item:pressed 
+{
+    -fx-background-color: #552a8a;
+}
+
+.label
+{
+    -fx-font-size: 15;
+}
+#custom{
+    -fx-font-size: 12;
+}
+
+
+.textfield
+{
+    -fx-font-size: 14;
+}
+.textfield:active{
+    -fx-text-fill: #ffff;
+}
+
+.combobox
+{
+    -fx-font-size: 14;
+}

@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="root" prefHeight="598.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox fx:id="vBoxVista" prefHeight="409.0" prefWidth="350.0" stylesheets="@../../css/styleItem.css" visible="false">
+         <children>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <HBox prefHeight="25.0" prefWidth="67.0">
+                           <children>
+                              <MFXButton id="custom" fx:id="btnCerrar" stylesheets="@../../css/Buttons.css" text="X">
+                                 <HBox.margin>
+                                    <Insets left="7.0" top="4.0" />
+                                 </HBox.margin>
+                              </MFXButton>
+                           </children>
+                        </HBox>
+                        <Label text="Promotor:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblPromotor" text="Yonel Jorge Sánchez Cantillo" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Cliente:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblCliente" text="Cheila" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Teléfono:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblTelefonoCliente" text="56391475" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="IMEI:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblImei" text="35468596124523" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Marca:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblMarca" text="Samsung" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Modelo:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblModelo" text="A12" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Precio:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblPrecio" text="150" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Precio Mensajería:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblPrecioMensajeria" text="1800" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="75.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Dirección:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblDireccion" text="Avenida 41 / 66 y 66a" wrapText="true" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Fecha de Venta:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblFechaVenta" text="16/7/24" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Fecha de Garantía:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblFechaGarantia" text="16/7/24" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Garantia">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblDiasGarantia" text="7 días" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="350.0">
+               <children>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+                     <children>
+                        <Label text="Comisión:">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="4.0" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="lblComision" text="10" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="42.0" prefWidth="350.0" spacing="10.0" stylesheets="@../../css/Buttons.css">
+               <children>
+                  <MFXButton fx:id="btnEditar" styleClass="outline-button" text="Editar" />
+                  <MFXButton fx:id="btnEliminar" styleClass="outline-button" text="Eliminar" />
+               </children>
+               <VBox.margin>
+                  <Insets top="41.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox fx:id="vBoxEdicion" prefHeight="200.0" prefWidth="100.0" stylesheets="@../../css/styleItem.css">
+         <children>
+            <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="420.0" spacing="10.0">
+               <children>
+                  <VBox alignment="TOP_RIGHT" stylesheets="@../../css/Label.css">
+                     <children>
+                        <Label stylesheets="@../../css/styleItem.css" text="Gestor:">
+                           <VBox.margin>
+                              <Insets top="6.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label stylesheets="@../../css/styleItem.css" text="Nombre del Cliente:">
+                           <VBox.margin>
+                              <Insets top="19.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label stylesheets="@../../css/styleItem.css" text="Teléfono de localización:">
+                           <VBox.margin>
+                              <Insets top="32.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label stylesheets="@../../css/styleItem.css" text="IMEI:">
+                           <VBox.margin>
+                              <Insets top="32.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label stylesheets="@../../css/styleItem.css" text="Marca:">
+                           <VBox.margin>
+                              <Insets top="16.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label stylesheets="@../../css/styleItem.css" text="Modelo:">
+                           <VBox.margin>
+                              <Insets top="16.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label stylesheets="@../../css/styleItem.css" text="Precio:">
+                           <VBox.margin>
+                              <Insets top="18.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label stylesheets="@../../css/styleItem.css" text="Fecha de Venta:">
+                           <VBox.margin>
+                              <Insets top="27.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label stylesheets="@../../css/styleItem.css" text="Comisión:">
+                           <VBox.margin>
+                              <Insets top="16.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label stylesheets="@../../css/styleItem.css" text="Dirección:">
+                           <VBox.margin>
+                              <Insets top="47.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label stylesheets="@../../css/styleItem.css" text="Costo de la Mensajería:">
+                           <VBox.margin>
+                              <Insets top="52.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="480.0" prefWidth="189.0">
+                     <children>
+                        <MFXFilterComboBox fx:id="filterComboBoxPromotor" floatMode="DISABLED" prefHeight="32.0" prefWidth="238.0" />
+                        <VBox prefHeight="34.0" prefWidth="240.0">
+                           <children>
+                              <MFXTextField id="customField" fx:id="txtCliente" floatMode="DISABLED" prefHeight="13.0" prefWidth="189.0">
+                                 <VBox.margin>
+                                    <Insets top="12.0" />
+                                 </VBox.margin>
+                              </MFXTextField>
+                              <Label fx:id="labelValidacionCliente" alignment="CENTER_RIGHT" prefHeight="6.0" prefWidth="237.0" styleClass="label-error" text="Label" visible="false" />
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <MFXTextField id="customField" fx:id="txtTelefonoCliente" floatMode="DISABLED" prefHeight="20.0" prefWidth="240.0" />
+                              <Label fx:id="labelValidacionTelefonoCliente" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="237.0" styleClass="label-error" text="Label" visible="false" />
+                           </children>
+                        </VBox>
+                        <MFXFilterComboBox fx:id="filterComboBoxImei" floatMode="DISABLED" prefHeight="32.0" prefWidth="238.0" />
+                        <MFXTextField id="customField" fx:id="txtMarca" disable="true" editable="false" floatMode="DISABLED" prefHeight="20.0" prefWidth="240.0">
+                           <VBox.margin>
+                              <Insets top="9.0" />
+                           </VBox.margin>
+                        </MFXTextField>
+                        <MFXTextField id="customField" fx:id="txtModelo" disable="true" editable="false" floatMode="DISABLED" prefHeight="20.0" prefWidth="240.0">
+                           <VBox.margin>
+                              <Insets top="7.0" />
+                           </VBox.margin>
+                        </MFXTextField>
+                        <VBox>
+                           <children>
+                              <MFXTextField id="customField" fx:id="txtPrecio" disable="true" floatMode="DISABLED" prefHeight="20.0" prefWidth="240.0">
+                                 <VBox.margin>
+                                    <Insets top="9.0" />
+                                 </VBox.margin>
+                              </MFXTextField>
+                              <Label fx:id="labelValidacionPrecio" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="237.0" styleClass="label-error" text="Label" visible="false" />
+                           </children>
+                        </VBox>
+                        <DatePicker fx:id="datePickerFechaVenta" prefHeight="32.0" prefWidth="189.0" stylesheets="@../../css/Pickers.css" />
+                        <VBox>
+                           <children>
+                              <MFXTextField id="customField" fx:id="txtComision" floatMode="DISABLED" prefHeight="20.0" prefWidth="240.0" />
+                              <Label fx:id="labelValidacionComision" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="237.0" styleClass="label-error" text="Label" visible="false" />
+                           </children>
+                           <VBox.margin>
+                              <Insets top="9.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <HBox alignment="BOTTOM_LEFT">
+                           <children>
+                              <CheckBox fx:id="checkBoxServicioMensajeria" mnemonicParsing="false" styleClass="label" text="Servicio de Mensajería">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </CheckBox>
+                           </children>
+                        </HBox>
+                        <TextArea fx:id="txtDireccion" disable="true" minHeight="-Infinity" prefHeight="58.0" prefWidth="189.0" />
+                        <VBox prefHeight="34.0" prefWidth="240.0">
+                           <children>
+                              <MFXTextField id="customField" fx:id="txtCostoMensajeria" disable="true" floatMode="DISABLED" prefHeight="15.0" prefWidth="240.0">
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </MFXTextField>
+                              <Label fx:id="labelValidacionCostoMensajeria" alignment="CENTER_RIGHT" prefHeight="6.0" prefWidth="237.0" styleClass="label-error" text="Label" visible="false" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <stylesheets>
+                        <URL value="@../../css/ComboBoxes.css" />
+                        <URL value="@../../css/TextFields.css" />
+                        <URL value="@../../css/Label.css" />
+                     </stylesheets>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="377.0">
+               <children>
+                  <Label fx:id="lblEstado" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="350.0" spacing="10.0" stylesheets="@../../css/Buttons.css">
+               <children>
+                  <MFXButton fx:id="btnCancelar" styleClass="outline-button" text="Cancelar" />
+                  <MFXButton fx:id="btnGuardar" disable="true" styleClass="outline-button" text="Actualizar" />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</StackPane>

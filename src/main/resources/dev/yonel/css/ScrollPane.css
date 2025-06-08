@@ -1,0 +1,21 @@
+/* Elimina el borde del ScrollPane */
+.scroll-pane {
+    -fx-background-color: transparent; /* Elimina el fondo */
+    -fx-border-color: transparent;     /* Elimina el borde */
+}
+
+
+.vbox {
+    -fx-background-color: transparent; /* Elimina el fondo */
+    -fx-border-color: transparent;     /* Elimina el borde */
+}
+
+.hbox {
+    -fx-background-color: transparent; /* Elimina el fondo */
+    -fx-border-color: transparent;     /* Elimina el borde */
+}
+
+.flow-pane {
+    -fx-background-color: transparent; /* Elimina el fondo */
+    -fx-border-color: transparent;     /* Elimina el borde */
+}

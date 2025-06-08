@@ -1,0 +1,43 @@
+
+@import '../css/MFXColors.css';
+@import '../fonts/Fonts.css';
+
+.hBox{
+    -fx-background-color: -mfx-frenchieOne;
+}
+.vBox
+{
+    /*-fx-background-color: -transparent;*/
+    -fx-border-color: -mfx-frenchieTwo;
+    -fx-border-radius: 10px;
+    
+}
+
+.label
+{
+    -fx-text-fill: #dfdcdc;
+    -fx-font-family: 'Comfortaa SemiBold';
+}
+
+.group{
+    -fx-background-color: -mfx-frenchieTwo;
+
+}
+
+.list-view{
+    -fx-background-color: transparent;
+    -fx-border-color: -mfx-frenchieTwo;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px;
+}
+
+.list-cell{
+    -fx-background-color: transparent;
+
+    -fx-text-fill: #dfdcdc;
+    -fx-font-size: 14;
+}
+
+.list-cell:selected {
+    -fx-background-color: -mfx-frenchieTwo;
+}

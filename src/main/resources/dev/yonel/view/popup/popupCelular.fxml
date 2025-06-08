@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="vBoxRoot" prefHeight="459.0" prefWidth="369.0" style="-fx-background-color: #9fffc0;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox prefHeight="443.0" prefWidth="369.0" spacing="10.0">
+         <children>
+            <VBox alignment="TOP_RIGHT">
+               <children>
+                  <Label text="Marca">
+                     <VBox.margin>
+                        <Insets bottom="11.0" top="2.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label text="Modelo">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="16.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="IMEI 1">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="19.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="IMEI 2">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="18.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Precio">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="16.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Fecha">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="19.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Observaciones">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+               <HBox.margin>
+                  <Insets top="12.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox styleClass="grid-background">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="20.0">
+                     <VBox.margin>
+                        <Insets bottom="6.0" />
+                     </VBox.margin>
+                     <children>
+                        <MFXFilterComboBox fx:id="cmbMarca" editable="false" floatMode="DISABLED" prefHeight="32.0" prefWidth="234.0" promptText="Marca" selectable="true" styleClass="mfx-combo-box" stylesheets="@../../css/ComboBoxes.css">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </MFXFilterComboBox>
+                     </children>
+                  </HBox>
+                  <HBox spacing="20.0">
+                     <VBox.margin>
+                        <Insets bottom="8.0" />
+                     </VBox.margin>
+                     <children>
+                        <MFXFilterComboBox fx:id="cmbModelo" editable="false" floatMode="DISABLED" prefHeight="32.0" prefWidth="232.0" promptText="Modelo" styleClass="mfx-combo-box" stylesheets="@../../css/ComboBoxes.css">
+                           <HBox.margin>
+                              <Insets bottom="4.0" />
+                           </HBox.margin>
+                        </MFXFilterComboBox>
+                     </children>
+                  </HBox>
+                  <MFXTextField id="customField" fx:id="txtImeiUno" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="IMEI 1" styleClass="text-field" stylesheets="@../../css/TextFields.css">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </MFXTextField>
+                  <Label id="validationLabel" fx:id="validationLabel_ImeiUno" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="232.0" styleClass="label-error" stylesheets="@../../css/Label.css" />
+                  <MFXTextField id="customField" fx:id="txtImeiDos" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="IMEI 2 -&gt; tiene que estar para aparecer en las listas" styleClass="text-field" stylesheets="@../../css/TextFields.css">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </MFXTextField>
+                  <Label id="validationLabel" fx:id="validationLabel_ImeiDos" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="232.0" styleClass="label-error" stylesheets="@../../css/Label.css" />
+                  <MFXTextField id="customField" fx:id="txtPrecio" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="Precio" styleClass="text-field" stylesheets="@../../css/TextFields.css">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </MFXTextField>
+                  <Label id="validationLabel" fx:id="validationLabel_Precio" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="232.0" styleClass="label-error" stylesheets="@../../css/Label.css" />
+                  <DatePicker fx:id="dateFechaInventario" editable="false" prefHeight="25.0" prefWidth="231.0" promptText="Fecha de inventario" styleClass="date-picker" stylesheets="@../../css/Pickers.css">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </DatePicker>
+                  <Label id="validationLabel" fx:id="validationLabel_Fecha" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="232.0" styleClass="label-error" stylesheets="@../../css/Label.css" />
+                  <TextArea fx:id="txtObservaciones" prefHeight="101.0" prefWidth="234.0" promptText="Puedes descirbir el estado del teléfono o lo que quieras." styleClass="text-area" stylesheets="@../../css/TextArea.css">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </TextArea>
+               </children>
+               <HBox.margin>
+                  <Insets top="12.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="21.0" prefWidth="369.0" stylesheets="@../../css/Label.css">
+         <children>
+            <Label fx:id="lblEstado" text="Estado" />
+         </children>
+      </HBox>
+      <HBox alignment="TOP_CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" spacing="20.0" VBox.vgrow="ALWAYS">
+         <children>
+            <MFXButton id="custom" fx:id="btnCancelar" styleClass="outline-button" stylesheets="@../../css/Buttons.css" text="Cancelar" />
+            <MFXButton id="custom" fx:id="btnGuardar" disable="true" styleClass="outline-button" stylesheets="@../../css/Buttons.css" text="Actualizar" />
+         </children>
+         <VBox.margin>
+            <Insets top="8.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>

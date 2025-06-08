@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="vBoxRoot" alignment="TOP_CENTER" stylesheets="@../css/ScrollPane.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="50.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css" VBox.vgrow="ALWAYS">
+         <children>
+            <MFXButton id="custom" fx:id="btnPromotores" disable="true" text="Lista" />
+            <MFXButton id="custom" fx:id="btnAgregarPromotor" text="Agregar Gestor" />
+         </children>
+      </HBox>
+      <StackPane fx:id="stackPane" prefHeight="525.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox fx:id="vboxPromotor" alignment="CENTER" prefHeight="537.0" prefWidth="793.0" StackPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="38.0" prefWidth="793.0" spacing="5.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label text="Gestor:">
+                           <font>
+                              <Font name="System Bold" size="19.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblPromotor" text="Yone Jorge Sánchez Cantillo">
+                           <font>
+                              <Font name="System Bold" size="19.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets left="14.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="53.0" prefWidth="793.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../css/Label.css">
+                           <children>
+                              <Label text="Ventas">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblValesTotal" styleClass="label-error" text="10" textFill="#ff4800">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="53.0" prefWidth="138.0" stylesheets="@../css/Label.css">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="124.0" text="Vales en Garantía">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblValesGarantia" styleClass="label-error" text="10" textFill="#ff4800">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="53.0" prefWidth="123.0" stylesheets="@../css/Label.css">
+                           <children>
+                              <Label text="Vales por Pagar">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblValesPorPagar" styleClass="label-error" text="10" textFill="#ff4800">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="53.0" prefWidth="127.0" stylesheets="@../css/Label.css">
+                           <children>
+                              <Label text="Dinero por Pagar">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblDineroPorPagar" styleClass="label-error" text="10" textFill="#ff4800">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" stylesheets="@../css/Label.css">
+                           <children>
+                              <Label text="Pagado">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="lblDineroPagado" styleClass="label-error" text="10" textFill="#ff4800">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <MenuButton alignment="CENTER_RIGHT" mnemonicParsing="false" style="-fx-text-fill: white;" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Opciones" textFill="WHITE">
+                          <items>
+                            <MenuItem fx:id="menuItemEditarPerfil" mnemonicParsing="false" text="Editar Perfil" />
+                            <MenuItem fx:id="menuItemEliminarPerfil" mnemonicParsing="false" text="Eliminar Perfil" />
+                          </items>
+                        </MenuButton>
+                     </children>
+                  </HBox>
+                  <VBox>
+                     <children>
+                        <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="28.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <Label text="Fecha a filtrar:">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker fx:id="datePickerFechaDesde" editable="false" prefHeight="25.0" prefWidth="138.0" promptText="Desde" />
+                              <DatePicker fx:id="datePickerFechaHasta" editable="false" prefHeight="25.0" prefWidth="136.0" promptText="Hasta" />
+                              <MFXButton fx:id="btnAplicarFiltroFecha" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Aplicar" />
+                              <MFXButton fx:id="btnReset" buttonType="RAISED" depthLevel="LEVEL4" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Reset" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Label fx:id="labelEstado_Promotor" stylesheets="@../css/Label.css" text="Label" visible="false" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <ScrollPane fx:id="scrollPane2" VBox.vgrow="ALWAYS">
+                     <content>
+                        <FlowPane fx:id="flowPanePromotorVales" alignment="TOP_CENTER" hgap="10.0" styleClass="splitmenubutton" stylesheets="@../css/styleItem.css" vgap="10.0" />
+                     </content>
+                  </ScrollPane>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="41.0" prefWidth="793.0" spacing="30.0" stylesheets="@../css/Buttons.css" VBox.vgrow="ALWAYS">
+                     <children>
+                        <HBox fx:id="hBoxLoadingInPromotor" alignment="CENTER" prefHeight="24.0" prefWidth="169.0" spacing="10.0" visible="false">
+                           <children>
+                              <Label text="CARGANDO" />
+                              <ImageView fitHeight="12.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/typing.gif" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="49.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="-250.0" right="100.0" />
+                           </HBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER" spacing="20.0">
+                           <children>
+                              <MFXButton fx:id="btnRegresar" styleClass="outline-button" text="Regresar" />
+                              <MFXButton fx:id="btnLiquidar" disable="true" styleClass="outline-button" text="Liquidar" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox fx:id="vboxLista" alignment="TOP_CENTER" visible="false">
+               <children>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="54.0" prefWidth="793.0" spacing="25.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <RadioButton fx:id="radioButton_Todos" mnemonicParsing="false" text="Todos" />
+                        <RadioButton fx:id="radioButton_EnGarantia" mnemonicParsing="false" text="En Garantia" />
+                        <RadioButton fx:id="radioButton_PorPagar" mnemonicParsing="false" text="Por Pagar" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="29.0" prefWidth="793.0" spacing="40.0" stylesheets="@../css/Label.css" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label text="Nombre y Apellidos">
+                           <HBox.margin>
+                              <Insets left="-40.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label text="Celular">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="24.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="Ventas">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="1.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="En Garantia">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="-19.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="Por Pagar">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="-20.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="Total por Pagar">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="-25.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <ScrollPane fx:id="scrollPane" minHeight="-Infinity" prefHeight="492.0" prefWidth="793.0" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox fx:id="vboxLista_Items" alignment="TOP_CENTER" prefHeight="458.0" prefWidth="787.0" spacing="10.0" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+            <VBox fx:id="vboxAgregar" prefHeight="554.0" prefWidth="793.0" visible="false">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="142.0" prefWidth="793.0" spacing="5.0">
+                     <children>
+                        <VBox alignment="TOP_RIGHT" spacing="10.0" stylesheets="@../css/Label.css">
+                           <children>
+                              <Label stylesheets="@../css/styleItem.css" text="Nombre:">
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding>
+                              </Label>
+                              <Label stylesheets="@../css/styleItem.css" text="Apellidos:">
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding>
+                              </Label>
+                              <Label stylesheets="@../css/styleItem.css" text="Número de celular:">
+                                 <padding>
+                                    <Insets top="10.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="-59.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox prefHeight="346.0" prefWidth="246.0" stylesheets="@../css/TextFields.css">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <children>
+                              <MFXTextField id="customField" fx:id="txtNombre" floatMode="DISABLED" maxHeight="32.0" prefHeight="29.0" prefWidth="218.0">
+                                 <VBox.margin>
+                                    <Insets top="3.0" />
+                                 </VBox.margin>
+                              </MFXTextField>
+                              <Label fx:id="validacionNombre" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="217.0" styleClass="label-error" stylesheets="@../css/Label.css" />
+                              <MFXTextField id="customField" fx:id="txtApellidos" floatMode="DISABLED" maxHeight="32.0" prefHeight="29.0" prefWidth="218.0" />
+                              <Label fx:id="validacionApellidos" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="217.0" styleClass="label-error" stylesheets="@../css/Label.css" />
+                              <MFXTextField id="customField" fx:id="txtCelular" floatMode="DISABLED" maxHeight="32.0" prefHeight="29.0" prefWidth="218.0" />
+                              <Label fx:id="validacionCelular" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="217.0" styleClass="label-error" stylesheets="@../css/Label.css" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="66.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="64.0" prefWidth="793.0" spacing="20.0" stylesheets="@../css/Buttons.css">
+                     <children>
+                        <MFXButton fx:id="btnLimpiar" styleClass="outline-button" text="Limpiar" />
+                        <MFXButton fx:id="btnAgregar" styleClass="outline-button" text="Agregar" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="BOTTOM_RIGHT" prefHeight="99.0" prefWidth="739.0" stylesheets="@../css/Label.css">
+                     <children>
+                        <Label fx:id="labelEstado_AgregarPromotor">
+                           <HBox.margin>
+                              <Insets right="200.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </children>
+</VBox>

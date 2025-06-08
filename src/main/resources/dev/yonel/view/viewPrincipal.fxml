@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.AreaChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="root" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/PrincipalStyle.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox styleClass="hBox" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="793.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="122.0" prefWidth="736.0" spacing="50.0" styleClass="hBox">
+                     <children>
+                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="70.0" prefWidth="216.0" spacing="20.0" styleClass="vBox">
+                           <children>
+                              <Label text="Celulares en Stock ">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="labelEnStock" text="125">
+                                 <font>
+                                    <Font size="35.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <HBox prefHeight="166.0" prefWidth="35.0" />
+                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="70.0" prefWidth="216.0" spacing="20.0" styleClass="vBox">
+                           <children>
+                              <Label text="Importe">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="labelImporte" text="125">
+                                 <font>
+                                    <Font size="35.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="54.0" prefWidth="857.0" styleClass="hBox" />
+                  <HBox alignment="CENTER" prefHeight="111.0" prefWidth="857.0" spacing="50.0" styleClass="hBox">
+                     <children>
+                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="70.0" prefWidth="216.0" spacing="20.0" styleClass="vBox">
+                           <children>
+                              <Label text="Vales en Garantía">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="labelEnGarantia" text="125">
+                                 <font>
+                                    <Font size="35.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <HBox prefHeight="166.0" prefWidth="35.0" />
+                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="70.0" prefWidth="216.0" spacing="20.0" styleClass="vBox">
+                           <children>
+                              <Label text="Vales por Pagar">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="labelPorPagar" text="125">
+                                 <font>
+                                    <Font size="35.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="54.0" prefWidth="857.0" styleClass="hBox" />
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="359.0" prefWidth="857.0" styleClass="hBox">
+                     <children>
+                        <AreaChart fx:id="areaChart_VentasDiarias" prefHeight="402.0" prefWidth="452.0" stylesheets="@../css/chart/chart.css">
+                          <xAxis>
+                            <CategoryAxis fx:id="categoryAxis" side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis fx:id="numberAxis" side="LEFT" />
+                          </yAxis>
+                        </AreaChart>
+                        <PieChart fx:id="pieChart_Marcas" minHeight="-Infinity" minWidth="-Infinity" prefHeight="249.0" prefWidth="358.0" stylesheets="@../css/chart/chart.css" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="359.0" styleClass="hBox" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Celulares viejos. ">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </Label>
+                  <ListView fx:id="listViewOldCelulares" prefHeight="564.0" prefWidth="349.0">
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </VBox.margin>
+                  </ListView>
+               </children>
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

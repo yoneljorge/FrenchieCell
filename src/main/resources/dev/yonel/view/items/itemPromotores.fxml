@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox fx:id="itemPromotor" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="780.0" styleClass="hbox" stylesheets="@../../css/styleItem.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+      <HBox alignment="CENTER" maxWidth="220.0" prefHeight="36.0" prefWidth="220.0">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <children>
+              <Label fx:id="labelNombre" text="Yonel Jorge Sánche Cantilloz" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" maxWidth="103.0" prefHeight="53.0" prefWidth="103.0">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <children>
+              <Label fx:id="labelNumeroCelular" text="55305613" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" maxWidth="60.0" prefHeight="53.0" prefWidth="60.0">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <children>
+              <Label fx:id="labelVentas" text="50" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="53.0" prefWidth="60.0">
+         <HBox.margin>
+            <Insets left="32.0" />
+         </HBox.margin>
+         <children>
+              <Label fx:id="labelEnGarantia" text="20" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" maxWidth="60.0" prefWidth="60.0">
+         <children>
+            <Label fx:id="labelPorPagar" text="30" />
+         </children>
+         <HBox.margin>
+            <Insets left="32.0" />
+         </HBox.margin>
+      </HBox>
+      <HBox alignment="CENTER" maxWidth="92.0" prefHeight="53.0" prefWidth="92.0">
+         <children>
+            <Label fx:id="labelTotal" prefHeight="21.0" prefWidth="35.0" text="4000" />
+         </children>
+         <HBox.margin>
+            <Insets left="37.0" />
+         </HBox.margin>
+      </HBox>
+      <HBox alignment="CENTER" maxWidth="68.0" prefHeight="36.0" prefWidth="53.0">
+         <HBox.margin>
+            <Insets left="29.0" />
+         </HBox.margin>
+         <children>
+            <MFXButton fx:id="btnVer" styleClass="outline-button" stylesheets="@../../css/Buttons.css" text="Ver" />
+         </children>
+      </HBox>
+    </children>
+    <effect>
+        <DropShadow blurType="GAUSSIAN" height="5.0" radius="2.0" width="5.0" />
+    </effect>
+</HBox>

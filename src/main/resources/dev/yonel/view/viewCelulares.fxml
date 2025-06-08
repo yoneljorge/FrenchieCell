@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXFilterComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<VBox styleClass="hBox" stylesheets="@../css/ScrollPane.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="50.0" styleClass="hBox">
+         <children>
+            <HBox alignment="CENTER" minWidth="-Infinity" prefHeight="50.0" prefWidth="396.0" spacing="20.0">
+               <children>
+                  <MFXButton id="custom" fx:id="btnVista" disable="true" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Lista" />
+                  <MFXButton id="custom" fx:id="btnAgregar" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Agregar" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <StackPane styleClass="hBox">
+         <children>
+            <VBox fx:id="pnlVista" alignment="TOP_CENTER" styleClass="hBox">
+               <children>
+                  <HBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" prefHeight="47.0" spacing="10.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="47.0" prefWidth="37.0" spacing="5.0">
+                           <children>
+                              <Label text="DUAL" />
+                              <CheckBox fx:id="checkDual" mnemonicParsing="false" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="47.0" prefWidth="113.0" spacing="5.0">
+                           <children>
+                              <Label text="Vendido" />
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <RadioButton fx:id="radioButton_VendidosNo" mnemonicParsing="false" />
+                                    <RadioButton fx:id="radioButton_VendidosSi" mnemonicParsing="false" />
+                                    <RadioButton fx:id="radioButton_Todos" mnemonicParsing="false" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                 <children>
+                                    <Label text="NO" />
+                                    <Label text="SI" />
+                                    <Label text="ALL" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <MFXFilterComboBox fx:id="cmbMarcaVista" floatMode="ABOVE" floatingText="Marca" />
+                        <MFXFilterComboBox fx:id="cmbModeloVista" disable="true" floatMode="ABOVE" floatingText="Modelo" />
+                        <MFXFilterComboBox fx:id="cmbFechaVista" floatMode="ABOVE" floatingText="Fecha" />
+                        <MFXTextField fx:id="txtFiltrarImei" floatMode="ABOVE" floatingText="IMEI" prefHeight="29.0" prefWidth="151.0" />
+                        <MFXButton id="custom" fx:id="btnRecargar" styleClass="mfx-button" stylesheets="@../css/Buttons.css" text="Recargar" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT">
+                     <children>
+                        <Label fx:id="validationLabel_FilterImei" styleClass="label-error" stylesheets="@../css/Label.css">
+                           <HBox.margin>
+                              <Insets right="158.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="BOTTOM_CENTER" spacing="60.0" stylesheets="@../css/styleItem.css">
+                     <children>
+                        <Label text="Vendido">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="-41.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="Marca">
+                           <HBox.margin>
+                              <Insets left="-36.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <Label text="Modelo">
+                           <HBox.margin>
+                              <Insets left="34.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="DUAL">
+                           <HBox.margin>
+                              <Insets left="-6.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="Precio">
+                           <HBox.margin>
+                              <Insets left="-37.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="Fecha">
+                           <HBox.margin>
+                              <Insets left="-23.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="IMEI">
+                           <HBox.margin>
+                              <Insets left="17.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="labelCantidad" stylesheets="@../css/Label.css" text="Cantidad: " />
+                     </children>
+                     <padding>
+                        <Insets left="22.0" />
+                     </padding>
+                  </HBox>
+                  <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" styleClass="hBox" VBox.vgrow="SOMETIMES">
+                     <content>
+                        <VBox fx:id="vboxItemVista" alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" styleClass="hBox" />
+                     </content>
+                  </ScrollPane>
+                  <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="19.0" prefWidth="781.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <HBox fx:id="hBoxLoadingInVista" alignment="CENTER" prefHeight="24.0" prefWidth="169.0" spacing="10.0" visible="false">
+                           <children>
+                              <Label text="CARGANDO" />
+                              <ImageView fitHeight="12.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/typing.gif" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets right="49.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="24.0" prefWidth="570.0" spacing="10.0">
+                           <children>
+                              <Label text="LEYENDA:" />
+                              <Label text="POR VENDER" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#75ff33" height="17.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+                              <Label text="VENDIDOS">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff5733" height="17.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox fx:id="pnlAgregar" prefHeight="465.0" prefWidth="539.0" visible="false">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="356.0" prefWidth="539.0">
+                     <children>
+                        <VBox alignment="TOP_RIGHT" stylesheets="@../css/Label.css">
+                           <children>
+                              <Label text="Marca">
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Modelo">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label text="IMEI 1">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label text="IMEI 2">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label text="Precio">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label text="Fecha">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label text="Observaciones">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="-116.0" right="20.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox styleClass="grid-background">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                 <VBox.margin>
+                                    <Insets bottom="6.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <MFXFilterComboBox fx:id="cmbMarcaAgregar" editable="false" floatMode="DISABLED" prefHeight="32.0" prefWidth="189.0" promptText="Marca" selectable="true" styleClass="mfx-combo-box" stylesheets="@../css/ComboBoxes.css">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </MFXFilterComboBox>
+                                    <MFXButton fx:id="btnAgregarMarca" rippleAnimateShadow="true" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="+" />
+                                 </children>
+                              </HBox>
+                              <HBox spacing="20.0">
+                                 <VBox.margin>
+                                    <Insets bottom="8.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <MFXFilterComboBox fx:id="cmbModeloAgregar" disable="true" editable="false" floatMode="DISABLED" prefHeight="32.0" prefWidth="189.0" promptText="Modelo" styleClass="mfx-combo-box" stylesheets="@../css/ComboBoxes.css">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" />
+                                       </HBox.margin>
+                                    </MFXFilterComboBox>
+                                    <MFXButton fx:id="btnAgregarModelo" disable="true" rippleAnimateShadow="true" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="+" />
+                                 </children>
+                              </HBox>
+                              <MFXTextField id="customField" fx:id="txtImeiUno" disable="true" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="IMEI 1" styleClass="text-field" stylesheets="@../css/TextFields.css">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </MFXTextField>
+                              <Label id="validationLabel" fx:id="validationLabel_ImeiUno" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="232.0" styleClass="label-error" stylesheets="@../css/Label.css" />
+                              <MFXTextField id="customField" fx:id="txtImeiDos" disable="true" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="IMEI 2 -&gt; tiene que estar para aparecer en las listas" styleClass="text-field" stylesheets="@../css/TextFields.css">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </MFXTextField>
+                              <Label id="validationLabel" fx:id="validationLabel_ImeiDos" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="232.0" styleClass="label-error" stylesheets="@../css/Label.css" />
+                              <MFXTextField id="customField" fx:id="txtPrecio" disable="true" floatMode="DISABLED" floatingText="IMEI 1" prefHeight="32.0" prefWidth="233.0" promptText="Precio" styleClass="text-field" stylesheets="@../css/TextFields.css">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </MFXTextField>
+                              <Label id="validationLabel" fx:id="validationLabel_Precio" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="232.0" styleClass="label-error" stylesheets="@../css/Label.css" />
+                              <DatePicker fx:id="dateFechaInventario" disable="true" editable="false" prefHeight="25.0" prefWidth="231.0" promptText="Fecha de inventario" styleClass="date-picker" stylesheets="@../css/Pickers.css">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </DatePicker>
+                              <Label id="validationLabel" fx:id="validationLabel_Fecha" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="232.0" styleClass="label-error" stylesheets="@../css/Label.css" />
+                              <TextArea fx:id="txtObservaciones" disable="true" prefHeight="101.0" prefWidth="234.0" promptText="Puedes descirbir el estado del teléfono o lo que quieras." styleClass="text-area" stylesheets="@../css/TextArea.css">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </TextArea>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <MFXButton id="custom" fx:id="btnLimpiar" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Limpiar" />
+                        <MFXButton id="custom" fx:id="btnGuardar" styleClass="outline-button" stylesheets="@../css/Buttons.css" text="Guardar" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="51.0" prefWidth="539.0" stylesheets="@../css/Label.css">
+                     <children>
+                        <Label fx:id="lblEstado" text="Estado">
+                           <HBox.margin>
+                              <Insets right="75.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="539.0">
+                     <children>
+                        <Label text="Nota: El IMEI dos tiene que estar para aparecer en las listas como DUAL SIM." />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </children>
+</VBox>

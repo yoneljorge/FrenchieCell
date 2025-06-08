@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="vboxVale" prefHeight="219.0" prefWidth="240.0" styleClass="hbox" stylesheets="@../../css/styleItem.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox prefHeight="33.0" prefWidth="253.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Gestor:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="94.0">
+               <children>
+                  <Label fx:id="lblGestor" text="Yonel" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="253.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Cliente:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="94.0">
+               <children>
+                  <Label fx:id="lblCliente" text="Cheila" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Teléfono:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="93.0">
+               <children>
+                  <Label fx:id="lblTelefonoCliente" text="56391475" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Marca:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="97.0">
+               <children>
+                  <Label fx:id="lblMarca" text="Samsung" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Modelo:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="74.0">
+               <children>
+                  <Label fx:id="lblModelo" text="A12" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Fecha de venta:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="84.0">
+               <children>
+                  <Label fx:id="lblFechaVenta" text="16/7/24" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="49.0" prefWidth="140.0">
+               <children>
+                  <Label text="Comisión:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets right="4.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="63.0">
+               <children>
+                  <Label fx:id="lblComision" text="10" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="33.0" prefWidth="350.0">
+         <children>
+            <CheckBox fx:id="checkBoxLiquidar" disable="true" mnemonicParsing="false" text="Marcar para liquidar" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

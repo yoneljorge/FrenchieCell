@@ -1,0 +1,9 @@
+@import '../fonts/Fonts.css';
+@import 'Common.css';
+@import 'MFXColors.css';
+
+
+.text-area{
+    -fx-border-color: -common-gradient;
+    -fx-border-radius: 5px;
+}

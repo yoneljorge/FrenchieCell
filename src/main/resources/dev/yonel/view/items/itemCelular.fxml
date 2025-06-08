@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox fx:id="itemCelular" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="865.0" styleClass="hbox" stylesheets="@../../css/styleItem.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+      <HBox alignment="CENTER" prefHeight="39.0" prefWidth="48.0">
+         <children>
+            <Label id="custom" fx:id="labelVendido" text="Vendido">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="39.0" prefWidth="121.0">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <children>
+              <Label id="custom" fx:id="labelMarca" text="Marca" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="41.0" prefWidth="168.0">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <children>
+              <Label id="custom" fx:id="labelModelo" text="Modelo" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="53.0" prefWidth="45.0">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <children>
+              <Label id="custom" fx:id="labelDualSim" text="DUAL" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="53.0" prefWidth="81.0">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+         <children>
+              <Label id="custom" fx:id="labelPrecio" text="\$200" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="53.0" prefWidth="87.0">
+         <children>
+            <Label id="custom" fx:id="labelFecha" text="1/6/24" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="53.0" prefWidth="129.0">
+         <children>
+            <Label id="custom" fx:id="labelImei" text="123456789123456" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="39.0" prefWidth="76.0">
+         <children>
+            <MFXButton fx:id="btnEditar" styleClass="outline-button" stylesheets="@../../css/Buttons.css" text="Editar" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="39.0" prefWidth="98.0">
+         <children>
+            <MFXButton fx:id="btnQuitar" styleClass="outline-button" stylesheets="@../../css/Buttons.css" text="Eliminar" />
+         </children>
+      </HBox>
+    </children>
+    <effect>
+        <DropShadow blurType="GAUSSIAN" height="5.0" radius="2.0" width="5.0" />
+    </effect>
+</HBox>

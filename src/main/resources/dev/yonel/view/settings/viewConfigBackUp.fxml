@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="600.0" styleClass="pane" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <stylesheets>
+      <URL value="@../../css/Colors.css" />
+      <URL value="@../../css/PrincipalStyle.css" />
+      <URL value="@../../css/Panel.css" />
+      <URL value="@../../css/Buttons.css" />
+   </stylesheets>
+   <children>
+      <HBox alignment="CENTER" prefHeight="96.0" prefWidth="600.0" spacing="30.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="65.0" spacing="10.0">
+               <children>
+                  <Label text="BackUp" />
+                  <VBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0">
+                     <children>
+                        <CheckBox fx:id="checkBox_BackUp" mnemonicParsing="false" />
+                     </children>
+                  </VBox>
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </VBox>
+            <VBox alignment="CENTER" spacing="10.0">
+               <children>
+                  <Label text="Tiempo en minutos" />
+                  <HBox alignment="CENTER" spacing="10.0">
+                     <children>
+                        <TextField fx:id="txt_Time" prefHeight="25.0" prefWidth="32.0" />
+                        <VBox alignment="CENTER">
+                           <children>
+                              <Button fx:id="btn_Up" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="spinner-button">
+                                 <graphic>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/upArrow.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="btn_Down" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="spinner-button">
+                                 <graphic>
+                                    <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../images/downArrow.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <MFXButton fx:id="btn_Aplicar" styleClass="outline-button" text="Aplicar" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

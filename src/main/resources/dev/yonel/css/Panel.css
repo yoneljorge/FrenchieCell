@@ -1,0 +1,63 @@
+
+.anchor-pane{
+    -fx-background-color: -color-one;
+}
+
+.pane{
+    -fx-background-color: -color-one;
+}
+
+.list-view{
+    -fx-background-color: transparent;
+}
+
+.list-cell{
+    -fx-background-color: transparent;
+
+    -fx-text-fill: #dfdcdc;
+    -fx-font-size: 14;
+}
+
+.list-cell:selected{
+    -fx-background-color: -color-two;
+}
+
+        /*BUTTONS*/
+.mfx-buttons{
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255, 255, 255, 0.815);
+    -fx-font-size: 20;
+}
+.mfx-buttons .mfx-ripple-generator {
+	-mfx-ripple-radius: 40;
+	-mfx-auto-clip: true;
+}
+
+.mfx-buttons:hover {
+   -fx-background-radius: 20px;
+
+    -fx-border-color: -color-two;
+   -fx-border-radius: 20px;
+}
+
+.outline-mfx-buttons{
+    -fx-background-color: transparent;
+    -fx-border-color: -color-two;
+    -fx-border-radius: 10px;
+
+    -fx-text-fill: rgba(255, 255, 255, 0.815);
+    -fx-font-size: 20;
+}
+
+.outline-mfx-buttons .mfx-ripple-generator {
+	-mfx-ripple-radius: 40;
+	-mfx-auto-clip: true;
+}
+.outline-mfx-buttons:hover{
+    -fx-background-color: transparent;
+
+    -fx-border-color: -color-two;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+
+}
